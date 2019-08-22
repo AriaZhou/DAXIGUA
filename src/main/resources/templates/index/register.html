@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/home.css" th:href="@{../css/home.css}" />
+
+</head>
+<body>
+
+<h2 style="position: center">Modal Login Form</h2>
+
+<!--<p id="user" hidden="true"> woshiyonghum </p>-->
+<!--<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>-->
+
+<div id="id01" class="modal" style="display: block">
+
+    <form class="modal-content animate" id="signIn" th:action="@{/register}" method="post" >
+        <div class="imgcontainer">
+            <!--      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>-->
+            <img src="../picture/img_0016.jpg" alt="Avatar" class="avatar">
+        </div>
+
+        <div class="container">
+            <p id="errorMsg" style="color:red;" th:if="${registerError}" class="error">该手机号已注册过，请登录</p>
+            <label for="username"><table><td><b>QQ</b></td>
+                <td><p id="emptyqq" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入QQ！</p></td></table></label>
+            <input type="text" id="username" placeholder="请输入QQ" name="username" autofocus="autofocus">
+
+            <label for="email"><table><td><b>邮箱</b></td>
+                <td><p id="emptyemail" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入邮箱！</p></td></table></label>
+            <input type="text" id="email" placeholder="请输入邮箱" name="email">
+
+            <label for="name"><table><td><b>群昵称</b></td>
+                <td><p id="emptyname" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入昵称！</p></td></table></label>
+            <input type="text" id="name" placeholder="请输入昵称" name="name">
+
+            <label for="address"><table><td><b>地址</b></td>
+                <td><p id="emptyaddress" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入地址！</p></td></table></label>
+            <input type="text" id="address" placeholder="请输入地址" name="address">
+
+            <label for="phone"><table><td><b>手机号码</b></td>
+                <td><p id="emptyphone" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入手机号码！</p></td></table></label>
+            <input type="text" id="phone" placeholder="请输入手机号码" name="phone">
+
+            <label for="password"><table><td><b>密码</b></td>
+                <td><p id="emptypsw" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入密码！</p></td></table></label>
+            <input type="password" id="password" placeholder="请输入密码" name="password">
+
+            <label for="passworda"><table><td><b>确认密码</b></td>
+                <td><p id="emptypswa" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入密码！</p></td></table></label>
+            <input type="password" id="passworda" placeholder="请再次输入密码" name="passworda">
+
+            </br>
+            </br>
+            <button id="checkSubmit" type="submit" value="Log in" onclick="return checkPsw()" th:text="送出"></button>
+
+            <label style="font-size: 10pt;">
+                <input type="checkbox" checked="checked" name="remember"> 记住我（记不住）
+            </label>
+        </div>
+
+        <div class="buttomContainer" style="background-color:#f1f1f1;height:20px">
+            <span class="signup">还不是会员? 我要<a href="#">注册</a></span>
+            <span class="psw">忘记<a href="#">密码?</a></span>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Get the modal
+    var modal = document.getElementById('id01');
+    var username = document.getElementById('username');
+    var email = document.getElementById('email');
+    var name = document.getElementById('name');
+    var address = document.getElementById('address');
+    var phone = document.getElementById('phone');
+    var password = document.getElementById('password');
+    var passworda = document.getElementById('passworda');
+
+    // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function(event) {
+    //     if (event.target == modal) {
+    //         modal.style.display = "none";
+    //     }
+    // }
+
+    //
+    function checkPsw() {
+
+        document.getElementById('emptyqq').hidden=true;
+        document.getElementById('emptyemail').hidden=true;
+        document.getElementById('emptyname').hidden=true;
+        document.getElementById('emptyaddress').hidden=true;
+        document.getElementById('emptyphone').hidden=true;
+        document.getElementById('emptypsw').hidden=true;
+        document.getElementById('emptypswa').hidden=true;
+
+        if(username.value===''){
+            document.getElementById('emptyqq').hidden=false;
+            return false;
+        }
+        else if(email.value===''){
+            document.getElementById('emptyemail').hidden=false;
+            submit.disabled=true;
+        }
+        else if(name.value===''){
+            document.getElementById('emptyname').hidden=false;
+            submit.disabled=true;
+        }
+        else if(address.value===''){
+            document.getElementById('emptyaddress').hidden=false;
+            submit.disabled=true;
+        }
+        else if(phone.value===''){
+            document.getElementById('emptyphone').hidden=false;
+            submit.disabled=true;
+        }
+        else if(password.value===''){
+            document.getElementById('emptypsw').hidden=false;
+            submit.disabled=true;
+        }
+        else if(passworda.value===''){
+            document.getElementById('emptypswa').hidden=false;
+            submit.disabled=true;
+        }
+        else{
+            phone.readOnly=true;
+            psw.readOnly=true;
+            submit.text="登入中...";
+
+            return true;
+        }
+    }
+</script>
+
+
+</body>
+</html>
