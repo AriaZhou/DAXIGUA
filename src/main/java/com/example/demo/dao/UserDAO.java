@@ -9,5 +9,6 @@ public interface UserDAO{
 	public User checkPsw(String phone, String psw);
 	public User findById(String id);
 	public int insert(User u);
+	public int checkRole(String u);
 	
 }

@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>UserIndex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<span th:text="${userInfo.name}"></span>
+
+<div class="dropdown" style="float: right;padding-right: 160px;padding-top: 60px">
+    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+            th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
+    <div class="dropdown-menu" style="border-color: #d1b6b1;">
+        <a class="dropdown-item" href="#" style="font-size: 11px">我的订单</a>
+        <a class="dropdown-item" href="#" style="font-size: 11px">登出</a>
+    </div>
+</div>
+
+<div class="container" style="padding-top: 160px">
+
+    <div class="card" style="width:230px">
+        <img class="card-img-top" src="../picture/img_0013.png" alt="Card image" style="width:100%">
+        <div class="card-body">
+            <table style="width: 100%">
+                <td style="vertical-align:bottom;"><h6>90120</h6></td>
+                <td style="vertical-align:bottom;"><h6 class="card-title" style="float: right">小橘里汁</h6></td>
+            </table>
+            <p class="card-text" style="color: #888888;font-size: 13px">这是介绍哦</p>
+            <table style="width: 100%;">
+                <tr style="width: 100%;">
+                    <td style="width: 60%; height: 100%">
+                        <p style="color: #d18b87;font-size: 20px; margin-bottom: 0px">￥ 78</p>
+                    </td>
+                    <td style="text-align: center">
+                        <table>
+                            <td><img src="../picture/img_0001.png" style="height: 20px"></td>
+                            <td><input type="text" style="font-size: 13px;width: 50px; height: 20px; line-height: 0px; text-align: center;
+                                         border:none; border-bottom: 1px dashed #d19090;" value="0"/></td>
+                            <td><img src="../picture/img_0002.png"  style="height: 20px"></td>
+                        </table>
+                        </td>
+                </tr>
+            </table>
+            <table width="100%" >
+                <td style="width: 100%;height: 100%; padding-top: 10px">
+                    <button type="submit" class="btn btn-info" style="background-color:#d19090;border-color: #d19090;font-size: 12px;width: 100%">确认订单</button>
+                </td>
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

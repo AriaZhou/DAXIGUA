@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../css/home.css" th:href="@{../css/home.css}" />
+    <link rel="stylesheet" href="../css/register.css" th:href="@{../css/register.css}" />
 
 </head>
 <body>
@@ -22,7 +22,14 @@
         </div>
 
         <div class="container">
-            <p id="errorMsg" style="color:red;" th:if="${registerError}" class="error">该手机号已注册过，请登录</p>
+            <table th:if="${registerError}" >
+                <td>
+                    <p id="errorMsg" style="color:red;" class="error">该手机号已注册过，请登录</p>
+                </td>
+                <td>
+                    <a th:href="@{/login}">立即登录</a>
+                </td>
+            </table>
             <label for="username"><table><td><b>QQ</b></td>
                 <td><p id="emptyqq" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入QQ！</p></td></table></label>
             <input type="text" id="username" placeholder="请输入QQ" name="username" autofocus="autofocus">
@@ -54,15 +61,10 @@
             </br>
             </br>
             <button id="checkSubmit" type="submit" value="Log in" onclick="return checkPsw()" th:text="送出"></button>
-
-            <label style="font-size: 10pt;">
-                <input type="checkbox" checked="checked" name="remember"> 记住我（记不住）
-            </label>
         </div>
 
         <div class="buttomContainer" style="background-color:#f1f1f1;height:20px">
-            <span class="signup">还不是会员? 我要<a href="#">注册</a></span>
-            <span class="psw">忘记<a href="#">密码?</a></span>
+            <span class="psw">已经是会员? 我要<a th:href="@{/login}">登录</a></span>
         </div>
     </form>
 </div>
@@ -102,27 +104,27 @@
         }
         else if(email.value===''){
             document.getElementById('emptyemail').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else if(name.value===''){
             document.getElementById('emptyname').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else if(address.value===''){
             document.getElementById('emptyaddress').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else if(phone.value===''){
             document.getElementById('emptyphone').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else if(password.value===''){
             document.getElementById('emptypsw').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else if(passworda.value===''){
             document.getElementById('emptypswa').hidden=false;
-            submit.disabled=true;
+            return false;
         }
         else{
             phone.readOnly=true;

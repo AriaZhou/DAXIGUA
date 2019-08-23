@@ -67,4 +67,13 @@ public class UserDAODB implements UserDAO{
 		}
 	}
 
+	public int checkRole(String id){
+		String u =  jdbcTemplate.queryForMap("select role  from user where username = ?",id).get("role").toString();
+
+		if(u.equals("ROLE_USER"))
+			return 0;
+		else
+			return 1;
+	}
+
 }
