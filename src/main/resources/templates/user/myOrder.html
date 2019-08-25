@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>我的订单</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/myOrder.css" th:href="@{../css/myOrder.css}" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+
+<div class="container">
+
+    <div class="dropdown" style="float: right;padding-top: 60px">
+        <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+                th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
+        <div class="dropdown-menu" style="border-color: #d1b6b1;">
+            <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
+            <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
+            <form action="#" th:action="@{/logout}" method="post">
+                <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+            </form>
+        </div>
+    </div>
+
+    <div style="padding-top: 160px">
+        <table class="table" style="min-width: 930px">
+            <tr>
+                <th style="border-top: 2px solid #d19090;"><p>编号</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>团号</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>名称</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>数量</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>价格</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>订单状态</p></th>
+                <th style="border-top: 2px solid #d19090;"><p>操作</p></th>
+            </tr>
+            <div th:each="o:${orderLst}">
+                <tr>
+                    <td><p th:text="${o.id}">id</p></td>
+                    <td><p th:text="${o.productId}">3254</p></td>
+                    <td><p th:text="${o.productId}">46546</p></td>
+                    <td><p th:text="${o.count}">4</p></td>
+                    <td><p th:text="'￥'+${o.price}">34</p></td>
+                    <td><p th:text="${o.state}">0</p></td>
+                    <td>
+                        <button class="btn btn-info" style="font-size: 12px;">修改订单</button>
+                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262" th:onclick="deleteOrder([[${o.id}]])">删除订单</button>
+                    </td>
+                </tr>
+            </div>
+        </table>
+    </div>
+
+
+    <div align="center">
+        <p th:if="!${#arrays.isEmpty(orderLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
+    </div>
+
+    <div align="center">
+        <p th:if="${#arrays.isEmpty(orderLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">你还没有订单欸</p>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+    function deleteOrder(name) {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/user/deleteOrder",
+            data:{
+                orderid : name,
+            },
+            async: false,
+            error: function(request){
+                alert("删除失败，请重试。");
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("删除失败，请重试。");
+                }else{
+
+                    alert("删除成功");
+                    window.location.reload();
+                    return false;
+
+                }
+            }
+        });
+    }
+
+</script>
+
+</html>

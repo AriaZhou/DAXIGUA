@@ -31,7 +31,6 @@ public class MainController {
 
 		ModelAndView model;
 		try{
-			System.out.println(principal.getName());
 			if(userDao.checkRole(principal.getName())==0)
 				model = new ModelAndView("redirect:/index");
 			else

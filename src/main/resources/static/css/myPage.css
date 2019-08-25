@@ -1,0 +1,27 @@
+.usrTitle{
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.usrRow{
+  padding: 6px;
+  text-align: center;
+}
+
+.usrValue{
+  width: 3px;
+  min-width: 0px;
+  border: none;
+  border-bottom: #d19090 dashed 1px;
+  font-size: 16px;
+  font-family: SimSun;
+}
+
+pre{
+  font-family: SimSun;
+  font-size:16px;
+}
+

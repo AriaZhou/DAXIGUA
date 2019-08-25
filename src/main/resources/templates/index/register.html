@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>注册</title>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="../css/register.css" th:href="@{../css/register.css}" />
+    <link rel="stylesheet" href="../../static/register.css" th:href="@{../css/register.css}" />
 
 </head>
 <body>
@@ -42,13 +43,13 @@
                 <td><p id="emptyname" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入昵称！</p></td></table></label>
             <input type="text" id="name" placeholder="请输入昵称" name="name">
 
-            <label for="address"><table><td><b>地址</b></td>
-                <td><p id="emptyaddress" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入地址！</p></td></table></label>
-            <input type="text" id="address" placeholder="请输入地址" name="address">
-
             <label for="phone"><table><td><b>手机号码</b></td>
                 <td><p id="emptyphone" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入手机号码！</p></td></table></label>
             <input type="text" id="phone" placeholder="请输入手机号码" name="phone">
+
+            <label for="address"><table><td><b>地址</b></td>
+                <td><p id="emptyaddress" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入地址！</p></td></table></label>
+            <input type="text" id="address" placeholder="请输入地址" name="address">
 
             <label for="password"><table><td><b>密码</b></td>
                 <td><p id="emptypsw" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入密码！</p></td></table></label>

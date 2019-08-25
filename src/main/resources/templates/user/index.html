@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <title>要西瓜吗</title>
     <meta charset="UTF-8">
-    <title>UserIndex</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -11,50 +11,126 @@
 </head>
 <body>
 
-<div class="dropdown" style="float: right;padding-right: 160px;padding-top: 60px">
-    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-            th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
-    <div class="dropdown-menu" style="border-color: #d1b6b1;">
-        <a class="dropdown-item" href="#" style="font-size: 11px">我的订单</a>
-        <a class="dropdown-item" href="#" style="font-size: 11px">登出</a>
-    </div>
-</div>
+<div class="container">
 
-<div class="container" style="padding-top: 160px">
-
-    <div class="card" style="width:230px">
-        <img class="card-img-top" src="../picture/img_0013.png" alt="Card image" style="width:100%">
-        <div class="card-body">
-            <table style="width: 100%">
-                <td style="vertical-align:bottom;"><h6>90120</h6></td>
-                <td style="vertical-align:bottom;"><h6 class="card-title" style="float: right">小橘里汁</h6></td>
-            </table>
-            <p class="card-text" style="color: #888888;font-size: 13px">这是介绍哦</p>
-            <table style="width: 100%;">
-                <tr style="width: 100%;">
-                    <td style="width: 60%; height: 100%">
-                        <p style="color: #d18b87;font-size: 20px; margin-bottom: 0px">￥ 78</p>
-                    </td>
-                    <td style="text-align: center">
-                        <table>
-                            <td><img src="../picture/img_0001.png" style="height: 20px"></td>
-                            <td><input type="text" style="font-size: 13px;width: 50px; height: 20px; line-height: 0px; text-align: center;
-                                         border:none; border-bottom: 1px dashed #d19090;" value="0"/></td>
-                            <td><img src="../picture/img_0002.png"  style="height: 20px"></td>
-                        </table>
-                        </td>
-                </tr>
-            </table>
-            <table width="100%" >
-                <td style="width: 100%;height: 100%; padding-top: 10px">
-                    <button type="submit" class="btn btn-info" style="background-color:#d19090;border-color: #d19090;font-size: 12px;width: 100%">确认订单</button>
-                </td>
-            </table>
-
+    <div class="dropdown" style="float: right;padding-top: 60px">
+        <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+                th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
+        <div class="dropdown-menu" style="border-color: #d1b6b1;">
+            <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+            <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
+            <form action="#" th:action="@{/logout}" method="post">
+                <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+            </form>
         </div>
     </div>
 
+    <div  style="padding-top: 160px">
+        <div class="row">
+            <div class="column" th:each="p:${productLst}" style="padding: 16px">
+                <div class="card" style="width:230px; height: 100%">
+                    <img class="card-img-top" src="../picture/img_0013.png" alt="Card image" style="width:100%">
+                    <div class="card-body">
+                        <table style="width: 100%">
+                            <td style="vertical-align:bottom;"><h6 th:text="${p.id}">90120</h6></td>
+                            <td style="vertical-align:bottom;"><h6 style="float: right" th:text="${p.getName()}">小橘里汁</h6></td>
+                        </table>
+                        <p class="card-text" style="color: #888888;font-size: 13px" th:text="${p.description}">这是介绍哦</p>
+                        <table style="width: 100%;">
+                            <tr style="width: 100%;">
+                                <td style="width: 60%; height: 100%">
+                                    <p style="color: #d18b87;font-size: 20px; margin-bottom: 0px">￥ [[${p.price}]]</p>
+                                </td>
+                                <td style="text-align: center">
+                                    <table>
+                                        <td><img src="../picture/img_0001.png" style="height: 20px" th:onclick="decCount([[${p.id}]])"></td>
+                                        <td><input th:id="${p.id}" type="text" style="font-size: 13px;width: 50px; height: 20px; line-height: 0px; text-align: center;
+                                         border:none; border-bottom: 1px dashed #d3d1d1;" value="0"/></td>
+                                        <td><img src="../picture/img_0002.png"  style="height: 20px" th:onclick="addCount([[${p.id}]])"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" >
+                            <td style="width: 100%;height: 100%; padding-top: 10px">
+                                <button type="submit" class="btn btn-info" style="background-color:#d19090;border-color: #d19090;font-size: 12px;width: 100%" th:id="'sub'+${p.id}" th:onclick="return submitOrder([[${p.id}]])">提交订单</button>
+                            </td>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    function decCount(name){
+        var count = document.getElementById(name);
+        if(parseInt(count.value) !== 0){
+            count.value = parseInt(count.value) - 1;
+        }
+    }
+
+    function addCount(name){
+        var count = document.getElementById(name);
+        count.value = parseInt(count.value) + 1;
+    }
+
+    function submitOrder(name) {
+        var count = document.getElementById(name);
+        var button = document.getElementById("sub"+name);
+        var countNum = parseInt(count.value);
+        var pId = name;
+
+        if(countNum === 0){
+            alert("订单提交失败，订单数量不可为0，请重试。");
+            return false;
+        }
+
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/user/addOrder",
+            data:{
+                pId : pId,
+                count : countNum,
+            },
+            async: false,
+            error: function(request){
+                alert("订单提交失败，请重试。");
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("订单提交失败，请重试。");
+                }else{
+                    count.value = 0;
+                    // button.backgroundColor = "#B2B0B0";
+                    // button.textContent = "已提交";
+                    // button.disabled = true;
+                    // count.readOnly = true;
+
+                    alert("订单提交成功");
+
+                    // var wto;
+                    // $('#sub'+name).change(function(){
+                    //     clearTimeout(wto);
+                    //     wto = setTimeout(function() {
+                    //         // do stuff when user has been idle for 1 second
+                    //         $('#sub'+name).css({"disabled":true,
+                    //                             "textContent":"已提交"});
+                    //     }, 1000);
+                    // });
+
+                    return false;
+
+                }
+            }
+        });
+    }
+
+</script>
 
 </body>
 </html>

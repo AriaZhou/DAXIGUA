@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>修改资料</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--<link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../../static/css/myPage.css}" />-->
+    <link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../css/myPage.css}" />
+</head>
+<body>
+
+    <div class="container" >
+
+        <div class="dropdown" style="float: right;padding-top: 60px">
+            <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+                    th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
+            <div class="dropdown-menu" style="border-color: #d1b6b1;">
+                <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
+                <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+                <form action="#" th:action="@{/logout}" method="post">
+                    <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+                </form>
+            </div>
+        </div>
+
+        <div style="padding-top: 160px">
+            <form id="basicInfo">
+                <table align="center" style="border-radius: 9px; border: #d19090 dashed 2px; width: 60%;
+                        min-width: 555px; border-collapse: separate; border-spacing: 0;">
+                    <tr>
+                        <td class="usrTitle">基本信息</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 18px; color: #886d6d; padding-bottom: 6px; text-align: center">
+                            QQ：<input name="username" id="username" style="border: none;font-size: 18px; color: #886d6d;" th:field="${userInfo.username}"></td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow" width="100%">
+                            <table align="center">
+                                <td>群昵称：</td>
+                                <td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow">
+                            <table align="center">
+                                <td>邮箱：</td>
+                                <td><input name="email" id="email" th:field="${userInfo.email}" class="usrValue"></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow">
+                            <table align="center">
+                                <td>手机号：</td>
+                                <td><input name="phone" id="phone" th:field="${userInfo.phone}" class="usrValue"></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow" style="padding-bottom: 26px">
+                            <table align="center">
+                                <td>邮寄地址：</td>
+                                <td><input name="address" id="address" th:field="${userInfo.address}" class="usrValue"></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow">
+                            <table align="center">
+                                <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
+                                <td style="padding-left: 6px"><button class="btn btn-info" type="submit" style="font-size: 14px" onclick="modifyUser()">确认修改</button></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" style="padding-bottom: 6px">
+                            <p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        $("input").unbind("input").bind("input",function(){
+            var width=textWidth($(this).val());
+            $(this).width(width)
+        });
+
+        //获取文本宽度
+        function textWidth(text){
+            var sensor = $('<pre>'+ text +'</pre>').css({display: 'none'});
+            $('body').append(sensor);
+            var width = sensor.width();
+            sensor.remove();
+            return width+6;
+        }
+
+        document.body.onload=function(){
+            $("input").each(function(){
+                var width=textWidth($(this).val());
+                $(this).width(width)
+            });
+        }
+
+        function modifyUser() {
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/user/modifyUser",
+                data:$('#basicInfo').serialize(),
+                async: false,
+                error: function(request){
+                    alert("修改失败，请重试。");
+                    // alert("Connection error:"+request.error);
+                },
+                success: function(data){
+                    if(data==="0"){
+                        alert("修改失败，请重试。");
+                    }else{
+                        alert("修改成功");
+                        window.location.reload();
+                        return false;
+                    }
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

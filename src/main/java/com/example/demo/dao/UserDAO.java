@@ -6,9 +6,10 @@ import com.example.demo.entity.User;
 
 public interface UserDAO{
 
-	public User checkPsw(String phone, String psw);
-	public User findById(String id);
-	public int insert(User u);
-	public int checkRole(String u);
+	User checkPsw(String phone, String psw);
+	User findById(String id);
+	int insert(User u);
+	int checkRole(String u);
+	int modifyUser(User u);
 	
 }
