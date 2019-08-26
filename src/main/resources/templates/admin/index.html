@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>首页</title>
 
-    <link th:href="../css/jquery-accordion-menu.css" rel="stylesheet" type="text/css" />
-    <link th:href="../css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
@@ -25,13 +24,17 @@
             overflow:hidden;
             text-overflow:ellipsis;
             -o-text-overflow:ellipsis;
-            white-space:nowrap;
+            white-space:nowrap;]
             width:100%;
         }
     </style>
 
-    <script th:src="../js/jquery-1.11.2.min.js" type="text/javascript"></script>
-    <script th:src="../js/jquery-accordion-menu.js" type="text/javascript"></script>
+    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+    <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
             jQuery("#jquery-accordion-menu").jqueryAccordionMenu();
@@ -49,33 +52,94 @@
 </head>
 <body>
 <div id="jquery-accordion-menu" class="jquery-accordion-menu red">
-    <div style="text-align:center; color: #ffffff; font-size: 24px; padding: 60px 0px 40px 0px">
-        西瓜李子卖苹果<br/>后台管理系统
+
+    <div class="toutou">
+        <img src="../picture/img_0016.png">
+        <p>王泽生聪明蛋</p>
+        <div class="toutoubuttons" style="padding-left: 6px">
+            <button><a href="#">修改资料</a></button>
+        </div>
+        <div class="toutoubuttons" style="padding-right: 6px">
+            <button><a href="#">登出账号</a></button>
+        </div>
     </div>
+
     <ul id="demo-list">
 
         <li class="active"><a href="#"> 首页 </a></li>
-        <li><a href="#">商品管理 </a></li>
+        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
         <li><a href="#">订单管理 </a></li>
         <li><a href="#">用户管理 </a>
-            <ul class="submenu">
-                <li><a href="#">Web Design </a></li>
-                <li><a href="#">Hosting </a></li>
-                <li><a href="#">Design </a>
-                    <ul class="submenu">
-                        <li><a href="#">Graphics </a></li>
-                        <li><a href="#">Vectors </a></li>
-                        <li><a href="#">Photoshop </a></li>
-                        <li><a href="#">Fonts </a></li>
-                    </ul>
-                </li>
-                <li><a href="#">Consulting </a></li>
-            </ul>
+            <!--<ul class="submenu">-->
+            <!--<li><a href="#">Web Design </a></li>-->
+            <!--<li><a href="#">Hosting </a></li>-->
+            <!--<li><a href="#">Consulting </a></li>-->
+            <!--</ul>-->
         </li>
         <li><a href="#">系统管理 </a></li>
         <li><a href="#">Contact </a></li>
 
     </ul>
+</div>
+
+
+<div style="padding-left: 200px">
+    <div class="container" style="height:100%; padding: 50px">
+        <table style="width: 100%">
+            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >商品管理</a></td>
+            <td style="width: 100%">
+                <div class="btn-group mr2" style="float: right; position: relative; top:35px">
+                    <button class="btn btn-sm btn-outline-secondary">新增产品</button>
+                    <button class="btn btn-sm btn-outline-secondary">批量删除</button>
+                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
+                </div>
+            </td>
+        </table>
+
+        <table class="table" style="margin-top: 50px; min-width: 930px;">
+
+            <tr>
+                <th></th>
+                <th>团号</th>
+                <th>名称</th>
+                <th>价格</th>
+                <th>数量</th>
+                <th>开团时间</th>
+                <th>截团时间</th>
+                <th>操作</th>
+            </tr>
+
+            <div th:each="p:${pLst}">
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><p th:text="${p.id}"></p></td>
+                    <td><p th:text="${p.name}"></p></td>
+                    <td><p th:text="${p.price}"></p></td>
+                    <td><p th:text="${p.count}"></p></td>
+                    <td><p th:text="${p.startTime}"></p></td>
+                    <td><p th:text="${p.endTime}"></p></td>
+                    <td>
+                        <button class="btn btn-info" style="font-size: 12px;">修改</button>
+                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262" th:onclick="deleteOrder([[${p.id}]])">删除</button>
+                    </td>
+                </tr>
+            </div>
+
+        </table>
+
+        <!--<div style="height: 2000px">-->
+
+        <!--</div>-->
+
+        <div align="center">
+            <p th:if="!${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
+        </div>
+
+        <div align="center">
+            <p th:if="${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
+        </div>
+
+    </div>
 </div>
 
 <script type="text/javascript">

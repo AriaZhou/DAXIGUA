@@ -57,8 +57,7 @@ public class UserController {
         o.setProductId(pId);
         o.setPrice(Integer.parseInt(productDao.findById(pId).getPrice())*count+"");
 
-        int flag = orderDao.insert(o);
-        return flag+"";
+        return orderDao.insert(o)+"";
     }
 
     @RequestMapping("/user/modifyData")
@@ -88,18 +87,18 @@ public class UserController {
 
     @RequestMapping("/user/deleteOrder")
     @ResponseBody
-    public int deleteOrder(String orderid, Principal principal){
+    public String deleteOrder(String orderid, Principal principal){
 
-        return orderDao.deleteById(orderid);
+        return orderDao.deleteById(orderid)+"";
 
     }
 
     @RequestMapping(value = "/user/modifyUser", method = RequestMethod.POST)
     @ResponseBody
-    public int modifyUser(@ModelAttribute User u){
+    public String modifyUser(@ModelAttribute User u){
 
         System.out.println(u.getUsername()+"%^&*(");
-        return userDao.modifyUser(u);
+        return userDao.modifyUser(u)+"";
 
     }
 }

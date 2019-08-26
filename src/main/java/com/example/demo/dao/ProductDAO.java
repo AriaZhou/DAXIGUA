@@ -10,5 +10,6 @@ public interface ProductDAO {
 	Product findById(String id);
 	List<Product> findAll();
 	int insert(Product p);
+	int deleteById(String id);
 	
 }

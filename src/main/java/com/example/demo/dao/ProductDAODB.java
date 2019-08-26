@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -35,7 +36,7 @@ public class ProductDAODB implements ProductDAO{
 				product.setCount(rs.getInt("pcount"));
 				product.setDescription(rs.getString("description"));
 				product.setStartTime(rs.getString("starttime"));
-				product.setEnTime(rs.getString("endtime"));
+				product.setEndTime(rs.getString("endtime"));
 				product.setEnabled(rs.getInt("enabled"));
 
 				rs.next();
@@ -78,10 +79,26 @@ public class ProductDAODB implements ProductDAO{
 
 	public int insert(Product p){
 		try{
-//			jdbcTemplate.update("insert into product (username, email, name, address, phone, password, role)" +
-//					"values (?,?,?,?,?,?,?)", p.getUsername(),);
+			jdbcTemplate.update("insert into product (id, username, uploadtime, pname, price, pcount, description, starttime, endtime, enabled)" +
+					"values (?,?,?,?,?,?,?,?,?,?)", p.getId(), p.getUsername(), new Date(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(),
+					p.getStartTime(), p.getEndTime(), 1);
 			return 1;
 		}catch(Exception e){
+			System.out.println("----error----");
+			System.out.println(e.getMessage());
+			System.out.println("----error----");
+			return 0;
+		}
+	}
+
+	public int deleteById(String id){
+		try{
+			jdbcTemplate.update("delete from product where id = ?", id);
+			return 1;
+		}catch(Exception e){
+			System.out.println("----error----");
+			System.out.println(e.getMessage());
+			System.out.println("----error----");
 			return 0;
 		}
 	}

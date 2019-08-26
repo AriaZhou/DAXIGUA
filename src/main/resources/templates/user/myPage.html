@@ -30,7 +30,7 @@
         <div style="padding-top: 160px">
             <form id="basicInfo">
                 <table align="center" style="border-radius: 9px; border: #d19090 dashed 2px; width: 60%;
-                        min-width: 555px; border-collapse: separate; border-spacing: 0;">
+                        min-width: fit-content; border-collapse: separate; border-spacing: 0;">
                     <tr>
                         <td class="usrTitle">基本信息</td>
                     </tr>
@@ -39,9 +39,9 @@
                             QQ：<input name="username" id="username" style="border: none;font-size: 18px; color: #886d6d;" th:field="${userInfo.username}"></td>
                     </tr>
                     <tr>
-                        <td class="usrRow" width="100%">
+                        <td class="usrRow">
                             <table align="center">
-                                <td>群昵称：</td>
+                                <td class="valueTitle">群昵称：</td>
                                 <td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>
                             </table>
                         </td>
@@ -49,7 +49,7 @@
                     <tr>
                         <td class="usrRow">
                             <table align="center">
-                                <td>邮箱：</td>
+                                <td class="valueTitle">邮箱：</td>
                                 <td><input name="email" id="email" th:field="${userInfo.email}" class="usrValue"></td>
                             </table>
                         </td>
@@ -57,7 +57,7 @@
                     <tr>
                         <td class="usrRow">
                             <table align="center">
-                                <td>手机号：</td>
+                                <td class="valueTitle">手机号：</td>
                                 <td><input name="phone" id="phone" th:field="${userInfo.phone}" class="usrValue"></td>
                             </table>
                         </td>
@@ -65,7 +65,7 @@
                     <tr>
                         <td class="usrRow" style="padding-bottom: 26px">
                             <table align="center">
-                                <td>邮寄地址：</td>
+                                <td class="valueTitle">邮寄地址：</td>
                                 <td><input name="address" id="address" th:field="${userInfo.address}" class="usrValue"></td>
                             </table>
                         </td>

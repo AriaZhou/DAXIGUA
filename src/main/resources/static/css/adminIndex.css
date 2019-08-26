@@ -7,11 +7,11 @@
 }
 
 .jquery-accordion-menu {
-	width: 230px;
+	width: 200px;
 	height: 100%;
-	float: left;
+	float:left;
 	background: #d19090;
-	position: absolute;
+	position: fixed;
 }
 
 .jquery-accordion-menu .jquery-accordion-menu-footer,.jquery-accordion-menu .jquery-accordion-menu-header {
@@ -40,7 +40,7 @@
 
 .jquery-accordion-menu ul li a {
 	width: 100%;
-	padding: 20px 36px;
+	padding: 20px 26px;
 	float: left;
 	text-decoration: none;
 	color: #f0f0f0;
@@ -70,7 +70,7 @@
 
 .jquery-accordion-menu .submenu-indicator {
 	float: right;
-	right: 30px;
+	left: 16px;
 	position: absolute;
 	line-height: 19px;
 	font-size: 20px;
@@ -236,15 +236,15 @@
 }
 
 .red.jquery-accordion-menu>ul>li.active>a,.red.jquery-accordion-menu>ul>li:hover>a {
-	background: #DA4453
+	background: #d1aca7
 }
 
 .red.jquery-accordion-menu>ul>li>a {
-	border-bottom-color: #DA4453
+	border-bottom-color: #d1aca7
 }
 
 .red.jquery-accordion-menu ul ul.submenu li:hover>a {
-	border-left-color: #DA4453
+	border-left-color: #d1aca7
 }
 
 .white.jquery-accordion-menu .jquery-accordion-menu-footer,.white.jquery-accordion-menu .jquery-accordion-menu-header,.white.jquery-accordion-menu ul li a {
@@ -286,4 +286,43 @@
 
 .black.jquery-accordion-menu ul ul.submenu li:hover>a {
 	border-left-color: #222
+}
+
+.toutou {
+	position:relative;
+	text-align: center;
+	height: 200px;
+	background-color: rgba(86, 86, 86, 0.91);
+}
+
+.toutou p {
+	color:white;
+	margin:6px 0 20px 0;
+}
+.toutou img{
+	width:70px;
+	object-fit: cover;
+	border-radius: 100%;
+	margin-top: 25px;
+}
+
+.toutoubuttons{
+	display:inline-block;
+	width:45%;
+	margin:0 0 20px 0;
+}
+
+.toutou button{
+	padding:6px;
+	/*margin:0 5px;*/
+	background: none;
+	border: white 1px solid;
+	width:90%;
+	border-radius: 3px;
+}
+
+.toutou button a{
+	text-decoration: none;
+	color: white;
+	font-size: 0.9em;
 }

@@ -1,25 +1,6 @@
 body {font-family: Arial, Helvetica, sans-serif;}
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-/* Set a style for all buttons */
-button {
-  background-color: #D19090;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
 
 button:hover {
   opacity: 0.8;
@@ -28,36 +9,10 @@ button:hover {
 /* Extra styles for the cancel button */
 
 /* Center the image and position the close button */
-.imgcontainer {
-  text-align: center;
-  margin: 24px 0 0 0;
-  position: relative;
-}
-
-img.avatar {
-  width: 35%;
-  border-radius: 50%;
-}
 
 .container {
   padding: 16px;
-}
-
-.buttomContainer {
-  padding: 10px;
-}
-
-
-span.psw {
-  float: right;
-  padding-top: 2px;
-  font-size: 11pt;
-}
-
-span.signup {
-  float: left;
-  padding-top: 2px;
-  font-size: 11pt;
+  max-width: 80%;
 }
 
 /* The Modal (background) */
@@ -72,7 +27,7 @@ span.signup {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-  padding-top: 60px;
+  padding-top: 30px;
 }
 
 /* Modal Content/Box */
@@ -81,7 +36,7 @@ span.signup {
   margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
   border: 1px solid #888;
   width: 80%; /* Could be more or less, depending on screen size */
-  max-width: 400px;
+  max-width: 60%;
 }
 
 /* The Close Button (x) */
@@ -103,9 +58,47 @@ span.signup {
 }
 
 /* Change styles for span and cancel button on extra small screens */
-@media screen and (max-width: 300px) {
-  span.psw {
-    display: block;
-    float: none;
-  }
+.usrTitle{
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.usrRow{
+  padding: 6px;
+  text-align: right;
+  /*width: 50%;*/
+}
+
+.usrValue{
+  width: 100%;
+  border-radius: 3px;
+  font-size: 16px;
+  box-shadow: none;
+  border: #3b424d solid 1px;
+}
+
+
+.valueTitle{
+  width: fit-content;
+  padding: 16px 16px 16px 0;
+  text-align: right;
+}
+
+/* The Close Button (x) */
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
 }

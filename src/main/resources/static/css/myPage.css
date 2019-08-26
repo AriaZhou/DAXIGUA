@@ -25,3 +25,7 @@ pre{
   font-size:16px;
 }
 
+.valueTitle{
+  width: max-content;
+}
+

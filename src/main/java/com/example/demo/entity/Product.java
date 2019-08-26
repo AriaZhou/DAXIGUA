@@ -16,7 +16,7 @@ public class Product {
     private String description;
     private int count;
     private String startTime;
-    private String enTime;
+    private String endTime;
     private int enabled;
 
     public String getId() {
@@ -67,11 +67,11 @@ public class Product {
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
-    public String getEnTime() {
-        return enTime;
+    public String getEndTime() {
+        return endTime;
     }
-    public void setEnTime(String enTime) {
-        this.enTime = enTime;
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
     public int getEnabled() {
         return enabled;

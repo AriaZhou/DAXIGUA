@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>商品管理</title>
+
+    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
+
+    <style type="text/css">
+        *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+        body{background:#f0f0f0;margin: 0px;}
+        .filterinput{
+            background-color:rgba(249, 244, 244, 0);
+            border-radius:15px;
+            width:90%;
+            height:30px;
+            border:thin solid #FFF;
+            text-indent:0.5em;
+            font-weight:bold;
+            color:#FFF;
+        }
+        #demo-list a{
+            overflow:hidden;
+            text-overflow:ellipsis;
+            -o-text-overflow:ellipsis;
+            white-space:nowrap;]
+            width:100%;
+        }
+    </style>
+
+    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+    <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery("#jquery-accordion-menu").jqueryAccordionMenu();
+
+        });
+
+        $(function(){
+            //顶部导航切换
+            $("#demo-list li").click(function(){
+                $("#demo-list li.active").removeClass("active")
+                $(this).addClass("active");
+            })
+        })
+    </script>
+</head>
+<body>
+
+<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+
+    <div class="toutou">
+        <img src="../picture/img_0016.png">
+        <p>王泽生聪明蛋</p>
+        <div class="toutoubuttons" style="padding-left: 6px">
+            <button><a href="#">修改资料</a></button>
+        </div>
+        <div class="toutoubuttons" style="padding-right: 6px">
+            <button><a href="#">登出账号</a></button>
+        </div>
+    </div>
+
+    <ul id="demo-list">
+
+        <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
+        <li class="active"  th:href="@{/admin/revealAllProduct}"><a href="#">商品管理 </a></li>
+        <li><a href="#">订单管理 </a></li>
+        <li><a href="#">用户管理 </a>
+            <!--<ul class="submenu">-->
+            <!--<li><a href="#">Web Design </a></li>-->
+            <!--<li><a href="#">Hosting </a></li>-->
+            <!--<li><a href="#">Consulting </a></li>-->
+            <!--</ul>-->
+        </li>
+        <li><a href="#">系统管理 </a></li>
+        <li><a href="#">Contact </a></li>
+
+    </ul>
+</div>
+
+<div style="padding-left: 200px">
+    <div class="container" style="height:100%; padding: 50px">
+
+        <div id="insertProduct" class="modal" style="display: none">
+
+            <form class="modal-content animate" id="addProduct">
+
+                <span onclick="document.getElementById('insertProduct').style.display='none'" class="close" title="Close Modal"
+                        style="margin: 26px; font-size: 40px">&times;</span>
+
+                <div class="container">
+
+                    <table align="center">
+                        <tr>
+                            <td class="usrTitle">新增产品</td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 18px; color: #886d6d; padding-bottom: 6px; text-align: center;">
+                                团号：<input name="id" id="id" style="border: none;font-size: 18px; color: #886d6d;"></td>
+                        </tr>
+                    </table>
+
+                    <table align="center" style="width: 80%;">
+                        <tr>
+                            <td class="valueTitle" style="width: 111px">名称：</td>
+                            <td><input name="name" id="name" class="usrValue"></td>
+                        </tr>
+                    </table>
+
+                    <table align="center" style="width: 80%;">
+                        <tr>
+                            <td class="valueTitle" style="width: 111px">价格：</td>
+                            <td><input name="price" id="price" class="usrValue"></td>
+                            <td class="valueTitle" style="width: 111px">数量：</td>
+                            <td><input name="count" id="count" class="usrValue"></td>
+                        </tr>
+                        <tr>
+                            <td class="valueTitle" style="width: 111px">开团时间：</td>
+                            <td><input name="startTime" id="startTime" class="usrValue"></td>
+                            <td class="valueTitle" style="width: 111px">截团时间：</td>
+                            <td><input name="endTime" id="endTime" class="usrValue"></td>
+                        </tr>
+                    </table>
+
+                    <table align="center" style="width: 80%;">
+                        <tr>
+                            <td class="valueTitle" style="width: 111px">描述：</td>
+                            <td><textarea name="description" id="description" style="height: 140px; margin: 19px 0 19px 0" class="usrValue"></textarea></td>
+                        </tr>
+                    </table>
+
+
+                    <table align="center">
+                        <tr>
+                            <td class="usrRow">
+                                <table align="center">
+                                    <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
+                                    <td style="padding-left: 6px"><button class="btn btn-info" type="submit" style="font-size: 14px" onclick="addProduct()">确认修改</button></td>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%">
+                                <p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </form>
+        </div>
+
+        <!--<div id="modifyProduct" class="modal" style="display: none">-->
+
+            <!--<form class="modal-content animate" id="modifyProduct">-->
+
+                <!--<span onclick="document.getElementById('insertProduct').style.display='none'" class="close" title="Close Modal"-->
+                      <!--style="float: right; position: fixed; margin: 26px; font-size: 40px">&times;</span>-->
+
+                <!--<div class="container">-->
+
+                    <!--<table align="center">-->
+                        <!--<tr>-->
+                            <!--<td class="usrTitle">新增产品</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td style="font-size: 18px; color: #886d6d; padding-bottom: 6px; text-align: center;">-->
+                                <!--团号：<input name="id" id="id" style="border: none;font-size: 18px; color: #886d6d;" th:field="${pInfo.id}"></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+
+                    <!--<table align="center" style="width: 80%;">-->
+                        <!--<tr>-->
+                            <!--<td class="valueTitle" style="width: 140px">名称：</td>-->
+                            <!--<td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+
+                    <!--<table align="center" style="width: 80%;">-->
+                        <!--<tr>-->
+                            <!--<td class="valueTitle" style="width: 140px">价格：</td>-->
+                            <!--<td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>-->
+                            <!--<td class="valueTitle" style="width: 140px">数量：</td>-->
+                            <!--<td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td class="valueTitle" style="width: 140px">开团时间：</td>-->
+                            <!--<td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>-->
+                            <!--<td class="valueTitle" style="width: 140px">截团时间：</td>-->
+                            <!--<td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+
+                    <!--<table align="center" style="width: 80%;">-->
+                        <!--<tr>-->
+                            <!--<td class="valueTitle" style="width: 140px">描述：</td>-->
+                            <!--<td><textarea style="height: 140px; margin: 19px 0 19px 0" class="usrValue"></textarea></td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+
+
+                    <!--<table align="center">-->
+                        <!--<tr>-->
+                            <!--<td class="usrRow">-->
+                                <!--<table align="center">-->
+                                    <!--<td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>-->
+                                    <!--<td style="padding-left: 6px"><button class="btn btn-info" type="submit" style="font-size: 14px" onclick="addProduct()">确认修改</button></td>-->
+                                <!--</table>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                        <!--<tr>-->
+                            <!--<td width="100%">-->
+                                <!--<p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>-->
+                            <!--</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+
+                <!--</div>-->
+            <!--</form>-->
+        <!--</div>-->
+
+        <table style="width: 100%">
+            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >商品管理</a></td>
+            <td style="width: 100%">
+                <div class="btn-group mr2" style="float: right; position: relative; top:35px">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('insertProduct').style.display='block'">新增产品</button>
+                    <button class="btn btn-sm btn-outline-secondary">批量删除</button>
+                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
+                </div>
+            </td>
+        </table>
+
+        <table class="table" style="margin-top: 50px; min-width: 930px;">
+
+            <tr>
+                <th></th>
+                <th>团号</th>
+                <th>名称</th>
+                <th>价格</th>
+                <th>数量</th>
+                <th>开团时间</th>
+                <th>截团时间</th>
+                <th>操作</th>
+            </tr>
+
+            <div th:each="p:${pLst}">
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td><p th:text="${p.id}"></p></td>
+                    <td><p th:text="${p.name}"></p></td>
+                    <td><p th:text="${p.price}"></p></td>
+                    <td><p th:text="${p.count}"></p></td>
+                    <td><p th:text="${p.startTime}"></p></td>
+                    <td><p th:text="${p.endTime}"></p></td>
+                    <td>
+                        <button class="btn btn-info" style="font-size: 12px;">修改</button>
+                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteProduct([[${p.id}]])">删除</button>
+                    </td>
+                </tr>
+            </div>
+
+        </table>
+
+        <!--<div style="height: 2000px">-->
+
+        <!--</div>-->
+
+        <div align="center">
+            <p th:if="!${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
+        </div>
+
+        <div align="center">
+            <p th:if="${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    (function($) {
+        $.expr[":"].Contains = function(a, i, m) {
+            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+        };
+        function filterList(header, list) {
+            //@header 头部元素
+            //@list 无需列表
+            //创建一个搜素表单
+            var form = $("<form>").attr({
+                "class":"filterform",
+                action:"#"
+            }), input = $("<input>").attr({
+                "class":"filterinput",
+                type:"text"
+            });
+            $(form).append(input).appendTo(header);
+            $(input).change(function() {
+                var filter = $(this).val();
+                if (filter) {
+                    $matches = $(list).find("a:Contains(" + filter + ")").parent();
+                    $("li", list).not($matches).slideUp();
+                    $matches.slideDown();
+                } else {
+                    $(list).find("li").slideDown();
+                }
+                return false;
+            }).keyup(function() {
+                $(this).change();
+            });
+        }
+        $(function() {
+            filterList($("#form"), $("#demo-list"));
+        });
+    })(jQuery);
+</script>
+
+<script>
+    // $("input").unbind("input").bind("input",function(){
+    //     var width=textWidth($(this).val());
+    //     $(this).width(width)
+    // });
+    //
+    // //获取文本宽度
+    // function textWidth(text){
+    //     var sensor = $('<pre>'+ text +'</pre>').css({display: 'none'});
+    //     $('body').append(sensor);
+    //     var width = sensor.width();
+    //     sensor.remove();
+    //     return width+6;
+    // }
+    //
+    // document.body.onload=function(){
+    //     $("input").each(function(){
+    //         var width=textWidth($(this).val());
+    //         $(this).width(width)
+    //     });
+    // }
+
+    var modal = document.getElementById("addProduct")
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    function modifyUser() {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/user/modifyUser",
+            data:$('#basicInfo').serialize(),
+            async: false,
+            error: function(request){
+                alert("修改失败，请重试。");
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("修改失败，请重试。");
+                }else{
+                    alert("修改成功");
+                    window.location.reload();
+                    return false;
+                }
+            }
+        });
+    }
+
+    function addProduct() {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/admin/addProduct",
+            data:$('#addProduct').serialize(),
+            async: false,
+            error: function(request){
+                alert("新增失败，请重试。");
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("新增失败，请重试。");
+                }else{
+                    alert("新增成功");
+                    window.location.reload();
+                    return false;
+                }
+            }
+        });
+    }
+
+    function deleteProduct(name) {
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/admin/deleteProduct",
+            data:{
+                productid : name,
+            },
+            async: false,
+            error: function(request){
+                alert("删除失败，请重试。");
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("删除失败，请重试。");
+                }else{
+
+                    alert("删除成功");
+                    window.location.reload();
+                    return false;
+
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
