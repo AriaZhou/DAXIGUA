@@ -55,12 +55,14 @@
 
     <div class="toutou">
         <img src="../picture/img_0016.png">
-        <p>王泽生聪明蛋</p>
+        <p>[[${username}]]</p>
         <div class="toutoubuttons" style="padding-left: 6px">
             <button><a href="#">修改资料</a></button>
         </div>
         <div class="toutoubuttons" style="padding-right: 6px">
-            <button><a href="#">登出账号</a></button>
+            <form action="#" th:action="@{/logout}" method="post">
+                <button><a style="color: white">登出账号</a></button>
+            </form>
         </div>
     </div>
 
@@ -68,7 +70,7 @@
 
         <li class="active"><a href="#"> 首页 </a></li>
         <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
-        <li><a href="#">订单管理 </a></li>
+        <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
         <li><a href="#">用户管理 </a>
             <!--<ul class="submenu">-->
             <!--<li><a href="#">Web Design </a></li>-->
@@ -85,59 +87,7 @@
 
 <div style="padding-left: 200px">
     <div class="container" style="height:100%; padding: 50px">
-        <table style="width: 100%">
-            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >商品管理</a></td>
-            <td style="width: 100%">
-                <div class="btn-group mr2" style="float: right; position: relative; top:35px">
-                    <button class="btn btn-sm btn-outline-secondary">新增产品</button>
-                    <button class="btn btn-sm btn-outline-secondary">批量删除</button>
-                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
-                </div>
-            </td>
-        </table>
-
-        <table class="table" style="margin-top: 50px; min-width: 930px;">
-
-            <tr>
-                <th></th>
-                <th>团号</th>
-                <th>名称</th>
-                <th>价格</th>
-                <th>数量</th>
-                <th>开团时间</th>
-                <th>截团时间</th>
-                <th>操作</th>
-            </tr>
-
-            <div th:each="p:${pLst}">
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td><p th:text="${p.id}"></p></td>
-                    <td><p th:text="${p.name}"></p></td>
-                    <td><p th:text="${p.price}"></p></td>
-                    <td><p th:text="${p.count}"></p></td>
-                    <td><p th:text="${p.startTime}"></p></td>
-                    <td><p th:text="${p.endTime}"></p></td>
-                    <td>
-                        <button class="btn btn-info" style="font-size: 12px;">修改</button>
-                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262" th:onclick="deleteOrder([[${p.id}]])">删除</button>
-                    </td>
-                </tr>
-            </div>
-
-        </table>
-
-        <!--<div style="height: 2000px">-->
-
-        <!--</div>-->
-
-        <div align="center">
-            <p th:if="!${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
-        </div>
-
-        <div align="center">
-            <p th:if="${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
-        </div>
+        <p>helloadmin</p>
 
     </div>
 </div>

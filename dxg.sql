@@ -19,7 +19,6 @@
 -- Table structure for table `porder`
 --
 
-DROP TABLE IF EXISTS `porder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `porder` (
@@ -35,7 +34,7 @@ CREATE TABLE `porder` (
   KEY `product_idx` (`productid`),
   CONSTRAINT `product` FOREIGN KEY (`productid`) REFERENCES `product` (`id`),
   CONSTRAINT `user` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -52,7 +51,6 @@ UNLOCK TABLES;
 -- Table structure for table `product`
 --
 
-DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product` (
@@ -67,7 +65,7 @@ CREATE TABLE `product` (
   `endtime` datetime NOT NULL,
   `enabled` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -84,7 +82,6 @@ UNLOCK TABLES;
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
@@ -97,7 +94,7 @@ CREATE TABLE `user` (
   `role` varchar(45) NOT NULL DEFAULT 'ROLE_USER',
   `enabled` varchar(45) NOT NULL DEFAULT '1',
   PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

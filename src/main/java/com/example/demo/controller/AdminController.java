@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class AdminController {
     UserDAO userDao;
     @Autowired
     ProductDAO productDao;
+    @Autowired
+    OrderDAO orderDao;
 
     @RequestMapping("/admin")
     @ResponseBody
@@ -34,6 +38,7 @@ public class AdminController {
 
         List<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
+        model.addObject("username", principal.getName());
 
         return model;
     }
@@ -46,6 +51,7 @@ public class AdminController {
 
         List<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
+        model.addObject("username", principal.getName());
 
         return model;
     }
@@ -65,6 +71,19 @@ public class AdminController {
         System.out.println(productid);
         return productDao.deleteById(productid)+"";
 
+    }
+
+    @RequestMapping("/admin/revealAllOrder")
+    @ResponseBody
+    public ModelAndView revealAllOrder(Principal principal) {
+
+        ModelAndView model = new ModelAndView("admin/orderLst");
+
+        List<Order> oLst = orderDao.findAll();
+        model.addObject("oLst", oLst);
+        model.addObject("username", principal.getName());
+
+        return model;
     }
 
 
