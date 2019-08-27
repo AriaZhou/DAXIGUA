@@ -36,8 +36,6 @@ public class AdminController {
         }
         ModelAndView model = new ModelAndView("admin/index");
 
-        List<Product> pLst = productDao.findAll();
-        model.addObject("pLst", pLst);
         model.addObject("username", principal.getName());
 
         return model;
@@ -68,9 +66,16 @@ public class AdminController {
     @ResponseBody
     public String deleteProduct(String productid, Principal principal){
 
-        System.out.println(productid);
         return productDao.deleteById(productid)+"";
 
+    }
+
+    @RequestMapping("/admin/modifyProduct")
+    @ResponseBody
+    public String modifyProduct(Product p, Principal principal) {
+
+        p.setUsername(principal.getName());
+        return productDao.modifyProduct(p)+"";
     }
 
     @RequestMapping("/admin/revealAllOrder")
@@ -85,6 +90,15 @@ public class AdminController {
 
         return model;
     }
+
+//    @RequestMapping("/admin/modifyOrder")
+//    @ResponseBody
+//    public String modifyOrder(Product p, Principal principal) {
+//        System.out.println(p.getName());
+//        p.setUsername(principal.getName());
+//        return productDao.modifyProduct(p)+"";
+//
+//    }
 
 
 }

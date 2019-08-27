@@ -97,7 +97,6 @@ public class UserController {
     @ResponseBody
     public String modifyUser(@ModelAttribute User u){
 
-        System.out.println(u.getUsername()+"%^&*(");
         return userDao.modifyUser(u)+"";
 
     }

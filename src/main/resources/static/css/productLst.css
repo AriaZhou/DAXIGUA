@@ -78,6 +78,7 @@ button:hover {
   font-size: 16px;
   box-shadow: none;
   border: #3b424d solid 1px;
+  padding-left: 6px;
 }
 
 

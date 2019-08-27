@@ -11,5 +11,6 @@ public interface ProductDAO {
 	List<Product> findAll();
 	int insert(Product p);
 	int deleteById(String id);
+	int modifyProduct(Product p);
 	
 }
