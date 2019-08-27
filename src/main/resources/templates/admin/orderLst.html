@@ -66,9 +66,9 @@
     <ul id="demo-list">
 
         <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
-        <li th:href="@{/admin/revealAllProduct}"><a href="#">商品管理 </a></li>
-        <li class="active" ><a href="#">订单管理 </a></li>
-        <li><a href="#">用户管理 </a>
+        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
+        <li class="active"><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
+        <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
             <!--<ul class="submenu">-->
             <!--<li><a href="#">Web Design </a></li>-->
             <!--<li><a href="#">Hosting </a></li>-->
@@ -317,33 +317,6 @@
 </script>
 
 <script>
-    // $("input").unbind("input").bind("input",function(){
-    //     var width=textWidth($(this).val());
-    //     $(this).width(width)
-    // });
-    //
-    // //获取文本宽度
-    // function textWidth(text){
-    //     var sensor = $('<pre>'+ text +'</pre>').css({display: 'none'});
-    //     $('body').append(sensor);
-    //     var width = sensor.width();
-    //     sensor.remove();
-    //     return width+6;
-    // }
-    //
-    // document.body.onload=function(){
-    //     $("input").each(function(){
-    //         var width=textWidth($(this).val());
-    //         $(this).width(width)
-    //     });
-    // }
-
-    // var modal = document.getElementById("insertProduct")
-    // window.onclick = function(event) {
-    //     if (event.target == modal) {
-    //         modal.style.display = "none";
-    //     }
-    // }
 
     function modifyP(index){
         var mp = document.getElementById("modifyProduct");
@@ -356,7 +329,7 @@
         var startTime = document.getElementById("startTimed");
         var endTime = document.getElementById("endTimed");
         var description = document.getElementById("descriptiond");
-        name.value = [[${pLst[T(Integer).parseInt(index)].id}]];
+        // name.value = [[${pLst[T(Integer).parseInt(index)].id}]];
         // name.value = [[${pLst.contains(""name"")]];
         // id.value = index;
     }

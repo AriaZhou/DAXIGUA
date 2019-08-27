@@ -73,6 +73,13 @@ public class AdminController {
 
     }
 
+    @RequestMapping("/admin/modifyProduct")
+    @ResponseBody
+    public String modifyProduct(Product p) {
+
+        return productDao.modifyProduct(p)+"";
+    }
+
     @RequestMapping("/admin/revealAllOrder")
     @ResponseBody
     public ModelAndView revealAllOrder(Principal principal) {
@@ -84,6 +91,13 @@ public class AdminController {
         model.addObject("username", principal.getName());
 
         return model;
+    }
+
+    @RequestMapping("/admin/modifyOrder")
+    @ResponseBody
+    public String modifyOrder(Product p) {
+
+        return productDao.modifyProduct(p)+"";
     }
 
 
