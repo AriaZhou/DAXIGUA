@@ -5,9 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>商品管理</title>
 
+<!--    我自己的-->
     <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
 
+<!--    jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<!--    侧边栏-->
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
         body{background:#f0f0f0;margin: 0px;}
@@ -29,11 +34,8 @@
             width:100%;
         }
     </style>
-
     <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -45,6 +47,13 @@
             })
         })
     </script>
+
+<!--    bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+<!--    Time picker-->
+    <script src="../../static/laydate/laydate.js" type="text/javascript"></script>
+
 </head>
 <body>
 
@@ -119,9 +128,17 @@
                         </tr>
                         <tr>
                             <td class="valueTitle" style="width: 111px">开团时间：</td>
-                            <td><input name="startTime" id="startTime" class="usrValue"></td>
+                            <td>
+                                <div class="layui-input-inline">
+                                    <input type="text"  readonly name="startTime" id="startTime" class="layui-input usrValue">
+                                </div>
+                            </td>
                             <td class="valueTitle" style="width: 111px">截团时间：</td>
-                            <td><input name="endTime" id="endTime" class="usrValue"></td>
+                            <td>
+                                <div class="layui-input-inline">
+                                    <input type="text" readonly name="endTime" id="endTime" class="usrValue layui-input">
+                                </div>
+                            </td>
                         </tr>
                     </table>
 
@@ -159,7 +176,7 @@
             <td style="width: 100%">
                 <div class="btn-group mr2" style="float: right; position: relative; top:35px">
                     <button class="btn btn-sm btn-outline-secondary" onclick="insertP()">新增产品</button>
-                    <button class="btn btn-sm btn-outline-secondary">批量删除</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
                     <button class="btn btn-sm btn-outline-secondary">导出表单</button>
                 </div>
             </td>
@@ -180,7 +197,7 @@
 
             <div th:each="p:${pLst}">
                 <tr>
-                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox" name="pItem" th:id="${p.id}"></td>
                     <td><p th:text="${p.id}"></p></td>
                     <td><p th:text="${p.name}"></p></td>
                     <td><p th:text="${p.price}"></p></td>
@@ -249,6 +266,18 @@
             filterList($("#form"), $("#demo-list"));
         });
     })(jQuery);
+
+    laydate.render({
+        elem: '#endTime'
+        ,theme: '#918D8E'
+        ,type: 'datetime'
+    });
+
+    laydate.render({
+        elem: '#startTime'
+        ,theme: '#918D8E'
+        ,type: 'datetime'
+    });
 </script>
 
 <script>
@@ -335,7 +364,7 @@
             type: "POST",
             url: "/admin/deleteProduct",
             data:{
-                productid : name,
+                productid : name
             },
             async: false,
             error: function(request){
@@ -354,6 +383,38 @@
                 }
             }
         });
+    }
+
+    function deleteGroup(){
+        $("input[name = 'pItem']:checked").each(function () {
+
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/admin/deleteProduct",
+                data:{
+                    productid : $(this).attr('id')
+                },
+                async: false,
+                error: function(request){
+                    alert("删除失败，请重试。");
+                    return false;
+                    // alert("Connection error:"+request.error);
+                },
+                success: function(data){
+                    if(data==="0"){
+                        alert("删除失败，请重试。");
+                        return false;
+                    }else{
+                        return false;
+                    }
+                }
+            });
+
+            alert("删除成功");
+            window.location.reload();
+
+        })
     }
 </script>
 

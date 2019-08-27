@@ -52,7 +52,7 @@ public class ProductDAODB implements ProductDAO{
 		List<Product> p;
 		try {
 			p = jdbcTemplate.queryForObject("select id, username, uploadtime, pname, price, pcount, description,"
-					+ "starttime, endtime, enabled from product ", new ProductMapper());
+					+ "starttime, endtime, enabled from product where enabled=?", new ProductMapper(), 1);
 		}catch(Exception e) {
 			p = null;
 			System.out.println("----error----");
@@ -93,7 +93,8 @@ public class ProductDAODB implements ProductDAO{
 
 	public int deleteById(String id){
 		try{
-			jdbcTemplate.update("delete from product where id = ?", id);
+			jdbcTemplate.update("update product set enabled=? " +
+					"where id=?", 0, id);
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
@@ -106,9 +107,8 @@ public class ProductDAODB implements ProductDAO{
 	public int modifyProduct(Product p){
 
 		try{
-			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, starttime=?, endtime=?, enabled=?" +
-							"values (?,?,?,?,?,?,?,?,?,?)", p.getId(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(),
-					p.getStartTime(), p.getEndTime(), 1);
+			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, starttime=?, endtime=?, enabled=? " +
+							"where username=?", p.getId(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getUsername());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
