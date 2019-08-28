@@ -108,7 +108,7 @@ public class ProductDAODB implements ProductDAO{
 
 		try{
 			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, starttime=?, endtime=?, enabled=? " +
-							"where username=?", p.getId(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getUsername());
+							"where id=?", p.getId(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getId());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");

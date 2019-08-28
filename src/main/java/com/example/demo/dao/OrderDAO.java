@@ -12,5 +12,6 @@ public interface OrderDAO {
 	int insert(Order o);
 	List<Order> findByUsr(String userName);
 	int deleteById(String id);
+	int modifyOrder(Order o);
 	
 }

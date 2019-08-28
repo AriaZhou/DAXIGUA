@@ -23,7 +23,7 @@ public class OrderDAODB implements OrderDAO{
 	JdbcTemplate jdbcTemplate;
 	
 	private static final class OrderMapper implements RowMapper<List<Order>>{
-		
+
 		public List<Order> mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 			List<Order> orderLst = new ArrayList<>();
@@ -107,6 +107,20 @@ public class OrderDAODB implements OrderDAO{
 	public int deleteById(String id){
 		try{
 			jdbcTemplate.update("delete from porder where id = ?", id);
+			return 1;
+		}catch(Exception e){
+			System.out.println("----error----");
+			System.out.println(e.getMessage());
+			System.out.println("----error----");
+			return 0;
+		}
+	}
+
+	public int modifyOrder(Order o){
+
+		try{
+			jdbcTemplate.update("update porder set id=?, username=?, productid=?, ocount=?, state=?, price=? " +
+					"where id=?", o.getId(), o.getUsername(), o.getProductId(), o.getCount(), o.getState(), o.getPrice(), o.getId());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");

@@ -52,7 +52,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
 <!--    Time picker-->
-    <script src="../../static/laydate/laydate.js" type="text/javascript"></script>
+    <script src="../../static/laydate/laydate.js" th:src="@{../laydate/laydate.js}" type="text/javascript"></script>
 
 </head>
 <body>
@@ -269,13 +269,13 @@
 
     laydate.render({
         elem: '#endTime'
-        ,theme: '#918D8E'
+        ,theme: '#cc9897'
         ,type: 'datetime'
     });
 
     laydate.render({
         elem: '#startTime'
-        ,theme: '#918D8E'
+        ,theme: '#cc9897'
         ,type: 'datetime'
     });
 </script>
@@ -289,6 +289,13 @@
         document.getElementById("insertConfirm").hidden = false;
         document.getElementById("modifyConfirm").hidden = true;
         document.getElementById("id").disabled=false;
+        document.getElementById("id").value = null;
+        document.getElementById("name").value = null;
+        document.getElementById("price").value = null;
+        document.getElementById("count").value = null;
+        document.getElementById("startTime").value = null;
+        document.getElementById("endTime").value = null;
+        document.getElementById("description").value = null;
 
     }
 
@@ -320,11 +327,13 @@
             async: false,
             error: function(request){
                 alert("修改失败，请重试。");
+                return false;
                 // alert("Connection error:"+request.error);
             },
             success: function(data){
                 if(data==="0"){
                     alert("修改失败，请重试。");
+                    return false;
                 }else{
                     document.getElementById("id").disabled=true;
                     alert("修改成功");
@@ -344,11 +353,13 @@
             async: false,
             error: function(request){
                 alert("新增失败，请重试。");
+                return false;
                 // alert("Connection error:"+request.error);
             },
             success: function(data){
                 if(data==="0"){
                     alert("新增失败，请重试。");
+                    return false;
                 }else{
                     alert("新增成功");
                     window.location.reload();
@@ -361,7 +372,7 @@
     function deleteProduct(name) {
         $.ajax({
             cache: true,
-            type: "POST",
+             type: "POST",
             url: "/admin/deleteProduct",
             data:{
                 productid : name
@@ -369,11 +380,13 @@
             async: false,
             error: function(request){
                 alert("删除失败，请重试。");
+                return false;
                 // alert("Connection error:"+request.error);
             },
             success: function(data){
                 if(data==="0"){
                     alert("删除失败，请重试。");
+                    return false;
                 }else{
 
                     alert("删除成功");

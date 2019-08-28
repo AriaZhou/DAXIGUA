@@ -86,19 +86,36 @@ public class AdminController {
 
         List<Order> oLst = orderDao.findAll();
         model.addObject("oLst", oLst);
+        List<Product> pLst = productDao.findAll();
+        model.addObject("pLst", pLst);
         model.addObject("username", principal.getName());
 
         return model;
     }
 
-//    @RequestMapping("/admin/modifyOrder")
-//    @ResponseBody
-//    public String modifyOrder(Product p, Principal principal) {
-//        System.out.println(p.getName());
-//        p.setUsername(principal.getName());
-//        return productDao.modifyProduct(p)+"";
-//
-//    }
+    @RequestMapping("/admin/addOrder")
+    @ResponseBody
+    public String addOrder(Order o, Principal principal) {
+
+        o.setUsername(principal.getName());
+        return orderDao.insert(o)+"";
+    }
+
+    @RequestMapping("/admin/deleteOrder")
+    @ResponseBody
+    public String deleteOrder(String orderid, Principal principal){
+
+        return orderDao.deleteById(orderid)+"";
+
+    }
+
+    @RequestMapping("/admin/modifyOrder")
+    @ResponseBody
+    public String modifyOrder(Order o, Principal principal) {
+
+        o.setUsername(principal.getName());
+        return orderDao.modifyOrder(o)+"";
+    }
 
 
 }
