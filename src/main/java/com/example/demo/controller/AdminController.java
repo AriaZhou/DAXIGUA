@@ -3,9 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,7 +83,7 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/orderLst");
 
-        List<Order> oLst = orderDao.findAll();
+        Iterable<Orders> oLst = orderDao.findAll();
         model.addObject("oLst", oLst);
         List<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
@@ -95,26 +94,27 @@ public class AdminController {
 
     @RequestMapping("/admin/addOrder")
     @ResponseBody
-    public String addOrder(Order o, Principal principal) {
+    public String addOrder(Orders o, Principal principal) {
 
-        o.setUsername(principal.getName());
-        return orderDao.insert(o)+"";
+        o.setUser(userDao.findById(principal.getName()).get());
+        return orderDao.save(o)+"";
     }
 
     @RequestMapping("/admin/deleteOrder")
     @ResponseBody
     public String deleteOrder(String orderid, Principal principal){
 
-        return orderDao.deleteById(orderid)+"";
+        orderDao.deleteById(orderid);
+        return "1";
 
     }
 
     @RequestMapping("/admin/modifyOrder")
     @ResponseBody
-    public String modifyOrder(Order o, Principal principal) {
+    public String modifyOrder(Orders o, Principal principal) {
 
-        o.setUsername(principal.getName());
-        return orderDao.modifyOrder(o)+"";
+        o.setUser(userDao.findById(principal.getName()).get());
+        return orderDao.save(o)+"";
     }
 
 

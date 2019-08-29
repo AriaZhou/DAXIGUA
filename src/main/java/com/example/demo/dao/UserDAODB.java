@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.entity.User;
 
 @Repository
-public class UserDAODB implements UserDAO{
+public class UserDAODB {
 
 	//@Autowired
 	//private DataSource dataSource;

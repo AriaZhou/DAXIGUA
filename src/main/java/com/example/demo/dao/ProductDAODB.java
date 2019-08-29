@@ -30,7 +30,7 @@ public class ProductDAODB implements ProductDAO{
 				Product product = new Product();
 				product.setId(rs.getString("id"));
 				product.setUsername(rs.getString("username"));
-				product.setUoloadTime(rs.getString("uploadtime"));
+				product.setUploadTime(rs.getString("uploadtime"));
 				product.setName(rs.getString("pname"));
 				product.setPrice(rs.getString("price"));
 				product.setCount(rs.getInt("pcount"));

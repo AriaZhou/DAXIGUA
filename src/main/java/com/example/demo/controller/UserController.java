@@ -3,16 +3,14 @@ package com.example.demo.controller;
 import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +30,7 @@ public class UserController {
 
         ModelAndView model = new ModelAndView("user/index");
         try{
-            User u = userDao.findById(principal.getName());
+            User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
             List<Product> pLst = productDao.findAll();
@@ -51,13 +49,13 @@ public class UserController {
     @ResponseBody
     public String addOrder(String pId, int count, Principal principal){
 
-        Order o = new Order();
-        o.setUsername(principal.getName());
+        Orders o = new Orders();
+        o.setUser(userDao.findById(principal.getName()).get());
         o.setCount(count);
-        o.setProductId(pId);
+        o.setProduct(productDao.findById(pId));
         o.setPrice(Integer.parseInt(productDao.findById(pId).getPrice())*count+"");
 
-        return orderDao.insert(o)+"";
+        return orderDao.save(o)+"";
     }
 
     @RequestMapping("/user/modifyData")
@@ -65,7 +63,7 @@ public class UserController {
     public ModelAndView modifyData(Principal principal){
 
         ModelAndView model = new ModelAndView("user/myPage");
-        User u = userDao.findById(principal.getName());
+        User u = userDao.findById(principal.getName()).get();
         model.addObject("userInfo",u);
 
         return model;
@@ -76,10 +74,10 @@ public class UserController {
     public ModelAndView myOrder(Principal principal){
 
         ModelAndView model = new ModelAndView("user/myOrder");
-        User u = userDao.findById(principal.getName());
+        User u = userDao.findById(principal.getName()).get();
         model.addObject("userInfo",u);
 
-        List<Order> orderLst = orderDao.findByUsr(principal.getName());
+        Iterable<Orders> orderLst = userDao.findById(principal.getName()).get().getOrders();
         model.addObject("orderLst",orderLst);
 
         return model;
@@ -89,7 +87,8 @@ public class UserController {
     @ResponseBody
     public String deleteOrder(String orderid, Principal principal){
 
-        return orderDao.deleteById(orderid)+"";
+        orderDao.deleteById(orderid);
+        return "1";
 
     }
 
@@ -97,7 +96,8 @@ public class UserController {
     @ResponseBody
     public String modifyUser(@ModelAttribute User u){
 
-        return userDao.modifyUser(u)+"";
+        userDao.save(u);
+        return "1";
 
     }
 }

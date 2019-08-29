@@ -1,20 +1,26 @@
 package com.example.demo.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
-public class User {
-	
+public class User implements Serializable {
+
+	private static final long serialVersionUID = -2957645392914180170L;
 	@Id
 	private String username;
-	private String name;
+	private String uname;
 	private String password;
 	private String address;
 	private String phone;
 	private String email;
 	private String role;
+
+	@OneToMany(mappedBy = "user")
+	private List<Orders> orders;
 	
 	public String getUsername() {
 		return username;
@@ -23,10 +29,10 @@ public class User {
 		this.username = username;
 	}
 	public String getName() {
-		return name;
+		return uname;
 	}
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String uname) {
+		this.uname = uname;
 	}
 	public String getPassword() {
 		return password;
@@ -58,6 +64,7 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-
+	public Iterable<Orders> getOrders() {
+		return orders;
+	}
 }

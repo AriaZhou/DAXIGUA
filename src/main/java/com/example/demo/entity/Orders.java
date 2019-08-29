@@ -1,18 +1,27 @@
 package com.example.demo.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class Order {
+@Table(name = "porder")
+public class Orders implements Serializable {
 
+    private static final long serialVersionUID = 3316076651716569539L;
     @Id
     private String id;
-    private String username;
-    private String productId;
-    private int count;
+    private int ocount;
     private int state;
     private String time;
     private String price;
+
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "productid")
+    private Product product;
 
     public String getId() {
         return id;
@@ -20,23 +29,11 @@ public class Order {
     public void setId(String id) {
         this.id = id;
     }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getProductId() {
-        return productId;
-    }
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
     public int getCount() {
-        return count;
+        return ocount;
     }
-    public void setCount(int count) {
-        this.count = count;
+    public void setCount(int ocount) {
+        this.ocount = ocount;
     }
     public int getState() {
         return state;
@@ -55,5 +52,17 @@ public class Order {
     }
     public void setPrice(String price) {
         this.price = price;
+    }
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
+    public Product getProduct() {
+        return product;
+    }
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }
