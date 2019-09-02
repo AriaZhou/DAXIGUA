@@ -29,10 +29,10 @@ public class Orders implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-    public int getCount() {
+    public int getOcount() {
         return ocount;
     }
-    public void setCount(int ocount) {
+    public void setOcount(int ocount) {
         this.ocount = ocount;
     }
     public int getState() {

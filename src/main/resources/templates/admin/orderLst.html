@@ -95,7 +95,7 @@
 
         <div id="insertOrder" class="modal" style="display: none">
 
-            <form class="modal-content animate" id="orderInfo">
+            <form class="modal-content animate" id="orderInfo" onsubmit="return false">
 
                 <span onclick="document.getElementById('insertOrder').style.display='none'" class="close" title="Close Modal"
                       style="margin: 26px; font-size: 40px">&times;</span>
@@ -110,17 +110,13 @@
                         </tr>
                         <tr>
                             <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
-                                <!--<div class="dropdown">-->
-                                    <!--团号：<input name="product" id="product" class="dropdown-toggle" data-toggle="dropdown" readonly-->
-                                               <!--style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">-->
-                                    <!--<div class="dropdown-menu">-->
-                                        <!--<a th:each="p:${pLst}" class="dropdown-item" th:onclick="addNameValue([[${p.id}]],[[${p.name}]],[[${p.price}]])">[[${p.id}]]</a>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                                团号：<select name="product" th:field="${p}" style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px"
-                                        th:onchange="addNameValue([[${p.id}]],[[${p.name}]],[[${p.price}]])">
-                                    <option th:each="p:${pLst}" th:value="${p.id}" th:text="${p.id}"></option>
-                                </select>
+                                <div class="dropdown">
+                                    团号：<input name="productId" id="product" class="dropdown-toggle" data-toggle="dropdown" readonly
+                                               style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
+                                    <div class="dropdown-menu">
+                                        <a th:each="p:${pLst}" class="dropdown-item" th:onclick="addNameValue([[${p.id}]],[[${p.pname}]],[[${p.price}]])">[[${p.id}]]</a>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </table>
@@ -146,8 +142,8 @@
                                     <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" onclick="addStateValue(0)">0 - 下单</a>
-                                        <a class="dropdown-item" onclick="addStateValue(1)">1 - 付款</a>
-                                        <a class="dropdown-item" onclick="addStateValue(2)">2 - 出货</a>
+                                        <a class="dropdown-item" onclick="addStateValue(1)">1 - 以付款</a>
+                                        <a class="dropdown-item" onclick="addStateValue(2)">2 - 出货中</a>
                                         <a class="dropdown-item" onclick="addStateValue(3)">3 - 申请退款</a>
                                         <a class="dropdown-item" onclick="addStateValue(4)">4 - 已退款</a>
                                     </div>
@@ -170,8 +166,8 @@
                             <td class="usrRow">
                                 <table align="center">
                                     <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="addOrder()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="modifyOrder()">确认修改</button></td>
+                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="return addOrder()">确认新增</button></td>
+                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="return modifyOrder()">确认修改</button></td>
                                 </table>
                             </td>
                         </tr>
@@ -212,15 +208,15 @@
 
             <div th:each="o:${oLst}">
                 <tr>
-                    <td><input type="checkbox"></td>
+                    <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
                     <td><p th:text="${o.product.id}"></p></td>
-                    <td><p th:text="${o.product.name}"></p></td>
-                    <td><p th:text="${o.count}"></p></td>
+                    <td><p th:text="${o.product.pname}"></p></td>
+                    <td><p th:text="${o.ocount}"></p></td>
                     <td><p th:text="'￥'+${o.price}"></p></td>
                     <td><p th:text="${o.state}"></p></td>
                     <td><p th:text="${o.user.username}"></p></td>
                     <td>
-                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.id}]], [[${o.product.name}]], [[${o.count}]], [[${o.price}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
+                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
                         <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
                     </td>
                 </tr>
@@ -384,7 +380,6 @@
                     alert("删除失败，请重试。");
                     return false;
                 }else{
-
                     alert("删除成功");
                     window.location.reload();
                     return false;
@@ -395,7 +390,8 @@
     }
 
     function deleteGroup(){
-        $("input[name = 'pItem']:checked").each(function () {
+        var flag = 0;
+        $("input[name = 'oItem']:checked").each(function () {
 
             $.ajax({
                 cache: true,
@@ -407,23 +403,25 @@
                 async: false,
                 error: function(request){
                     alert("删除失败，请重试。");
-                    return false;
+                    flag = 1;
                     // alert("Connection error:"+request.error);
                 },
                 success: function(data){
                     if(data==="0"){
                         alert("删除失败，请重试。");
-                        return false;
-                    }else{
-                        return false;
+                        flag = 1;
                     }
                 }
             });
+            if(flag === 1)
+                return false;
 
+        });
+
+        if(flag === 0){
             alert("删除成功");
             window.location.reload();
-
-        })
+        }
     }
 
     function addNameValue(id, name, priceValue) {
@@ -431,6 +429,9 @@
         document.getElementById('name').value=name;
         document.getElementById('ocount').readOnly = false;
         price = parseInt(priceValue);
+        if(document.getElementById('ocount').value !== null){
+            document.getElementById("price").value = document.getElementById('ocount').value*price;
+        }
     }
 
     function addPriceValue(count) {

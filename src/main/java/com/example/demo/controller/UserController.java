@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -33,7 +36,7 @@ public class UserController {
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
-            List<Product> pLst = productDao.findAll();
+            List<Product> pLst = productDao.findByTime();
             model.addObject("productLst",pLst);
 
         }catch(Exception e){
@@ -49,13 +52,25 @@ public class UserController {
     @ResponseBody
     public String addOrder(String pId, int count, Principal principal){
 
-        Orders o = new Orders();
-        o.setUser(userDao.findById(principal.getName()).get());
-        o.setCount(count);
-        o.setProduct(productDao.findById(pId));
-        o.setPrice(Integer.parseInt(productDao.findById(pId).getPrice())*count+"");
-
-        return orderDao.save(o)+"";
+        try{
+            Orders o = new Orders();
+            Product p = productDao.findById(pId);
+            o.setUser(userDao.findById(principal.getName()).get());
+            o.setOcount(count);
+            o.setProduct(p);
+            Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            o.setTime(format.format(now));
+            o.setId(principal.getName()+now.getTime());
+            o.setState(0);
+            o.setPrice(Integer.parseInt(productDao.findById(pId).getPrice())*count+"");
+            orderDao.save(o);
+            p.setPcount(p.getPcount()-count);
+            productDao.modifyProduct(p);
+            return "1";
+        }catch (Exception e){
+            return "0";
+        }
     }
 
     @RequestMapping("/user/modifyData")
@@ -79,6 +94,15 @@ public class UserController {
 
         Iterable<Orders> orderLst = userDao.findById(principal.getName()).get().getOrders();
         model.addObject("orderLst",orderLst);
+
+        List<String> s = new ArrayList<String>();
+        s.add("下单");
+        s.add("已付款");
+        s.add("出货中");
+        s.add("申请退款");
+        s.add("已退款");
+        Iterable<String> stateLst = s;
+        model.addObject("stateLst",stateLst);
 
         return model;
     }

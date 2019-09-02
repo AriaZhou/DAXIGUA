@@ -34,7 +34,7 @@ public class OrderDAODB{
 				order.setId(rs.getString("id"));
 //				order.setUser(userDAO.findById(rs.getString("username")));
 				order.setProduct(productDAO.findById(rs.getString("productId")));
-				order.setCount(rs.getInt("ocount"));
+				order.setOcount(rs.getInt("ocount"));
 				order.setState(rs.getInt("state"));
 				order.setTime(rs.getString("time"));
 				order.setPrice(rs.getString("price"));
@@ -96,7 +96,7 @@ public class OrderDAODB{
 			Date now = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 			jdbcTemplate.update("insert into porder (id, username, productid, ocount, state, time, price)" +
-					"values (?,?,?,?,?,?,?)", o.getUser().getUsername()+now.getTime(), o.getUser().getUsername(), o.getProduct().getId(), o.getCount(), 0, format.format(now), o.getPrice());
+					"values (?,?,?,?,?,?,?)", o.getUser().getUsername()+now.getTime(), o.getUser().getUsername(), o.getProduct().getId(), o.getOcount(), 0, format.format(now), o.getPrice());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
@@ -122,7 +122,7 @@ public class OrderDAODB{
 
 		try{
 			jdbcTemplate.update("update porder set id=?, username=?, productid=?, ocount=?, state=?, price=? " +
-					"where id=?", o.getId(), o.getUser().getUsername(), o.getProduct().getId(), o.getCount(), o.getState(), o.getPrice(), o.getId());
+					"where id=?", o.getId(), o.getUser().getUsername(), o.getProduct().getId(), o.getOcount(), o.getState(), o.getPrice(), o.getId());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");

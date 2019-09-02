@@ -44,10 +44,10 @@ public class Product implements Serializable {
     public void setUploadTime(String uploadtime) {
         this.uploadtime = uploadtime;
     }
-    public String getName() {
+    public String getPname() {
         return pname;
     }
-    public void setName(String pname) {
+    public void setPname(String pname) {
         this.pname = pname;
     }
     public String getPrice() {
@@ -62,10 +62,10 @@ public class Product implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-    public int getCount() {
+    public int getPcount() {
         return pcount;
     }
-    public void setCount(int pcount) {
+    public void setPcount(int pcount) {
         this.pcount = pcount;
     }
     public String getStartTime() {

@@ -12,5 +12,6 @@ public interface ProductDAO {
 	int insert(Product p);
 	int deleteById(String id);
 	int modifyProduct(Product p);
+	List<Product> findByTime();
 	
 }

@@ -1,10 +1,12 @@
 package com.example.demo.dao;
 
 import com.example.demo.entity.Orders;
+import com.example.demo.entity.Product;
 import org.springframework.data.repository.CrudRepository;
 
 public interface OrderDAO extends CrudRepository<Orders, String> {
 
+    Iterable<Orders> findByProductId(Product product);
 //	Orders findById(String id);
 //	List<Orders> findAll();
 //	int insert(Orders o);
