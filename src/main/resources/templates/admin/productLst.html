@@ -95,7 +95,7 @@
 
         <div id="insertProduct" class="modal" style="display: none">
 
-            <form class="modal-content animate" id="productInfo">
+            <form class="modal-content animate" id="productInfo" onsubmit="return false">
 
                 <span onclick="document.getElementById('insertProduct').style.display='none'" class="close" title="Close Modal"
                         style="margin: 26px; font-size: 40px">&times;</span>
@@ -115,7 +115,7 @@
                     <table align="center" style="width: 80%;">
                         <tr>
                             <td class="valueTitle" style="width: 111px">名称：</td>
-                            <td><input name="name" id="name" class="usrValue"></td>
+                            <td><input name="pname" id="name" class="usrValue"></td>
                         </tr>
                     </table>
 
@@ -123,20 +123,20 @@
                         <tr>
                             <td class="valueTitle" style="width: 111px">价格：</td>
                             <td><input name="price" id="price" class="usrValue"></td>
-                            <td class="valueTitle" style="width: 111px">数量：</td>
-                            <td><input name="count" id="count" class="usrValue"></td>
+                            <td class="valueTitle" style="width: 111px">库存：</td>
+                            <td><input name="pcount" id="count" class="usrValue"></td>
                         </tr>
                         <tr>
                             <td class="valueTitle" style="width: 111px">开团时间：</td>
                             <td>
                                 <div class="layui-input-inline">
-                                    <input type="text"  readonly name="startTime" id="startTime" class="layui-input usrValue">
+                                    <input type="text" readonly name="starttime" id="starttime" class="layui-input usrValue">
                                 </div>
                             </td>
                             <td class="valueTitle" style="width: 111px">截团时间：</td>
                             <td>
                                 <div class="layui-input-inline">
-                                    <input type="text" readonly name="endTime" id="endTime" class="usrValue layui-input">
+                                    <input type="text" readonly name="endtime" id="endtime" class="usrValue layui-input">
                                 </div>
                             </td>
                         </tr>
@@ -155,8 +155,8 @@
                             <td class="usrRow">
                                 <table align="center">
                                     <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="addProduct()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="modifyProduct()">确认修改</button></td>
+                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addProduct()">确认新增</button></td>
+                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyProduct()">确认修改</button></td>
                                 </table>
                             </td>
                         </tr>
@@ -189,24 +189,23 @@
                 <th>团号</th>
                 <th>名称</th>
                 <th>价格</th>
-                <th>数量</th>
+                <th>库存</th>
                 <th>开团时间</th>
                 <th>截团时间</th>
                 <th>操作</th>
             </tr>
-
             <div th:each="p:${pLst}">
                 <tr>
                     <td><input type="checkbox" name="pItem" th:id="${p.id}"></td>
                     <td><p th:text="${p.id}"></p></td>
-                    <td><p th:text="${p.name}"></p></td>
+                    <td><p th:text="${p.pname}"></p></td>
                     <td><p th:text="${p.price}"></p></td>
-                    <td><p th:text="${p.count}"></p></td>
+                    <td><p th:text="${p.pcount}"></p></td>
                     <td><p th:text="${p.startTime}"></p></td>
                     <td><p th:text="${p.endTime}"></p></td>
                     <td>
                         <button class="btn btn-info" style="font-size: 12px;"
-                                th:onclick="modifyP([[${p.id}]],[[${p.name}]],[[${p.price}]],[[${p.count}]],[[${p.startTime}]],[[${p.endTime}]],[[${p.description}]])">修改
+                                th:onclick="modifyP([[${p.id}]],[[${p.pname}]],[[${p.price}]],[[${p.pcount}]],[[${p.startTime}]],[[${p.endTime}]],[[${p.description}]])">修改
                         </button>
                         <!--<button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyP([[${pStat.index}]])">修改</button>-->
                         <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteProduct([[${p.id}]])">删除</button>
@@ -268,13 +267,13 @@
     })(jQuery);
 
     laydate.render({
-        elem: '#endTime'
+        elem: '#endtime'
         ,theme: '#cc9897'
         ,type: 'datetime'
     });
 
     laydate.render({
-        elem: '#startTime'
+        elem: '#starttime'
         ,theme: '#cc9897'
         ,type: 'datetime'
     });
@@ -293,8 +292,8 @@
         document.getElementById("name").value = null;
         document.getElementById("price").value = null;
         document.getElementById("count").value = null;
-        document.getElementById("startTime").value = null;
-        document.getElementById("endTime").value = null;
+        document.getElementById("starttime").value = null;
+        document.getElementById("endtime").value = null;
         document.getElementById("description").value = null;
 
     }
@@ -306,11 +305,12 @@
         document.getElementById("insertConfirm").hidden = true;
         document.getElementById("modifyConfirm").hidden = false;
         document.getElementById("id").value = id;
+        document.getElementById("id").disabled = true;
         document.getElementById("name").value = name;
         document.getElementById("price").value = price;
         document.getElementById("count").value = count;
-        document.getElementById("startTime").value = startTime;
-        document.getElementById("endTime").value = endTime;
+        document.getElementById("starttime").value = startTime;
+        document.getElementById("endtime").value = endTime;
         document.getElementById("description").value = description;
 
     }
@@ -372,7 +372,7 @@
     function deleteProduct(name) {
         $.ajax({
             cache: true,
-             type: "POST",
+            type: "POST",
             url: "/admin/deleteProduct",
             data:{
                 productid : name
@@ -399,6 +399,7 @@
     }
 
     function deleteGroup(){
+        var flag = 0;
         $("input[name = 'pItem']:checked").each(function () {
 
             $.ajax({
@@ -411,25 +412,27 @@
                 async: false,
                 error: function(request){
                     alert("删除失败，请重试。");
-                    return false;
+                    flag = 1;
                     // alert("Connection error:"+request.error);
                 },
                 success: function(data){
                     if(data==="0"){
                         alert("删除失败，请重试。");
-                        return false;
-                    }else{
-                        return false;
+                        flag = 1;
                     }
                 }
             });
+            if(flag === 1)
+                return false;
+        });
 
+        if(flag === 0){
             alert("删除成功");
             window.location.reload();
-
-        })
+        }
     }
 </script>
 
 </body>
+
 </html>

@@ -1,17 +1,18 @@
 package com.example.demo.dao;
 
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
+import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+public interface OrderDAO extends CrudRepository<Orders, String> {
 
-public interface OrderDAO {
-
-	Order findById(String id);
-	List<Order> findAll();
-	int insert(Order o);
-	List<Order> findByUsr(String userName);
-	int deleteById(String id);
-	int modifyOrder(Order o);
+    Iterable<Orders> findByProductId(Product product);
+//	Orders findById(String id);
+//	List<Orders> findAll();
+//	int insert(Orders o);
+//	@Query("select o from Orders o where o.user = userName")
+//	public Iterable<Orders> findByUsr(String userName);
+//	int deleteById(String id);
+//	int modifyOrder(Orders o);
 	
 }

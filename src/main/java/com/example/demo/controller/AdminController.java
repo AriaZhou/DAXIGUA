@@ -3,16 +3,18 @@ package com.example.demo.controller;
 import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
-import com.example.demo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -56,26 +58,51 @@ public class AdminController {
 
     @RequestMapping("/admin/addProduct")
     @ResponseBody
-    public String addProduct(Product p, Principal principal) {
+    public String addProduct(@ModelAttribute Product p, Principal principal) {
 
-        p.setUsername(principal.getName());
-        return productDao.insert(p)+"";
+        try{
+            p.setUsername(principal.getName());
+            productDao.insert(p);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
     }
 
     @RequestMapping("/admin/deleteProduct")
     @ResponseBody
     public String deleteProduct(String productid, Principal principal){
 
-        return productDao.deleteById(productid)+"";
+        try{
+            productDao.deleteById(productid);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
 
     }
 
     @RequestMapping("/admin/modifyProduct")
     @ResponseBody
-    public String modifyProduct(Product p, Principal principal) {
+    public String modifyProduct(@ModelAttribute Product p, Principal principal) {
 
-        p.setUsername(principal.getName());
-        return productDao.modifyProduct(p)+"";
+        try{
+            p.setUsername(principal.getName());
+            productDao.modifyProduct(p);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
     }
 
     @RequestMapping("/admin/revealAllOrder")
@@ -84,7 +111,7 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/orderLst");
 
-        List<Order> oLst = orderDao.findAll();
+        Iterable<Orders> oLst = orderDao.findAll();
         model.addObject("oLst", oLst);
         List<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
@@ -95,26 +122,55 @@ public class AdminController {
 
     @RequestMapping("/admin/addOrder")
     @ResponseBody
-    public String addOrder(Order o, Principal principal) {
+    public String addOrder(@ModelAttribute Orders o, String productId, Principal principal) {
 
-        o.setUsername(principal.getName());
-        return orderDao.insert(o)+"";
+        try{
+//            o.setUser(userDao.findById(principal.getName()).get());
+            o.setProduct(productDao.findById(productId));
+            Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            o.setTime(format.format(now));
+            o.setId(o.getUser().getUsername()+now.getTime());
+            orderDao.save(o);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
     }
 
     @RequestMapping("/admin/deleteOrder")
     @ResponseBody
     public String deleteOrder(String orderid, Principal principal){
 
-        return orderDao.deleteById(orderid)+"";
+        try{
+            orderDao.deleteById(orderid);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return  "0";
+        }
 
     }
 
     @RequestMapping("/admin/modifyOrder")
     @ResponseBody
-    public String modifyOrder(Order o, Principal principal) {
+    public String modifyOrder(@ModelAttribute Orders o, Principal principal) {
 
-        o.setUsername(principal.getName());
-        return orderDao.modifyOrder(o)+"";
+        try{
+            o.setUser(userDao.findById(principal.getName()).get());
+            orderDao.save(o);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return  "0";
+        }
     }
 
 

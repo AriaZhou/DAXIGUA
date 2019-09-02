@@ -31,7 +31,7 @@ public class MainController {
 
 		ModelAndView model;
 		try{
-			if(userDao.checkRole(principal.getName())==0)
+			if(userDao.findById(principal.getName()).get().getRole().equals("0"))
 				model = new ModelAndView("redirect:/index");
 			else
 				model = new ModelAndView("redirect:/admin");
@@ -61,13 +61,13 @@ public class MainController {
 	@ResponseBody
 	public ModelAndView register(@ModelAttribute User cus) {
 		System.out.println(cus.getUsername());
-		int flag = userDao.insert(cus);
 		ModelAndView model;
-		if(flag == 0){
+		try{
+			userDao.save(cus);
+			model = new ModelAndView("redirect:/login");
+		}catch (Exception e){
 			model = new ModelAndView("index/register");
 			model.addObject("registerError", true);
-		}else{
-			model = new ModelAndView("redirect:/login");
 		}
 
 		return model;

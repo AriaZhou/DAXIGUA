@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,10 +31,10 @@ public class ProductDAODB implements ProductDAO{
 				Product product = new Product();
 				product.setId(rs.getString("id"));
 				product.setUsername(rs.getString("username"));
-				product.setUoloadTime(rs.getString("uploadtime"));
-				product.setName(rs.getString("pname"));
+				product.setUploadTime(rs.getString("uploadtime"));
+				product.setPname(rs.getString("pname"));
 				product.setPrice(rs.getString("price"));
-				product.setCount(rs.getInt("pcount"));
+				product.setPcount(rs.getInt("pcount"));
 				product.setDescription(rs.getString("description"));
 				product.setStartTime(rs.getString("starttime"));
 				product.setEndTime(rs.getString("endtime"));
@@ -62,6 +63,23 @@ public class ProductDAODB implements ProductDAO{
 		return p;
 	}
 
+	public List<Product> findByTime() {
+		List<Product> p;
+		try {
+			Date now = new Date();
+			SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+			p = jdbcTemplate.queryForObject("select id, username, uploadtime, pname, price, pcount, description,"
+					+ "starttime, endtime, enabled from product where enabled=? AND starttime < ? and endtime > ?",
+					new ProductMapper(), 1, format.format(now), format.format(now));
+		}catch(Exception e) {
+			p = null;
+			System.out.println("----error----");
+			System.out.println(e.getMessage());
+			System.out.println("----error----");
+		}
+		return p;
+	}
+
 
 	public Product findById(String id) {
 		Product p;
@@ -79,8 +97,8 @@ public class ProductDAODB implements ProductDAO{
 
 	public int insert(Product p){
 		try{
-			jdbcTemplate.update("insert into product (id, username, uploadtime, pname, price, pcount, description, starttime, endtime, enabled)" +
-					"values (?,?,?,?,?,?,?,?,?,?)", p.getId(), p.getUsername(), new Date(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(),
+			jdbcTemplate.update("insert into product (id, username, pname, price, pcount, description, starttime, endtime, enabled)" +
+					"values (?,?,?,?,?,?,?,?,?)", p.getId(), p.getUsername(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(),
 					p.getStartTime(), p.getEndTime(), 1);
 			return 1;
 		}catch(Exception e){
@@ -108,7 +126,7 @@ public class ProductDAODB implements ProductDAO{
 
 		try{
 			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, starttime=?, endtime=?, enabled=? " +
-							"where id=?", p.getId(), p.getName(), p.getPrice(), p.getCount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getId());
+							"where id=?", p.getId(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getId());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");

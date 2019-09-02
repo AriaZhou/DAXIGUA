@@ -95,7 +95,7 @@
 
         <div id="insertOrder" class="modal" style="display: none">
 
-            <form class="modal-content animate" id="orderInfo">
+            <form class="modal-content animate" id="orderInfo" onsubmit="return false">
 
                 <span onclick="document.getElementById('insertOrder').style.display='none'" class="close" title="Close Modal"
                       style="margin: 26px; font-size: 40px">&times;</span>
@@ -111,12 +111,10 @@
                         <tr>
                             <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
                                 <div class="dropdown">
-                                    团号：<input name="productId" id="productId" class="dropdown-toggle" data-toggle="dropdown" readonly
+                                    团号：<input name="productId" id="product" class="dropdown-toggle" data-toggle="dropdown" readonly
                                                style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
                                     <div class="dropdown-menu">
-                                        <div th:each="p:${pLst}">
-                                            <a class="dropdown-item" th:onclick="addValue([[${p.id}]],[[${p.name}]])">[[${p.id}]]</a>
-                                        </div>
+                                        <a th:each="p:${pLst}" class="dropdown-item" th:onclick="addNameValue([[${p.id}]],[[${p.pname}]],[[${p.price}]])">[[${p.id}]]</a>
                                     </div>
                                 </div>
                             </td>
@@ -133,15 +131,26 @@
                     <table align="center" style="width: 80%;">
                         <tr>
                             <td class="valueTitle" style="width: 111px">数量：</td>
-                            <td><input name="count" id="count" class="usrValue"></td>
+                            <td><input name="ocount" id="ocount" class="usrValue" readonly onchange="addPriceValue(this.value)"></td>
                             <td class="valueTitle" style="width: 111px">价格：</td>
-                            <td><input name="price" id="price" class="usrValue"></td>
+                            <td><input name="price" id="price" class="usrValue" readonly></td>
                         </tr>
                         <tr>
                             <td class="valueTitle" style="width: 111px">状态：</td>
-                            <td><input name="state" id="state" class="usrValue"></td>
+                            <td>
+                                <div class="dropdown">
+                                    <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" onclick="addStateValue(0)">0 - 下单</a>
+                                        <a class="dropdown-item" onclick="addStateValue(1)">1 - 以付款</a>
+                                        <a class="dropdown-item" onclick="addStateValue(2)">2 - 出货中</a>
+                                        <a class="dropdown-item" onclick="addStateValue(3)">3 - 申请退款</a>
+                                        <a class="dropdown-item" onclick="addStateValue(4)">4 - 已退款</a>
+                                    </div>
+                                </div>
+                            </td>
                             <td class="valueTitle" style="width: 111px">下单QQ：</td>
-                            <td><input name="username" id="username" class="usrValue"></td>
+                            <td><input name="user" id="user" class="usrValue"></td>
                         </tr>
                     </table>
 
@@ -157,8 +166,8 @@
                             <td class="usrRow">
                                 <table align="center">
                                     <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="addOrder()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" type="submit" style="font-size: 14px" onclick="modifyOrder()">确认修改</button></td>
+                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="return addOrder()">确认新增</button></td>
+                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="return modifyOrder()">确认修改</button></td>
                                 </table>
                             </td>
                         </tr>
@@ -199,15 +208,15 @@
 
             <div th:each="o:${oLst}">
                 <tr>
-                    <td><input type="checkbox"></td>
-                    <td><p th:text="${o.productId}"></p></td>
-                    <td><p th:text="${o.productId}"></p></td>
-                    <td><p th:text="${o.count}"></p></td>
+                    <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
+                    <td><p th:text="${o.product.id}"></p></td>
+                    <td><p th:text="${o.product.pname}"></p></td>
+                    <td><p th:text="${o.ocount}"></p></td>
                     <td><p th:text="'￥'+${o.price}"></p></td>
                     <td><p th:text="${o.state}"></p></td>
-                    <td><p th:text="${o.username}"></p></td>
+                    <td><p th:text="${o.user.username}"></p></td>
                     <td>
-                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.productId}]], [[${o.productId}]], [[${o.count}]], [[${o.price}]], [[${o.state}]], [[${o.username}]])">修改</button>
+                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
                         <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
                     </td>
                 </tr>
@@ -268,6 +277,7 @@
 </script>
 
 <script>
+    var price;
 
     function insertO(){
         document.getElementById("insertOrder").style.display='block';
@@ -275,12 +285,12 @@
         document.getElementById("formTitle").innerHTML = "新增订单";
         document.getElementById("insertConfirm").hidden = false;
         document.getElementById("modifyConfirm").hidden = true;
-        document.getElementById("productId").value = null;
+        document.getElementById("product").value = null;
         document.getElementById("name").value = null;
         document.getElementById("price").value = null;
-        document.getElementById("count").value = null;
+        document.getElementById("ocount").value = null;
         document.getElementById("state").value = null;
-        document.getElementById("username").value = null;
+        document.getElementById("user").value = null;
 
     }
 
@@ -291,12 +301,12 @@
         document.getElementById("insertConfirm").hidden = true;
         document.getElementById("modifyConfirm").hidden = false;
         document.getElementById("id").value = id;
-        document.getElementById("productId").value = productId;
+        document.getElementById("product").value = productId;
         document.getElementById("name").value = name;
         document.getElementById("price").value = price;
-        document.getElementById("count").value = count;
+        document.getElementById("ocount").value = count;
         document.getElementById("state").value = state;
-        document.getElementById("username").value = username;
+        document.getElementById("user").value = username;
 
     }
 
@@ -339,12 +349,12 @@
                 return false;
             },
             success: function(data){
-                if(data==="0"){
-                    alert("新增失败，请检查QQ号填写是否正确。");
-                    return false;
-                }else{
+                if(data==="1"){
                     alert("新增成功");
                     window.location.reload();
+                    return false;
+                }else{
+                    alert("新增失败，请检查QQ号填写是否正确。");
                     return false;
                 }
             }
@@ -370,7 +380,6 @@
                     alert("删除失败，请重试。");
                     return false;
                 }else{
-
                     alert("删除成功");
                     window.location.reload();
                     return false;
@@ -381,7 +390,8 @@
     }
 
     function deleteGroup(){
-        $("input[name = 'pItem']:checked").each(function () {
+        var flag = 0;
+        $("input[name = 'oItem']:checked").each(function () {
 
             $.ajax({
                 cache: true,
@@ -393,29 +403,45 @@
                 async: false,
                 error: function(request){
                     alert("删除失败，请重试。");
-                    return false;
+                    flag = 1;
                     // alert("Connection error:"+request.error);
                 },
                 success: function(data){
                     if(data==="0"){
                         alert("删除失败，请重试。");
-                        return false;
-                    }else{
-                        return false;
+                        flag = 1;
                     }
                 }
             });
+            if(flag === 1)
+                return false;
 
+        });
+
+        if(flag === 0){
             alert("删除成功");
             window.location.reload();
-
-        })
+        }
     }
 
-    function addValue(id, name) {
-        document.getElementById('productId').value=id;
+    function addNameValue(id, name, priceValue) {
+        document.getElementById('product').value=id;
         document.getElementById('name').value=name;
+        document.getElementById('ocount').readOnly = false;
+        price = parseInt(priceValue);
+        if(document.getElementById('ocount').value !== null){
+            document.getElementById("price").value = document.getElementById('ocount').value*price;
+        }
     }
+
+    function addPriceValue(count) {
+        document.getElementById("price").value = count*price;
+    }
+
+    function addStateValue(stateValue) {
+        document.getElementById("state").value = stateValue;
+    }
+
 </script>
 
 </body>
