@@ -1,6 +1,3 @@
-$(function() {
-        $("#groupTable").tablesorter();
-    });
 
 function onSearch(obj){
     var table = document.getElementById('groupTable');//獲取table的id標識
@@ -55,17 +52,6 @@ function onSearch(obj){
         });
     })(jQuery);
 
-laydate.render({
-    elem: '#endtime'
-    ,theme: '#cc9897'
-    ,type: 'datetime'
-});
-
-laydate.render({
-    elem: '#starttime'
-    ,theme: '#cc9897'
-    ,type: 'datetime'
-});
 
 var mStartTime;
 var mEndTime;
@@ -224,8 +210,9 @@ function deleteGroup(){
 }
 
 function checkedAll(obj) {
-    $("input[name='pItem']").each(function(index) {
-        if(document.getElementById('productTable').rows[index+1].style.display === '')
+    $("input[name='gItem']").each(function(index) {
+        if(document.getElementById('groupTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
 }
+

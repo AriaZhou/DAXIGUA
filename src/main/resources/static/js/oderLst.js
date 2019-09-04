@@ -1,7 +1,4 @@
 
-$(function() {
-        $("#orderTable").tablesorter();
-    });
 
 function onSearch(obj){
     var table = document.getElementById('orderTable');//獲取table的id標識
@@ -277,8 +274,8 @@ function addNameValue(groupid) {
 }
 
 function checkedAll(obj) {
-    $("input[name='pItem']").each(function(index) {
-        if(document.getElementById('productTable').rows[index+1].style.display === '')
+    $("input[name='oItem']").each(function(index) {
+        if(document.getElementById('oderTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
 }

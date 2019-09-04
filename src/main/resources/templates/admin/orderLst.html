@@ -204,7 +204,11 @@
             </td>
         </table>
 
-        搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px">
+        <table>
+            <td>搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px"></td>
+            <td><button style="margin: 46px 0 0 6px;font-size: 11px;" class="btn btn-sm btn-outline-secondary"
+                onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button></td>
+        </table>
 
         <table id="orderTable" class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
             <thead>
@@ -253,6 +257,12 @@
 
     </div>
 </div>
+
+<script>
+    $(function() {
+        $("#orderTable").tablesorter();
+    });
+</script>
 
 </body>
 

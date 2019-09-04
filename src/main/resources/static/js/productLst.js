@@ -1,7 +1,4 @@
 
-$(function() {
-        $("#productTable").tablesorter();
-    });
 
 function onSearch(obj){
     var table = document.getElementById('productTable');//獲取table的id標識
