@@ -8,6 +8,7 @@
     <!--    我自己的-->
     <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
+    <script src="../../static/js/oderLst.js" th:src="@{../js/oderLst.js}" type="text/javascript"></script>
 
     <!--    jQuery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -54,6 +55,9 @@
     <!--    Time picker-->
     <script src="../../static/laydate/laydate.js" th:src="@{../laydate/laydate.js}" type="text/javascript"></script>
 
+<!--    tablesorter-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.30.5/js/jquery.tablesorter.min.js"></script>
+
 </head>
 <body>
 
@@ -75,6 +79,7 @@
     <ul id="demo-list">
 
         <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
+        <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
         <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
         <li class="active"><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
         <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
@@ -111,10 +116,10 @@
                         <tr>
                             <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
                                 <div class="dropdown">
-                                    团号：<input name="productId" id="product" class="dropdown-toggle" data-toggle="dropdown" readonly
+                                    团号：<input name="groupid" id="groupid" class="dropdown-toggle" data-toggle="dropdown" readonly
                                                style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
                                     <div class="dropdown-menu">
-                                        <a th:each="p:${pLst}" class="dropdown-item" th:onclick="addNameValue([[${p.id}]],[[${p.pname}]],[[${p.price}]])">[[${p.id}]]</a>
+                                        <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addNameValue([[${g.id}]])">[[${g.id}]]</a>
                                     </div>
                                 </div>
                             </td>
@@ -123,15 +128,21 @@
 
                     <table align="center" style="width: 80%;">
                         <tr>
-                            <td class="valueTitle" style="width: 111px">名称：</td>
-                            <td><input name="name" id="name" class="usrValue" readonly></td>
+                            <td class="valueTitle" style="width: 111px">产品：</td>
+                            <td>
+                                <input name="product" id="name" class="usrValue dropdown-toggle" data-toggle="dropdown" readonly>
+                                <div class="dropdown-menu" id="oProductLst">
+                                    <a th:each="p:${pLst}" th:title="${p.group.id}" hidden class="dropdown-item"
+                                        th:onclick="addPriceValue([[${p.id}]],[[${p.pname}]],[[${p.price}]])">[[${p.id}]] - [[${p.pname}]]</a>
+                                </div>
+                            </td>
                         </tr>
                     </table>
 
                     <table align="center" style="width: 80%;">
                         <tr>
                             <td class="valueTitle" style="width: 111px">数量：</td>
-                            <td><input name="ocount" id="ocount" class="usrValue" readonly onchange="addPriceValue(this.value)"></td>
+                            <td><input name="ocount" id="ocount" class="usrValue" readonly onchange="changePriceValue(this.value)"></td>
                             <td class="valueTitle" style="width: 111px">价格：</td>
                             <td><input name="price" id="price" class="usrValue" readonly></td>
                         </tr>
@@ -165,7 +176,7 @@
                         <tr>
                             <td class="usrRow">
                                 <table align="center">
-                                    <td style="padding-right: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="window.location.reload()">复原资料</button></td>
+                                    <td style="padding-right: 6px"><button  id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
                                     <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="return addOrder()">确认新增</button></td>
                                     <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="return modifyOrder()">确认修改</button></td>
                                 </table>
@@ -185,7 +196,7 @@
         <table style="width: 100%">
             <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >订单管理</a></td>
             <td style="width: 100%">
-                <div class="btn-group mr2" style="float: right; position: relative; top:35px">
+                <div class="btn-group mr2" style="float: right; position: relative; top:80px">
                     <button class="btn btn-sm btn-outline-secondary" onclick="insertO()">新增产品</button>
                     <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
                     <button class="btn btn-sm btn-outline-secondary">导出表单</button>
@@ -193,20 +204,23 @@
             </td>
         </table>
 
-        <table class="table" style="margin-top: 50px; min-width: 930px;">
+        搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px">
 
-            <tr>
-                <th><input type="checkbox">&nbsp;&nbsp;全选</th>
-                <th>团号</th>
-                <th>名称</th>
-                <th>数量</th>
-                <th>价格</th>
-                <th>状态</th>
-                <th>下单QQ号</th>
-                <th>操作</th>
-            </tr>
-
-            <div th:each="o:${oLst}">
+        <table id="orderTable" class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
+                    <th>团号</th>
+                    <th>名称</th>
+                    <th>数量</th>
+                    <th>价格</th>
+                    <th>状态</th>
+                    <th>下单QQ号</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div th:each="o:${oLst}">
                 <tr>
                     <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
                     <td><p th:text="${o.product.id}"></p></td>
@@ -216,11 +230,12 @@
                     <td><p th:text="${o.state}"></p></td>
                     <td><p th:text="${o.user.username}"></p></td>
                     <td>
-                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
+                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
                         <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
                     </td>
                 </tr>
             </div>
+            </tbody>
 
         </table>
 
@@ -239,210 +254,6 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    (function($) {
-        $.expr[":"].Contains = function(a, i, m) {
-            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-        };
-        function filterList(header, list) {
-            //@header 头部元素
-            //@list 无需列表
-            //创建一个搜素表单
-            var form = $("<form>").attr({
-                "class":"filterform",
-                action:"#"
-            }), input = $("<input>").attr({
-                "class":"filterinput",
-                type:"text"
-            });
-            $(form).append(input).appendTo(header);
-            $(input).change(function() {
-                var filter = $(this).val();
-                if (filter) {
-                    $matches = $(list).find("a:Contains(" + filter + ")").parent();
-                    $("li", list).not($matches).slideUp();
-                    $matches.slideDown();
-                } else {
-                    $(list).find("li").slideDown();
-                }
-                return false;
-            }).keyup(function() {
-                $(this).change();
-            });
-        }
-        $(function() {
-            filterList($("#form"), $("#demo-list"));
-        });
-    })(jQuery);
-</script>
-
-<script>
-    var price;
-
-    function insertO(){
-        document.getElementById("insertOrder").style.display='block';
-
-        document.getElementById("formTitle").innerHTML = "新增订单";
-        document.getElementById("insertConfirm").hidden = false;
-        document.getElementById("modifyConfirm").hidden = true;
-        document.getElementById("product").value = null;
-        document.getElementById("name").value = null;
-        document.getElementById("price").value = null;
-        document.getElementById("ocount").value = null;
-        document.getElementById("state").value = null;
-        document.getElementById("user").value = null;
-
-    }
-
-    function modifyO(id,productId,name,price,count,state,username){
-        document.getElementById("insertOrder").style.display='block';
-
-        document.getElementById("formTitle").innerHTML = "修改订单";
-        document.getElementById("insertConfirm").hidden = true;
-        document.getElementById("modifyConfirm").hidden = false;
-        document.getElementById("id").value = id;
-        document.getElementById("product").value = productId;
-        document.getElementById("name").value = name;
-        document.getElementById("price").value = price;
-        document.getElementById("ocount").value = count;
-        document.getElementById("state").value = state;
-        document.getElementById("user").value = username;
-
-    }
-
-    function modifyOrder() {
-
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/admin/modifyOrder",
-            data:$('#orderInfo').serialize(),
-            async: false,
-            error: function(request){
-                alert("修改失败，请重试。");
-                // alert("Connection error:"+request.error);
-                return false;
-            },
-            success: function(data){
-                if(data==="0"){
-                    alert("修改失败，请重试。");
-                    return false;
-                }else{
-                    alert("修改成功");
-                    window.location.reload();
-                    return false;
-                }
-            }
-        });
-    }
-
-    function addOrder() {
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/admin/addOrder",
-            data:$('#orderInfo').serialize(),
-            async: false,
-            error: function(request){
-                alert("新增失败，请重试。");
-                // alert("Connection error:"+request.error);
-                return false;
-            },
-            success: function(data){
-                if(data==="1"){
-                    alert("新增成功");
-                    window.location.reload();
-                    return false;
-                }else{
-                    alert("新增失败，请检查QQ号填写是否正确。");
-                    return false;
-                }
-            }
-        });
-    }
-
-    function deleteOrder(name) {
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/admin/deleteOrder",
-            data:{
-                orderid : name,
-            },
-            async: false,
-            error: function(request){
-                alert("删除失败，请重试。");
-                return false;
-                // alert("Connection error:"+request.error);
-            },
-            success: function(data){
-                if(data==="0"){
-                    alert("删除失败，请重试。");
-                    return false;
-                }else{
-                    alert("删除成功");
-                    window.location.reload();
-                    return false;
-
-                }
-            }
-        });
-    }
-
-    function deleteGroup(){
-        var flag = 0;
-        $("input[name = 'oItem']:checked").each(function () {
-
-            $.ajax({
-                cache: true,
-                type: "POST",
-                url: "/admin/deleteOrder",
-                data:{
-                    orderid : $(this).attr('id')
-                },
-                async: false,
-                error: function(request){
-                    alert("删除失败，请重试。");
-                    flag = 1;
-                    // alert("Connection error:"+request.error);
-                },
-                success: function(data){
-                    if(data==="0"){
-                        alert("删除失败，请重试。");
-                        flag = 1;
-                    }
-                }
-            });
-            if(flag === 1)
-                return false;
-
-        });
-
-        if(flag === 0){
-            alert("删除成功");
-            window.location.reload();
-        }
-    }
-
-    function addNameValue(id, name, priceValue) {
-        document.getElementById('product').value=id;
-        document.getElementById('name').value=name;
-        document.getElementById('ocount').readOnly = false;
-        price = parseInt(priceValue);
-        if(document.getElementById('ocount').value !== null){
-            document.getElementById("price").value = document.getElementById('ocount').value*price;
-        }
-    }
-
-    function addPriceValue(count) {
-        document.getElementById("price").value = count*price;
-    }
-
-    function addStateValue(stateValue) {
-        document.getElementById("state").value = stateValue;
-    }
-
-</script>
-
 </body>
+
 </html>

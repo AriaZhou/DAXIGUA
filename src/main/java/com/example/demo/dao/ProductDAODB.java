@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public class ProductDAODB implements ProductDAO{
+public class ProductDAODB{
 
 	//@Autowired
 	//private DataSource dataSource;
@@ -36,8 +36,7 @@ public class ProductDAODB implements ProductDAO{
 				product.setPrice(rs.getString("price"));
 				product.setPcount(rs.getInt("pcount"));
 				product.setDescription(rs.getString("description"));
-				product.setStartTime(rs.getString("starttime"));
-				product.setEndTime(rs.getString("endtime"));
+//				product.setGroup(rs.getString("description"));
 				product.setEnabled(rs.getInt("enabled"));
 
 				rs.next();
@@ -53,7 +52,7 @@ public class ProductDAODB implements ProductDAO{
 		List<Product> p;
 		try {
 			p = jdbcTemplate.queryForObject("select id, username, uploadtime, pname, price, pcount, description,"
-					+ "starttime, endtime, enabled from product where enabled=?", new ProductMapper(), 1);
+					+ "enabled from product where enabled=?", new ProductMapper(), 1);
 		}catch(Exception e) {
 			p = null;
 			System.out.println("----error----");
@@ -69,7 +68,7 @@ public class ProductDAODB implements ProductDAO{
 			Date now = new Date();
 			SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
 			p = jdbcTemplate.queryForObject("select id, username, uploadtime, pname, price, pcount, description,"
-					+ "starttime, endtime, enabled from product where enabled=? AND starttime < ? and endtime > ?",
+					+ "enabled from product where enabled=? AND starttime < ? and endtime > ?",
 					new ProductMapper(), 1, format.format(now), format.format(now));
 		}catch(Exception e) {
 			p = null;
@@ -85,7 +84,7 @@ public class ProductDAODB implements ProductDAO{
 		Product p;
 		try {
 			p = jdbcTemplate.queryForObject("select id, username, uploadtime, pname, price, pcount, description,"
-					+ "starttime, endtime, enabled from product where id = ?", new Object[]{id}, new ProductMapper()).get(0);
+					+ "enabled from product where id = ?", new Object[]{id}, new ProductMapper()).get(0);
 		}catch(Exception e) {
 			p = null;
 			System.out.println("----error----");
@@ -98,8 +97,8 @@ public class ProductDAODB implements ProductDAO{
 	public int insert(Product p){
 		try{
 			jdbcTemplate.update("insert into product (id, username, pname, price, pcount, description, starttime, endtime, enabled)" +
-					"values (?,?,?,?,?,?,?,?,?)", p.getId(), p.getUsername(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(),
-					p.getStartTime(), p.getEndTime(), 1);
+					"values (?,?,?,?,?,?,?,?)", p.getId(), p.getUsername(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(),
+					 1);
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
@@ -125,8 +124,8 @@ public class ProductDAODB implements ProductDAO{
 	public int modifyProduct(Product p){
 
 		try{
-			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, starttime=?, endtime=?, enabled=? " +
-							"where id=?", p.getId(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(), p.getStartTime(), p.getEndTime(), 1, p.getId());
+			jdbcTemplate.update("update product set id=?, pname=?, price=?, pcount=?, description=?, enabled=? " +
+							"where id=?", p.getId(), p.getPname(), p.getPrice(), p.getPcount(), p.getDescription(), 1, p.getId());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");

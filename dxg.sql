@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: dxg
 -- ------------------------------------------------------
--- Server version	8.0.13
+-- Server version	8.0.17
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,25 +16,51 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `pgroup`
+--
+
+DROP TABLE IF EXISTS `pgroup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pgroup` (
+  `id` varchar(45) NOT NULL,
+  `starttime` datetime DEFAULT NULL,
+  `endtime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pgroup`
+--
+
+LOCK TABLES `pgroup` WRITE;
+/*!40000 ALTER TABLE `pgroup` DISABLE KEYS */;
+INSERT INTO `pgroup` VALUES ('190666','2019-09-04 00:00:00','2019-09-12 00:00:00'),('190808','2019-08-09 00:00:00','2019-08-09 00:00:00'),('190903','2019-08-09 00:00:00','2019-09-09 00:00:00');
+/*!40000 ALTER TABLE `pgroup` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `porder`
 --
 
+DROP TABLE IF EXISTS `porder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `porder` (
   `id` varchar(45) NOT NULL,
-  `username` varchar(45) NOT NULL,
-  `productid` varchar(45) NOT NULL,
-  `ocount` int(11) NOT NULL,
-  `state` int(11) NOT NULL DEFAULT '0',
-  `time` datetime NOT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `productid` varchar(45) DEFAULT NULL,
+  `ocount` int(11) DEFAULT NULL,
+  `state` int(11) DEFAULT '0',
+  `time` datetime DEFAULT CURRENT_TIMESTAMP,
   `price` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_idx` (`username`),
   KEY `product_idx` (`productid`),
   CONSTRAINT `product` FOREIGN KEY (`productid`) REFERENCES `product` (`id`),
   CONSTRAINT `user` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +69,7 @@ CREATE TABLE `porder` (
 
 LOCK TABLES `porder` WRITE;
 /*!40000 ALTER TABLE `porder` DISABLE KEYS */;
-INSERT INTO `porder` VALUES ('1231566663585208','123','190820',3,0,'2019-08-25 00:19:00','102'),('1231566663602291','123','190834',2,0,'2019-08-25 00:20:00','134'),('8976941641566635675519','897694164','190801',1,0,'2019-08-24 16:34:00','45');
+INSERT INTO `porder` VALUES ('','897694163','326537547',3,0,NULL,'135'),('1231567418650258','123','326537547',2,0,'2019-09-02 18:04:10','90'),('1231567419182258','123','326537547',2,0,'2019-09-02 18:13:02','90'),('1231567488970155','123','324325451',6,0,'2019-09-03 13:36:10','138'),('1231567589888037','123','324325451',2,0,'2019-09-04 17:38:08','46');
 /*!40000 ALTER TABLE `porder` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -51,21 +77,23 @@ UNLOCK TABLES;
 -- Table structure for table `product`
 --
 
+DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product` (
   `id` varchar(45) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
-  `uploadtime` datetime DEFAULT NULL,
-  `pname` varchar(45) NOT NULL,
-  `price` varchar(45) NOT NULL,
+  `uploadtime` datetime DEFAULT CURRENT_TIMESTAMP,
+  `pname` varchar(45) DEFAULT NULL,
+  `price` varchar(45) DEFAULT NULL,
   `description` varchar(1000) DEFAULT NULL,
   `pcount` int(11) DEFAULT NULL,
-  `starttime` datetime NOT NULL,
-  `endtime` datetime NOT NULL,
   `enabled` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `groupid` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groupid_idx` (`groupid`),
+  CONSTRAINT `groupid` FOREIGN KEY (`groupid`) REFERENCES `pgroup` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +102,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES ('190708',NULL,NULL,'多少个','78','都给我买！',99,'2019-08-01 00:00:00','2019-09-30 00:00:00',1),('190801',NULL,NULL,'发表是不是','45','都给我买！',99,'2019-09-30 00:00:00','2019-09-30 00:00:00',1),('190820',NULL,NULL,'魏国强爱人','34','都给我买！',99,'2019-09-30 00:00:00','2019-09-30 00:00:00',1),('190834',NULL,NULL,'违法','67','都给我买！',99,'2019-09-30 00:00:00','2019-09-30 00:00:00',1),('190912','',NULL,'小橘里汁','111','都给我买！',99,'2019-08-01 00:00:00','2019-09-30 00:00:00',1),('192076',NULL,NULL,'三个','93','都给我买！',99,'2019-08-01 00:00:00','2019-09-30 00:00:00',1),('197579',NULL,NULL,'二分干','99','都给我买！',99,'2019-08-01 00:00:00','2019-09-30 00:00:00',1);
+INSERT INTO `product` VALUES ('1909031567491662635','897694163',NULL,'test1','270','',99,0,'190903'),('324325451','123','2019-08-09 00:00:00','KKK','23',NULL,97,1,'190808'),('326537547','123','2019-08-08 00:00:00','hhh','45',NULL,97,1,'190903');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -82,6 +110,7 @@ UNLOCK TABLES;
 -- Table structure for table `user`
 --
 
+DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
@@ -94,7 +123,7 @@ CREATE TABLE `user` (
   `role` varchar(45) NOT NULL DEFAULT 'ROLE_USER',
   `enabled` varchar(45) NOT NULL DEFAULT '1',
   PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -116,4 +145,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-26  9:03:38
+-- Dump completed on 2019-09-04 17:41:46

@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.GroupDAO;
 import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
+import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import com.example.demo.entity.User;
@@ -25,6 +27,8 @@ public class UserController {
     ProductDAO productDao;
     @Autowired
     OrderDAO orderDao;
+    @Autowired
+    GroupDAO groupDao;
 
 
     @RequestMapping("/index")
@@ -36,8 +40,8 @@ public class UserController {
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
-            List<Product> pLst = productDao.findByTime();
-            model.addObject("productLst",pLst);
+            Iterable<Group> groupLst = groupDao.findAll();
+            model.addObject("groupLst",groupLst);
 
         }catch(Exception e){
             System.out.println("----error----");
@@ -48,13 +52,33 @@ public class UserController {
         return model;
     }
 
+    @RequestMapping("/user/revealProduct")
+    @ResponseBody
+    public ModelAndView revealProduct(Principal principal, String groupid) {
+
+        ModelAndView model = new ModelAndView("user/productLst");
+        try{
+            User u = userDao.findById(principal.getName()).get();
+            model.addObject("userInfo",u);
+
+            Iterable<Product> pLst = productDao.findByGroupId(groupid);
+            model.addObject("productLst",pLst);
+
+        }catch(Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+        }
+        return model;
+    }
+
     @RequestMapping(value = "/user/addOrder", method = RequestMethod.POST)
     @ResponseBody
     public String addOrder(String pId, int count, Principal principal){
 
         try{
             Orders o = new Orders();
-            Product p = productDao.findById(pId);
+            Product p = productDao.findById(pId).get();
             o.setUser(userDao.findById(principal.getName()).get());
             o.setOcount(count);
             o.setProduct(p);
@@ -63,12 +87,15 @@ public class UserController {
             o.setTime(format.format(now));
             o.setId(principal.getName()+now.getTime());
             o.setState(0);
-            o.setPrice(Integer.parseInt(productDao.findById(pId).getPrice())*count+"");
+            o.setPrice(Integer.parseInt(productDao.findById(pId).get().getPrice())*count+"");
             orderDao.save(o);
             p.setPcount(p.getPcount()-count);
-            productDao.modifyProduct(p);
+            productDao.save(p);
             return "1";
         }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
             return "0";
         }
     }

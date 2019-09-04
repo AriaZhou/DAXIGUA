@@ -1,8 +1,6 @@
 package com.example.demo.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,12 +17,14 @@ public class Product implements Serializable {
     private String price;
     private String description;
     private int pcount;
-    private String starttime;
-    private String endtime;
     private int enabled;
 
     @OneToMany(mappedBy = "product")
     private List<Orders> orders;
+
+    @ManyToOne
+    @JoinColumn(name = "groupid")
+    private Group group;
 
     public String getId() {
         return id;
@@ -68,18 +68,6 @@ public class Product implements Serializable {
     public void setPcount(int pcount) {
         this.pcount = pcount;
     }
-    public String getStartTime() {
-        return starttime;
-    }
-    public void setStartTime(String starttime) {
-        this.starttime = starttime;
-    }
-    public String getEndTime() {
-        return endtime;
-    }
-    public void setEndTime(String endtime) {
-        this.endtime = endtime;
-    }
     public int getEnabled() {
         return enabled;
     }
@@ -88,5 +76,11 @@ public class Product implements Serializable {
     }
     public Iterable<Orders> getOrders() {
         return orders;
+    }
+    public Group getGroup() {
+        return group;
+    }
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

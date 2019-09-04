@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.example.demo.dao.GroupDAO;
 import com.example.demo.dao.OrderDAO;
 import com.example.demo.dao.ProductDAO;
 import com.example.demo.dao.UserDAO;
+import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class AdminController {
     ProductDAO productDao;
     @Autowired
     OrderDAO orderDao;
+    @Autowired
+    GroupDAO groupDao;
 
     @RequestMapping("/admin")
     @ResponseBody
@@ -43,14 +47,82 @@ public class AdminController {
         return model;
     }
 
+    @RequestMapping("/admin/revealAllGroup")
+    @ResponseBody
+    public ModelAndView revealAllGroup(Principal principal) {
+
+        ModelAndView model = new ModelAndView("admin/groupLst");
+
+        Iterable<Group> gLst = groupDao.findAll();
+        model.addObject("gLst", gLst);
+        model.addObject("username", principal.getName());
+
+        return model;
+    }
+
+    @RequestMapping("/admin/addGroup")
+    @ResponseBody
+    public String addGroup(@ModelAttribute Group g, Principal principal) {
+
+        try{
+//            p.setUsername(principal.getName());
+//            Date now = new Date();
+//            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+//            p.setUploadTime(format.format(now));
+//            p.setId(p.getGroup().getId()+now.getTime());
+            groupDao.save(g);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+    }
+
+    @RequestMapping("/admin/deleteGroup")
+    @ResponseBody
+    public String deleteGroup(String groupid, Principal principal){
+
+        try{
+            groupDao.deleteById(groupid);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
+    }
+
+    @RequestMapping("/admin/modifyGroup")
+    @ResponseBody
+    public String modifyGroup(@ModelAttribute Group g, Principal principal) {
+
+        try{
+//            p.setUsername(principal.getName());
+            groupDao.save(g);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
+    }
+
     @RequestMapping("/admin/revealAllProduct")
     @ResponseBody
     public ModelAndView revealAllProduct(Principal principal) {
 
         ModelAndView model = new ModelAndView("admin/productLst");
 
-        List<Product> pLst = productDao.findAll();
+        Iterable<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
+        Iterable<Group> gLst = groupDao.findAll();
+        model.addObject("gLst", gLst);
         model.addObject("username", principal.getName());
 
         return model;
@@ -62,7 +134,11 @@ public class AdminController {
 
         try{
             p.setUsername(principal.getName());
-            productDao.insert(p);
+            Date now = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+            p.setUploadTime(format.format(now));
+            p.setId(p.getGroup().getId()+now.getTime());
+            productDao.save(p);
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -94,7 +170,7 @@ public class AdminController {
 
         try{
             p.setUsername(principal.getName());
-            productDao.modifyProduct(p);
+            productDao.save(p);
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -113,7 +189,9 @@ public class AdminController {
 
         Iterable<Orders> oLst = orderDao.findAll();
         model.addObject("oLst", oLst);
-        List<Product> pLst = productDao.findAll();
+        Iterable<Group> gLst = groupDao.findAll();
+        model.addObject("gLst", gLst);
+        Iterable<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
         model.addObject("username", principal.getName());
 
@@ -125,8 +203,6 @@ public class AdminController {
     public String addOrder(@ModelAttribute Orders o, String productId, Principal principal) {
 
         try{
-//            o.setUser(userDao.findById(principal.getName()).get());
-            o.setProduct(productDao.findById(productId));
             Date now = new Date();
             SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             o.setTime(format.format(now));
