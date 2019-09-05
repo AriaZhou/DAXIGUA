@@ -72,7 +72,7 @@ function rollBack(){
     document.getElementById("user").value = oUsername;
 
     var plist = document.getElementById('oProductLst').getElementsByTagName('a');
-    for (let i = 0; i < plist.length; i++) {
+    for (var i = 0; i < plist.length; i++) {
         var p = plist.item(i);
         if(p.title===oGroupId)
             p.hidden=false;
@@ -112,7 +112,7 @@ function modifyO(groupId,productId,name,price,count,state,username){
     document.getElementById("user").value = username;
 
     var plist = document.getElementById('oProductLst').getElementsByTagName('a');
-    for (let i = 0; i < plist.length; i++) {
+    for (var i = 0; i < plist.length; i++) {
         var p = plist.item(i);
         if(p.title===groupId)
             p.hidden=false;
@@ -211,7 +211,6 @@ function deleteOrder(name) {
 function deleteGroup(){
     var flag = 0;
     $("input[name = 'oItem']:checked").each(function () {
-
         $.ajax({
             cache: true,
             type: "POST",
@@ -264,7 +263,7 @@ function addNameValue(groupid) {
     document.getElementById('groupid').value = groupid;
     document.getElementById('name').value = null;
     var plist = document.getElementById('oProductLst').getElementsByTagName('a');
-    for (let i = 0; i < plist.length; i++) {
+    for (var i = 0; i < plist.length; i++) {
         var p = plist.item(i);
         if(p.title===groupid)
             p.hidden=false;
@@ -278,4 +277,33 @@ function checkedAll(obj) {
         if(document.getElementById('oderTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
+}
+
+function showExport(){
+    var ids = [];
+    $("input[name='oItem']:checked").each(function(index) {
+        ids.push(this.attr('id'));
+    });
+
+    $.ajax({
+        cache: true,
+        type: "POST",
+        url: "/admin/exportSelectedData",
+        data:{
+            ids : ids
+        },
+        async: false,
+        error: function(request){
+            alert("导出失败，请重试。");
+            flag = 1;
+            // alert("Connection error:"+request.error);
+        },
+        success: function(data){
+            if(data==="0"){
+                alert("导出失败，请重试。");
+                flag = 1;
+            }
+        }
+    });
+
 }

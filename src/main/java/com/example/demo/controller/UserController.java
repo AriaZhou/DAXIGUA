@@ -85,7 +85,7 @@ public class UserController {
             Date now = new Date();
             SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             o.setTime(format.format(now));
-            o.setId(principal.getName()+now.getTime());
+            o.setId(now.getTime()+"");
             o.setState(0);
             o.setPrice(Integer.parseInt(productDao.findById(pId).get().getPrice())*count+"");
             orderDao.save(o);
