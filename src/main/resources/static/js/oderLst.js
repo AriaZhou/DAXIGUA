@@ -1,12 +1,10 @@
-
-
 function onSearch(obj){
     var table = document.getElementById('orderTable');//獲取table的id標識
     var rowsLength = table.rows.length;//表格總共有多少行
     var columnsLength = table.rows.item(0).cells.length;//表格總共有多少列
     var key = obj.value;//獲取輸入框的值
-    for(var i=1;i<rowsLength-1;i++){//按表的行數進行迴圈，本例第一行是標題，所以i=1，從第二行開始篩選（從0數起）
-        for(var j=1; j<columnsLength; j++){
+    for(var i=1;i<rowsLength;i++){//按表的行數進行迴圈，本例第一行是標題，所以i=1，從第二行開始篩選（從0數起）
+        for(var j=1; j<columnsLength-1; j++){
             var searchText = table.rows[i].cells[j].getElementsByTagName('p')[0].innerHTML;//取得table行，列的值
             if(searchText.match(key)){//用match函式進行篩選，如果input的值，即變數 key的值為空，返回的是ture，
                 table.rows[i].style.display='';//顯示行操作，
@@ -18,40 +16,40 @@ function onSearch(obj){
     }
 }
 
-(function($) {
-        $.expr[":"].Contains = function(a, i, m) {
-            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-        };
-        function filterList(header, list) {
-            //@header 头部元素
-            //@list 无需列表
-            //创建一个搜素表单
-            var form = $("<form>").attr({
-                "class":"filterform",
-                action:"#"
-            }), input = $("<input>").attr({
-                "class":"filterinput",
-                type:"text"
-            });
-            $(form).append(input).appendTo(header);
-            $(input).change(function() {
-                var filter = $(this).val();
-                if (filter) {
-                    $matches = $(list).find("a:Contains(" + filter + ")").parent();
-                    $("li", list).not($matches).slideUp();
-                    $matches.slideDown();
-                } else {
-                    $(list).find("li").slideDown();
-                }
-                return false;
-            }).keyup(function() {
-                $(this).change();
-            });
-        }
-        $(function() {
-            filterList($("#form"), $("#demo-list"));
-        });
-    })(jQuery);
+// (function($) {
+//         $.expr[":"].Contains = function(a, i, m) {
+//             return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+//         };
+//         function filterList(header, list) {
+//             //@header 头部元素
+//             //@list 无需列表
+//             //创建一个搜素表单
+//             var form = $("<form>").attr({
+//                 "class":"filterform",
+//                 action:"#"
+//             }), input = $("<input>").attr({
+//                 "class":"filterinput",
+//                 type:"text"
+//             });
+//             $(form).append(input).appendTo(header);
+//             $(input).change(function() {
+//                 var filter = $(this).val();
+//                 if (filter) {
+//                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
+//                     $("li", list).not($matches).slideUp();
+//                     $matches.slideDown();
+//                 } else {
+//                     $(list).find("li").slideDown();
+//                 }
+//                 return false;
+//             }).keyup(function() {
+//                 $(this).change();
+//             });
+//         }
+//         $(function() {
+//             filterList($("#form"), $("#demo-list"));
+//         });
+//     })(jQuery);
 
 var price;
 
@@ -274,7 +272,7 @@ function addNameValue(groupid) {
 
 function checkedAll(obj) {
     $("input[name='oItem']").each(function(index) {
-        if(document.getElementById('oderTable').rows[index+1].style.display === '')
+        if(document.getElementById('orderTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
 }
@@ -282,28 +280,14 @@ function checkedAll(obj) {
 function showExport(){
     var ids = [];
     $("input[name='oItem']:checked").each(function(index) {
-        ids.push(this.attr('id'));
+        ids.push($(this).attr('id'));
     });
 
-    $.ajax({
-        cache: true,
-        type: "POST",
-        url: "/admin/exportSelectedData",
-        data:{
-            ids : ids
-        },
-        async: false,
-        error: function(request){
-            alert("导出失败，请重试。");
-            flag = 1;
-            // alert("Connection error:"+request.error);
-        },
-        success: function(data){
-            if(data==="0"){
-                alert("导出失败，请重试。");
-                flag = 1;
-            }
-        }
-    });
+    if(ids.length>0){
+        console.log(ids);
+        location.href="/admin/exportSelectedData?ids="+ids;
+    }else{
+        location.href="/admin/exportData";
+    }
 
 }

@@ -1,10 +1,11 @@
 package com.example.demo.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,8 +16,12 @@ public class Group implements Serializable {
 
     @Id
     private String id;
-    private String starttime;
-    private String endtime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date starttime;
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date endtime;
 
     @OneToMany(mappedBy = "group")
     private List<Product> products;
@@ -27,16 +32,16 @@ public class Group implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-    public String getStarttime() {
+    public Date getStarttime() {
         return starttime;
     }
-    public void setStarttime(String starttime) {
+    public void setStarttime(Date starttime) {
         this.starttime = starttime;
     }
-    public String getEndtime() {
+    public Date getEndtime() {
         return endtime;
     }
-    public void setEndtime(String endtime) {
+    public void setEndtime(Date endtime) {
         this.endtime = endtime;
     }
     public Iterable<Product> getProducts() {

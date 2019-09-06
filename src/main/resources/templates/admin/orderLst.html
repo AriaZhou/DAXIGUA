@@ -152,11 +152,8 @@
                                 <div class="dropdown">
                                     <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" onclick="addStateValue(0)">0 - 下单</a>
-                                        <a class="dropdown-item" onclick="addStateValue(1)">1 - 以付款</a>
-                                        <a class="dropdown-item" onclick="addStateValue(2)">2 - 出货中</a>
-                                        <a class="dropdown-item" onclick="addStateValue(3)">3 - 申请退款</a>
-                                        <a class="dropdown-item" onclick="addStateValue(4)">4 - 已退款</a>
+                                        <a class="dropdown-item" th:each="s:${sLst}" th:onclick="addStateValue([[${sStat.index}]])">
+                                            [[${sStat.index}]] - [[${s.value}]]</a>
                                     </div>
                                 </div>
                             </td>
@@ -224,24 +221,20 @@
                     <th>操作</th>
                 </tr>
             </thead>
-            <tbody>
-                <div th:each="o:${oLst}">
-                <tr>
-                    <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
-                    <td><p th:text="${o.id}"></p></td>
-                    <td><p th:text="${o.product.id}"></p></td>
-                    <td><p th:text="${o.product.pname}"></p></td>
-                    <td><p th:text="${o.ocount}"></p></td>
-                    <td><p th:text="'￥'+${o.price}"></p></td>
-                    <td><p th:text="${o.state}"></p></td>
-                    <td><p th:text="${o.user.name}"></p></td>
-                    <td>
-                        <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state}]], [[${o.user.username}]])">修改</button>
-                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
-                    </td>
-                </tr>
-            </div>
-            </tbody>
+            <tr th:each="o:${oLst}">
+                <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
+                <td><p th:text="${o.id}"></p></td>
+                <td><p th:text="${o.product.id}"></p></td>
+                <td><p th:text="${o.product.pname}"></p></td>
+                <td><p th:text="${o.ocount}"></p></td>
+                <td><p th:text="'￥'+${o.price}"></p></td>
+                <td><p th:text="${o.state.value}"></p></td>
+                <td><p th:text="${o.user.name}"></p></td>
+                <td>
+                    <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state.id}]], [[${o.user.username}]])">修改</button>
+                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
+                </td>
+            </tr>
 
         </table>
 

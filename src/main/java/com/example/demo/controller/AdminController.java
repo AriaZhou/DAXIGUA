@@ -1,12 +1,10 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.GroupDAO;
-import com.example.demo.dao.OrderDAO;
-import com.example.demo.dao.ProductDAO;
-import com.example.demo.dao.UserDAO;
+import com.example.demo.dao.*;
 import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
+import com.example.demo.entity.State;
 import org.apache.poi.hssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +35,8 @@ public class AdminController {
     OrderDAO orderDao;
     @Autowired
     GroupDAO groupDao;
+    @Autowired
+    StateDAO stateDao;
 
     @RequestMapping("/admin")
     @ResponseBody
@@ -200,6 +200,8 @@ public class AdminController {
         model.addObject("gLst", gLst);
         Iterable<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
+        Iterable<State> sLst = stateDao.findAll();
+        model.addObject("sLst", sLst);
         model.addObject("username", principal.getName());
 
         return model;
@@ -259,6 +261,7 @@ public class AdminController {
     @RequestMapping("/admin/exportSelectedData")
     public void exportSelectedData(HttpServletRequest request, HttpServletResponse response){
         String tempIds = request.getParameter("ids");
+        System.out.println(tempIds+"KKKKKKKK");
 
         if(tempIds.contains(",")){
             List<String> ids = Arrays.asList(tempIds.split(","));
@@ -291,7 +294,7 @@ public class AdminController {
             list = orderDao.findAllById(ids);
         }
 
-        String fileName =new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fileName = new Date().getTime()+"";
 
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();
@@ -329,12 +332,15 @@ public class AdminController {
         cell.setCellValue("状态");
 //        cell.setCellStyle(style);
         cell = row.createCell(6);
-        cell.setCellValue("QQ昵称");
+        cell.setCellValue("QQ");
 //        cell.setCellStyle(style);
         cell = row.createCell(7);
-        cell.setCellValue("地址");
+        cell.setCellValue("昵称");
 //        cell.setCellStyle(style);
         cell = row.createCell(8);
+        cell.setCellValue("地址");
+//        cell.setCellStyle(style);
+        cell = row.createCell(9);
         cell.setCellValue("电话");
 //        cell.setCellStyle(style);
 
@@ -361,27 +367,25 @@ public class AdminController {
             cell2.setCellValue(o.getPrice());
             cell2 = row.createCell(5);
 //            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getState());
+            cell2.setCellValue(o.getState().getId()+" - "+o.getState().getValue());
             cell2 = row.createCell(6);
 //            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getName());
+            cell2.setCellValue(o.getUser().getUsername());
             cell2 = row.createCell(7);
 //            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getAddress());
+            cell2.setCellValue(o.getUser().getName());
             cell2 = row.createCell(8);
 //            cell2.setCellStyle(style);
+            cell2.setCellValue(o.getUser().getAddress());
+            cell2 = row.createCell(9);
+//            cell2.setCellStyle(style);
             cell2.setCellValue(o.getUser().getPhone());
+            i++;
         }
         //设置自动调整宽度
-        sheet.autoSizeColumn(0);
-        sheet.autoSizeColumn(1);
-        sheet.autoSizeColumn(2);
-        sheet.autoSizeColumn(3);
-        sheet.autoSizeColumn(4);
-        sheet.autoSizeColumn(5);
-        sheet.autoSizeColumn(6);
-        sheet.autoSizeColumn(7);
-        sheet.autoSizeColumn(8);
+        for (int j = 0; j < 9; j++) {
+            sheet.autoSizeColumn(j);
+        }
         // 第六步，保存文件
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;

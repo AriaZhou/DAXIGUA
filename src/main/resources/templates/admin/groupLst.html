@@ -126,7 +126,7 @@
                             <td style="padding-bottom: 30px">
                                 <div class="layui-input-inline">
                                     截团时间：<input type="text" readonly name="endtime" id="endtime" class="layui-input"
-                                           style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px"
+                                           style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
                                 </div>
                             </td>
                         </tr>
@@ -180,20 +180,18 @@
                     <th>操作</th>
                 </tr>
             </thead>
-            <div th:each="g:${gLst}">
-                <tr>
-                    <td><input type="checkbox" name="gItem" th:id="${g.id}"></td>
-                    <td><p th:text="${g.id}"></p></td>
-                    <td><p th:text="${g.starttime}"></p></td>
-                    <td><p th:text="${g.endtime}"></p></td>
-                    <td>
-                        <button class="btn btn-info" style="font-size: 12px;"
-                                th:onclick="modifyG([[${g.id}]],[[${g.starttime}]],[[${g.endtime}]])">修改
-                        </button>
-                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSingleGroup([[${g.id}]])">删除</button>
-                    </td>
-                </tr>
-            </div>
+            <tr th:each="g:${gLst}">
+                <td><input type="checkbox" name="gItem" th:id="${g.id}"></td>
+                <td><p th:text="${g.id}"></p></td>
+                <td><p th:text="${#dates.format(g.starttime, 'yyyy/MM/dd HH:mm')}"></p></td>
+                <td><p th:text="${#dates.format(g.endtime, 'yyyy/MM/dd HH:mm')}"></p></td>
+                <td>
+                    <button class="btn btn-info" style="font-size: 12px;"
+                            th:onclick="modifyG([[${g.id}]],[[${#dates.format(g.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(g.endtime, 'yyyy-MM-dd HH:mm:ss')}]])">修改
+                    </button>
+                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSingleGroup([[${g.id}]])">删除</button>
+                </td>
+            </tr>
 
         </table>
 

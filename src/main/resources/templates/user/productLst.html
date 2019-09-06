@@ -17,6 +17,7 @@
         <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
                 th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
         <div class="dropdown-menu" style="border-color: #d1b6b1;">
+            <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
             <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
             <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
             <form action="#" th:action="@{/logout}" method="post">

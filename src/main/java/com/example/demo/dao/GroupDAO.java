@@ -3,16 +3,16 @@ package com.example.demo.dao;
 import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.Date;
 
 public interface GroupDAO extends CrudRepository<Group, String> {
 
-//	Orders findById(String id);
-//	List<Orders> findAll();
-//	int insert(Orders o);
-//	@Query("select o from Orders o where o.user = userName")
-//	public Iterable<Orders> findByUsr(String userName);
-//	int deleteById(String id);
-//	int modifyOrder(Orders o);
+    @Query("select g from Group g where g.starttime <= :nowTime AND g.endtime >= :nowTime")
+    Iterable<Group> findAllWithNowTimeBefore(
+            @Param("nowTime") Date nowTime);
 	
 }

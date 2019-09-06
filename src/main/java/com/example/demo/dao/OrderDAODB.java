@@ -35,7 +35,7 @@ public class OrderDAODB{
 //				order.setUser(userDAO.findById(rs.getString("username")));
 				order.setProduct(productDAO.findById(rs.getString("productId")).get());
 				order.setOcount(rs.getInt("ocount"));
-				order.setState(rs.getInt("state"));
+//				order.setState(rs.getInt("state"));
 				order.setTime(rs.getString("time"));
 				order.setPrice(rs.getString("price"));
 

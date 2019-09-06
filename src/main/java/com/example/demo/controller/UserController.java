@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.GroupDAO;
-import com.example.demo.dao.OrderDAO;
-import com.example.demo.dao.ProductDAO;
-import com.example.demo.dao.UserDAO;
+import com.example.demo.dao.*;
 import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
@@ -29,6 +26,8 @@ public class UserController {
     OrderDAO orderDao;
     @Autowired
     GroupDAO groupDao;
+    @Autowired
+    StateDAO stateDao;
 
 
     @RequestMapping("/index")
@@ -40,7 +39,7 @@ public class UserController {
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
-            Iterable<Group> groupLst = groupDao.findAll();
+            Iterable<Group> groupLst = groupDao.findAllWithNowTimeBefore(new Date());
             model.addObject("groupLst",groupLst);
 
         }catch(Exception e){
@@ -86,7 +85,7 @@ public class UserController {
             SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             o.setTime(format.format(now));
             o.setId(now.getTime()+"");
-            o.setState(0);
+            o.setState(stateDao.findById(0L).get());
             o.setPrice(Integer.parseInt(productDao.findById(pId).get().getPrice())*count+"");
             orderDao.save(o);
             p.setPcount(p.getPcount()-count);
@@ -121,15 +120,6 @@ public class UserController {
 
         Iterable<Orders> orderLst = userDao.findById(principal.getName()).get().getOrders();
         model.addObject("orderLst",orderLst);
-
-        List<String> s = new ArrayList<String>();
-        s.add("下单");
-        s.add("已付款");
-        s.add("出货中");
-        s.add("申请退款");
-        s.add("已退款");
-        Iterable<String> stateLst = s;
-        model.addObject("stateLst",stateLst);
 
         return model;
     }
