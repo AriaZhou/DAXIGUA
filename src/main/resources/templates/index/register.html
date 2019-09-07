@@ -41,7 +41,7 @@
 
             <label for="name"><table><td><b>群昵称</b></td>
                 <td><p id="emptyname" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入昵称！</p></td></table></label>
-            <input type="text" id="name" placeholder="请输入昵称" name="name">
+            <input type="text" id="name" placeholder="请输入昵称" name="uname">
 
             <label for="phone"><table><td><b>手机号码</b></td>
                 <td><p id="emptyphone" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入手机号码！</p></td></table></label>
@@ -56,7 +56,7 @@
             <input type="password" id="password" placeholder="请输入密码" name="password">
 
             <label for="passworda"><table><td><b>确认密码</b></td>
-                <td><p id="emptypswa" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入密码！</p></td></table></label>
+                <td><p id="emptypswa" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 密码不一致！</p></td></table></label>
             <input type="password" id="passworda" placeholder="请再次输入密码" name="passworda">
 
             </br>
@@ -123,7 +123,7 @@
             document.getElementById('emptypsw').hidden=false;
             return false;
         }
-        else if(passworda.value===''){
+        else if(passworda.value!==password.value){
             document.getElementById('emptypswa').hidden=false;
             return false;
         }

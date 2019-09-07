@@ -1,5 +1,5 @@
 function onSearch(obj){
-    var table = document.getElementById('productTable');//獲取table的id標識
+    var table = document.getElementById('userTable');//獲取table的id標識
     var rowsLength = table.rows.length;//表格總共有多少行
     var columnsLength = table.rows.item(0).cells.length;//表格總共有多少列
     var key = obj.value;//獲取輸入框的值
@@ -51,80 +51,90 @@ function onSearch(obj){
 //         });
 //     })(jQuery);
 
-var mGroupid;
-var mName;
-var mPrice;
-var mCount;
-var mStarttime;
-var mEndtime;
-var mDescription;
+var uusername;
+var uname;
+var uemail;
+var uaddress;
+var upassword;
+var uphone;
 
 function rollBack(){
-    document.getElementById("groupid").value = mGroupid;
-    document.getElementById("name").value = mName;
-    document.getElementById("price").value = mPrice;
-    document.getElementById("count").value = mCount;
-    document.getElementById("starttime").value = mStarttime;
-    document.getElementById("endtime").value = mEndtime;
-    document.getElementById("description").value = mDescription;
+
+    document.getElementById("username").value = uusername;
+    document.getElementById("name").value = uname;
+    document.getElementById("email").value = uemail;
+    document.getElementById("address").value = uaddress;
+    document.getElementById("password").value = upassword;
+    document.getElementById("phone").value = uphone;
+
+    $("#insertUser").find("input").each(function(){
+        var width=textWidth($(this).val());
+        $(this).width(width)
+    });
+
 }
 
-function insertP(){
-    document.getElementById("insertProduct").style.display='block';
+function insertU(){
+    document.getElementById("insertUser").style.display='block';
 
-    document.getElementById("formTitle").innerHTML = "新增产品";
+    document.getElementById("formTitle").innerHTML = "新增用户";
     document.getElementById("rollback").hidden = true;
     document.getElementById("insertConfirm").hidden = false;
     document.getElementById("modifyConfirm").hidden = true;
-    document.getElementById("groupid").value = null;
+    document.getElementById("username").value = null;
     document.getElementById("name").value = null;
-    document.getElementById("price").value = null;
-    document.getElementById("count").value = null;
-    document.getElementById("starttime").value = null;
-    document.getElementById("endtime").value = null;
-    document.getElementById("description").value = null;
+    document.getElementById("email").value = null;
+    document.getElementById("address").value = null;
+    document.getElementById("password").value = null;
+    document.getElementById("phone").value = null;
+
+    $("#insertUser").find("input").each(function(){
+        var width=textWidth($(this).val());
+        $(this).width("fit-content")
+    });
 
 }
 
-function modifyP(id, gid,name,price,count,startTime,endTime,description){
-    document.getElementById("insertProduct").style.display='block';
+function modifyU(username,name,email,address,phone,password){
+    document.getElementById("insertUser").style.display='block';
 
-    document.getElementById("formTitle").innerHTML = "修改产品";
+    document.getElementById("formTitle").innerHTML = "修改用户";
     document.getElementById("rollback").hidden = false;
     document.getElementById("insertConfirm").hidden = true;
     document.getElementById("modifyConfirm").hidden = false;
-    document.getElementById("id").value = id;
-    document.getElementById("groupid").value = gid;
+    document.getElementById("username").value = username;
     document.getElementById("name").value = name;
-    document.getElementById("price").value = price;
-    document.getElementById("count").value = count;
-    document.getElementById("starttime").value = startTime;
-    document.getElementById("endtime").value = endTime;
-    document.getElementById("description").value = description;
+    document.getElementById("email").value = email;
+    document.getElementById("address").value = address;
+    document.getElementById("password").value = password;
+    document.getElementById("phone").value = phone;
 
+    uusername = username;
+    uname = name;
+    uemail = email;
+    uaddress = address;
+    upassword = password;
+    uphone = phone;
 
-    mGroupid = gid;
-    mName = name;
-    mPrice= price;
-    mCount = count;
-    mStarttime = startTime;
-    mEndtime = endTime;
-    mDescription = description;
+    $("#insertUser").find("input").each(function(){
+        var width=textWidth($(this).val());
+        $(this).width(width)
+    });
 
 }
 
-function modifyProduct() {
+function modifyUser() {
 
     $.ajax({
         cache: true,
         type: "POST",
-        url: "/admin/modifyProduct",
-        data:$('#productInfo').serialize(),
+        url: "/admin/modifyUser",
+        data:$('#userInfo').serialize(),
         async: false,
         error: function(request){
             alert("修改失败，请重试。");
-            return false;
             // alert("Connection error:"+request.error);
+            return false;
         },
         success: function(data){
             if(data==="0"){
@@ -139,38 +149,38 @@ function modifyProduct() {
     });
 }
 
-function addProduct() {
+function addUser() {
     $.ajax({
         cache: true,
         type: "POST",
-        url: "/admin/addProduct",
-        data:$('#productInfo').serialize(),
+        url: "/admin/addUser",
+        data:$('#userInfo').serialize(),
         async: false,
         error: function(request){
             alert("新增失败，请重试。");
-            return false;
             // alert("Connection error:"+request.error);
+            return false;
         },
         success: function(data){
-            if(data==="0"){
-                alert("新增失败，请重试。");
-                return false;
-            }else{
+            if(data==="1"){
                 alert("新增成功");
                 window.location.reload();
+                return false;
+            }else{
+                alert("新增失败，该QQ号已经注册过了。");
                 return false;
             }
         }
     });
 }
 
-function deleteProduct(name) {
+function deleteSingleUser(name) {
     $.ajax({
         cache: true,
         type: "POST",
-        url: "/admin/deleteProduct",
+        url: "/admin/deleteUser",
         data:{
-            productid : name
+            userid : name,
         },
         async: false,
         error: function(request){
@@ -183,7 +193,6 @@ function deleteProduct(name) {
                 alert("删除失败，请重试。");
                 return false;
             }else{
-
                 alert("删除成功");
                 window.location.reload();
                 return false;
@@ -195,9 +204,10 @@ function deleteProduct(name) {
 
 function deleteGroup(){
     var ids = [];
-    $("input[name = 'pItem']:checked").each(function () {
+    $("input[name = 'uItem']:checked").each(function () {
         ids.push($(this).attr('id'));
     });
+    console.log(ids);
 
     if(ids.length === 0){
         alert("您选一个啊，点checkbox！");
@@ -207,9 +217,9 @@ function deleteGroup(){
     $.ajax({
         cache: true,
         type: "POST",
-        url: "/admin/deleteProductGroup",
+        url: "/admin/deleteUserGroup",
         data:{
-            productid : ids.toString()
+            userid : ids.toString()
         },
         async: false,
         error: function(request){
@@ -219,7 +229,7 @@ function deleteGroup(){
         },
         success: function(data){
             if(data==="0"){
-                alert("有人买了这个商品了，不能删了哦。");
+                alert("删除失败，请重试。");
                 return false;
             }else{
                 alert("删除成功");
@@ -230,15 +240,24 @@ function deleteGroup(){
     });
 }
 
-function addTimeValue(gid, stime, endtime) {
-    document.getElementById("groupid").value = gid;
-    document.getElementById("starttime").value = stime;
-    document.getElementById("endtime").value = endtime;
-}
-
 function checkedAll(obj) {
-    $("input[name='pItem']").each(function(index) {
-        if(document.getElementById('productTable').rows[index+1].style.display === '')
+    $("input[name='uItem']").each(function(index) {
+        if(document.getElementById('userTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
+}
+
+function showExport(){
+    var ids = [];
+    $("input[name='uItem']:checked").each(function(index) {
+        ids.push($(this).attr('id'));
+    });
+
+    if(ids.length>0){
+        console.log(ids);
+        location.href="/admin/exportSelectedData?ids="+ids;
+    }else{
+        location.href="/admin/exportData";
+    }
+
 }

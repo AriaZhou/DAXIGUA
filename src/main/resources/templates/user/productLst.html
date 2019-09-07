@@ -8,22 +8,32 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--    jQuery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
 
 <div class="container">
 
-    <div class="dropdown" style="float: right;padding-top: 60px">
-        <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-                th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
-        <div class="dropdown-menu" style="border-color: #d1b6b1;">
-            <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
-            <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
-            <form action="#" th:action="@{/logout}" method="post">
-                <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
-            </form>
-        </div>
-    </div>
+    <table style="float: right;">
+        <td style="padding: 60px 20px 0 0">
+            <button type="button" class="btn btn-info" th:text="批量下单" style="background-color: #d19090; border-color: #d19090;" onclick="submitOrderGroup()"></button>
+        </td>
+        <td style="padding-top: 60px">
+            <div class="dropdown">
+                <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+                        th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
+                <div class="dropdown-menu" style="border-color: #d1b6b1;">
+                    <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
+                    <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+                    <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
+                    <form action="#" th:action="@{/logout}" method="post">
+                        <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+                    </form>
+                </div>
+            </div>
+        </td>
+    </table>
 
     <div  style="padding-top: 160px">
         <div class="row">
@@ -32,7 +42,6 @@
                     <img class="card-img-top" src="../picture/img_0013.png" alt="Card image" style="width:100%">
                     <div class="card-body">
                         <table style="width: 100%">
-                            <td style="vertical-align:bottom;"><h6 th:text="${p.id}">90120</h6></td>
                             <td style="vertical-align:bottom;"><h6 style="float: right" th:text="${p.pname}">小橘里汁</h6></td>
                         </table>
                         <p class="card-text" style="color: #888888;font-size: 13px" th:text="${p.description}">这是介绍哦</p>
@@ -110,6 +119,43 @@
 
                     return false;
 
+                }
+            }
+        });
+    }
+
+    function submitOrderGroup() {
+        var ids = [];
+        var nums = [];
+        $("input").each(function () {
+            if(this.value!=="0" && this.value!=="登出"){
+                ids.push($(this).attr('id'));
+                nums.push(this.value);
+            }
+        });
+
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/user/addOrderGroup",
+            data:{
+                productid : ids.toString(),
+                productNum : nums.toString()
+            },
+            async: false,
+            error: function(request){
+                alert("下单失败，请重试。");
+                return false;
+                // alert("Connection error:"+request.error);
+            },
+            success: function(data){
+                if(data==="0"){
+                    alert("下单失败，请重试。");
+                    return false;
+                }else{
+                    alert("下单成功");
+                    window.location.reload();
+                    return  false;
                 }
             }
         });

@@ -60,9 +60,16 @@ public class MainController {
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	@ResponseBody
 	public ModelAndView register(@ModelAttribute User cus) {
-		System.out.println(cus.getUsername());
 		ModelAndView model;
 		try{
+			if(userDao.existsById(cus.getUsername())){
+				model = new ModelAndView("index/register");
+				model.addObject("registerError", true);
+				return model;
+			}
+
+			cus.setRole("ROLE_USER");
+			cus.setPassword("{noop}"+cus.getPassword());
 			userDao.save(cus);
 			model = new ModelAndView("redirect:/login");
 		}catch (Exception e){

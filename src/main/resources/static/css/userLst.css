@@ -1,0 +1,30 @@
+.userTitle{
+  padding: 20px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.userRow{
+  text-align: center;
+}
+
+.userValue{
+  width: fit-content;
+  min-width: 0px;
+  border: none;
+  border-bottom: #d19090 dashed 1px;
+  font-size: 16px;
+  font-family: SimSun;
+}
+
+pre{
+  font-family: SimSun;
+  font-size:16px;
+}
+
+.valueTitle{
+  width: max-content;
+}
+

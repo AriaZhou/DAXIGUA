@@ -28,10 +28,10 @@ public class User implements Serializable {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-	public String getName() {
+	public String getUname() {
 		return uname;
 	}
-	public void setName(String uname) {
+	public void setUname(String uname) {
 		this.uname = uname;
 	}
 	public String getPassword() {

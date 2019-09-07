@@ -17,10 +17,11 @@
 
         <div class="dropdown" style="float: right;padding-top: 60px">
             <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-                    th:text="${userInfo.name}" style="background-color: #d19090; border-color: #d19090;"></button>
+                    th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
             <div class="dropdown-menu" style="border-color: #d1b6b1;">
                 <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
                 <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+                <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
                 <form action="#" th:action="@{/logout}" method="post">
                     <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
                 </form>
@@ -28,7 +29,7 @@
         </div>
 
         <div style="padding-top: 160px">
-            <form id="basicInfo">
+            <form id="basicInfo" onsubmit="return false">
                 <table align="center" style="border-radius: 9px; border: #d19090 dashed 2px; width: 60%;
                         min-width: fit-content; border-collapse: separate; border-spacing: 0;">
                     <tr>
@@ -42,7 +43,7 @@
                         <td class="usrRow">
                             <table align="center">
                                 <td class="valueTitle">群昵称：</td>
-                                <td><input name="name" id="name" th:field="${userInfo.name}" class="usrValue"></td>
+                                <td><input name="name" id="name" th:field="${userInfo.uname}" class="usrValue"></td>
                             </table>
                         </td>
                     </tr>
@@ -102,14 +103,14 @@
             var width = sensor.width();
             sensor.remove();
             return width+6;
-        }
+        };
 
         document.body.onload=function(){
             $("input").each(function(){
                 var width=textWidth($(this).val());
                 $(this).width(width)
             });
-        }
+        };
 
         function modifyUser() {
             $.ajax({
@@ -120,11 +121,13 @@
                 async: false,
                 error: function(request){
                     alert("修改失败，请重试。");
+                    return false;
                     // alert("Connection error:"+request.error);
                 },
                 success: function(data){
                     if(data==="0"){
                         alert("修改失败，请重试。");
+                        return false;
                     }else{
                         alert("修改成功");
                         window.location.reload();

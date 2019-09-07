@@ -11,7 +11,6 @@ public class Orders implements Serializable {
     @Id
     private String id;
     private int ocount;
-    private int state;
     private String time;
     private String price;
 
@@ -22,6 +21,10 @@ public class Orders implements Serializable {
     @ManyToOne
     @JoinColumn(name = "productid")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "state")
+    private State state;
 
     public String getId() {
         return id;
@@ -34,12 +37,6 @@ public class Orders implements Serializable {
     }
     public void setOcount(int ocount) {
         this.ocount = ocount;
-    }
-    public int getState() {
-        return state;
-    }
-    public void setState(int state) {
-        this.state = state;
     }
     public String getTime() {
         return time;
@@ -64,5 +61,11 @@ public class Orders implements Serializable {
     }
     public void setProduct(Product product) {
         this.product = product;
+    }
+    public State getState() {
+        return state;
+    }
+    public void setState(State state) {
+        this.state = state;
     }
 }

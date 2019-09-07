@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dao.GroupDAO;
-import com.example.demo.dao.OrderDAO;
-import com.example.demo.dao.ProductDAO;
-import com.example.demo.dao.UserDAO;
+import com.example.demo.dao.*;
 import com.example.demo.entity.Group;
 import com.example.demo.entity.Orders;
 import com.example.demo.entity.Product;
@@ -15,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +27,8 @@ public class UserController {
     OrderDAO orderDao;
     @Autowired
     GroupDAO groupDao;
+    @Autowired
+    StateDAO stateDao;
 
 
     @RequestMapping("/index")
@@ -40,7 +40,7 @@ public class UserController {
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
-            Iterable<Group> groupLst = groupDao.findAll();
+            Iterable<Group> groupLst = groupDao.findAllWithNowTimeBefore(new Date());
             model.addObject("groupLst",groupLst);
 
         }catch(Exception e){
@@ -85,12 +85,54 @@ public class UserController {
             Date now = new Date();
             SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             o.setTime(format.format(now));
-            o.setId(principal.getName()+now.getTime());
-            o.setState(0);
+            o.setId(now.getTime()+"");
+            o.setState(stateDao.findById(0L).get());
             o.setPrice(Integer.parseInt(productDao.findById(pId).get().getPrice())*count+"");
             orderDao.save(o);
             p.setPcount(p.getPcount()-count);
             productDao.save(p);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+    }
+
+    @RequestMapping(value = "/user/addOrderGroup", method = RequestMethod.POST)
+    @ResponseBody
+    public String addOrderGroup(String productid, String productNum, Principal principal){
+
+        try{
+            Orders o = new Orders();
+            o.setUser(userDao.findById(principal.getName()).get());
+
+            List<String> pids = new ArrayList<>();
+            List<String> counts = new ArrayList<>();
+            if(productid.contains(",")){
+                pids = Arrays.asList(productid.split(","));
+                counts = Arrays.asList(productNum.split(","));
+            }
+            else{
+                pids.add(productid);
+                counts.add(productNum);
+            }
+
+            for (int i = 0; i < pids.size(); i++) {
+                Product p = productDao.findById(pids.get(i)).get();
+                o.setOcount(Integer.parseInt(counts.get(i)));
+                o.setProduct(p);
+                Date now = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                o.setTime(format.format(now));
+                o.setId(now.getTime()+"");
+                o.setState(stateDao.findById(0L).get());
+                o.setPrice(Integer.parseInt(productDao.findById(pids.get(i)).get().getPrice())*Integer.parseInt(counts.get(i))+"");
+                orderDao.save(o);
+                p.setPcount(p.getPcount()-Integer.parseInt(counts.get(i)));
+                productDao.save(p);
+            }
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -122,15 +164,6 @@ public class UserController {
         Iterable<Orders> orderLst = userDao.findById(principal.getName()).get().getOrders();
         model.addObject("orderLst",orderLst);
 
-        List<String> s = new ArrayList<String>();
-        s.add("下单");
-        s.add("已付款");
-        s.add("出货中");
-        s.add("申请退款");
-        s.add("已退款");
-        Iterable<String> stateLst = s;
-        model.addObject("stateLst",stateLst);
-
         return model;
     }
 
@@ -146,7 +179,9 @@ public class UserController {
     @RequestMapping(value = "/user/modifyUser", method = RequestMethod.POST)
     @ResponseBody
     public String modifyUser(@ModelAttribute User u){
-
+        User uOld = userDao.findById(u.getUsername()).get();
+        u.setRole(uOld.getRole());
+        u.setPassword(uOld.getPassword());
         userDao.save(u);
         return "1";
 

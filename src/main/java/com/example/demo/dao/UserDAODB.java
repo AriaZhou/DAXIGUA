@@ -31,7 +31,7 @@ public class UserDAODB {
 				User user = new User();
 				user.setUsername(rs.getString("username"));
 				user.setEmail(rs.getString("email"));
-				user.setName(rs.getString("uname"));
+				user.setUname(rs.getString("uname"));
 				user.setAddress(rs.getString("address"));
 				user.setPhone(rs.getString("phone"));
 				user.setRole(rs.getString("role"));
@@ -76,7 +76,7 @@ public class UserDAODB {
 	public int insert(User u){
 		try{
 			jdbcTemplate.update("insert into user (username, email, uname, address, phone, password, role)" +
-					"values (?,?,?,?,?,?,?)", u.getUsername(), u.getEmail(), u.getName(), u.getAddress(), u.getPhone(), "{noop}"+u.getPassword(), "ROLE_USER");
+					"values (?,?,?,?,?,?,?)", u.getUsername(), u.getEmail(), u.getUname(), u.getAddress(), u.getPhone(), "{noop}"+u.getPassword(), "ROLE_USER");
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
@@ -99,7 +99,7 @@ public class UserDAODB {
 
 		try{
 			jdbcTemplate.update("update user set email=?, uname=?, address=?, phone=?" +
-					"where username=?", u.getEmail(), u.getName(), u.getAddress(), u.getPhone(), u.getUsername());
+					"where username=?", u.getEmail(), u.getUname(), u.getAddress(), u.getPhone(), u.getUsername());
 			return 1;
 		}catch(Exception e){
 			System.out.println("----error----");
