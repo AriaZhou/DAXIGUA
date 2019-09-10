@@ -99,7 +99,7 @@
 
         <div id="insertProduct" class="modal" style="display: none">
 
-            <form class="modal-content animate" id="productInfo" onsubmit="return false">
+            <form class="modal-content animate" id="productInfo" method="post" action="/upload" enctype="multipart/form-data">
                 <input name="id" id="id" hidden>
                 <span onclick="document.getElementById('insertProduct').style.display='none'" class="close" title="Close Modal"
                         style="margin: 26px; font-size: 40px">&times;</span>
@@ -116,7 +116,7 @@
                                     团号：<input name="group" id="groupid" class="dropdown-toggle" data-toggle="dropdown" readonly
                                               style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
                                     <div class="dropdown-menu">
-                                        <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addTimeValue([[${g.id}]],[[${g.starttime}]],[[${g.endtime}]])">[[${g.id}]]</a>
+                                        <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addTimeValue([[${g.id}]],[[${#dates.format(g.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(g.endtime, 'yyyy-MM-dd HH:mm:ss')}]])">[[${g.id}]]</a>
                                     </div>
                                 </div>
                             </td>
@@ -147,6 +147,12 @@
                                 <input type="text" readonly name="endtime" id="endtime" class="usrValue">
                             </td>
                         </tr>
+                        <tr>
+                            <td class="valueTitle" style="width: 111px">图片：</td>
+                            <td><input type="file" name="file" id="file"><br></td>
+                            <td class="valueTitle" style="width: 111px"><a>查看图片</a></td>
+                            <td></td>
+                        </tr>
                     </table>
 
                     <table align="center" style="width: 80%;">
@@ -162,8 +168,8 @@
                             <td class="usrRow">
                                 <table align="center">
                                     <td style="padding-right: 6px"><button  id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addProduct()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyProduct()">确认修改</button></td>
+                                    <td style="padding-left: 6px"><button type="submit" id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addProduct()">确认新增</button></td>
+                                    <td style="padding-left: 6px"><button type="submit" id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyProduct()">确认修改</button></td>
                                 </table>
                             </td>
                         </tr>
@@ -246,6 +252,8 @@
     $(function() {
         $("#productTable").tablesorter();
     });
+
+
 </script>
 
 </body>

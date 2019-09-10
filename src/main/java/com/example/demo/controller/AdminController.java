@@ -39,14 +39,17 @@ public class AdminController {
     @ResponseBody
     public ModelAndView adminIndex(Principal principal) {
 
+        ModelAndView model;
         try{
-            System.out.println(principal.getName());
+            if(userDao.findById(principal.getName()).get().getRole().equals("0"))
+                model = new ModelAndView("redirect:/index");
+            else{
+                model = new ModelAndView("admin/index");
+                model.addObject("username", principal.getName());
+            }
         }catch(Exception e){
-
+            model = new ModelAndView("index/login");
         }
-        ModelAndView model = new ModelAndView("admin/index");
-
-        model.addObject("username", principal.getName());
 
         return model;
     }
@@ -162,7 +165,7 @@ public class AdminController {
             Date now = new Date();
             SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
             p.setUploadTime(format.format(now));
-            p.setId(p.getGroup().getId()+now.getTime());
+//            p.setId(p.getGroup().getId()+now.getTime());
             productDao.save(p);
             return "1";
         }catch (Exception e){

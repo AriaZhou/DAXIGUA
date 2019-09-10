@@ -140,6 +140,8 @@ function modifyProduct() {
 }
 
 function addProduct() {
+    document.getElementById("id").value = document.getElementById("groupid").value+new Date().getTime();
+
     $.ajax({
         cache: true,
         type: "POST",

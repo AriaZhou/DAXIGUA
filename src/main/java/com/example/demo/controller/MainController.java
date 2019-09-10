@@ -19,9 +19,18 @@ public class MainController {
 	
 	@RequestMapping("/")
 	@ResponseBody
-	public ModelAndView index() {
+	public ModelAndView index(Principal principal) {
 
-		ModelAndView model = new ModelAndView("redirect:/index");
+		ModelAndView model;
+		try{
+			if(userDao.findById(principal.getName()).get().getRole().equals("0"))
+				model = new ModelAndView("redirect:/index");
+			else
+				model = new ModelAndView("redirect:/admin");
+		}catch(Exception e){
+			model = new ModelAndView("index/login");
+		}
+
 		return model;
 	}
 
