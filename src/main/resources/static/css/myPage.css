@@ -7,12 +7,12 @@
 }
 
 .usrRow{
-  padding: 6px;
+  padding: 16px;
   text-align: center;
 }
 
 .usrValue{
-  width: 3px;
+  width: fit-content;
   min-width: 0px;
   border: none;
   border-bottom: #d19090 dashed 1px;
@@ -29,3 +29,12 @@ pre{
   width: max-content;
 }
 
+.basicInfo{
+  border-radius: 9px;
+  border: #d19090 dashed 2px;
+  width: 60%;
+  min-width: fit-content;
+  border-collapse: separate;
+  border-spacing: 0;
+  padding: 30px
+}
