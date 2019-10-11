@@ -117,6 +117,13 @@
 			<version>4.7.11.ALL</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.6.2-jaxb-1.0.6</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

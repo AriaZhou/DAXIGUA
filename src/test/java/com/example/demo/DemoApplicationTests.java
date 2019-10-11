@@ -1,11 +1,8 @@
 package com.example.demo;
 
-<<<<<<< HEAD
 import com.example.demo.service.OrderService;
-=======
 import com.example.demo.API.KdGoldCreateOrderAPI;
 import com.example.demo.API.KdniaoSubscribeAPI;
->>>>>>> e81e597f6e06bbb637d9b59558c2762b8b47fbea
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
