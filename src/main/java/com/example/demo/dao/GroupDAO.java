@@ -14,5 +14,9 @@ public interface GroupDAO extends CrudRepository<Group, String> {
     @Query("select g from Group g where g.starttime <= :nowTime AND g.endtime >= :nowTime")
     Iterable<Group> findAllWithNowTimeBefore(
             @Param("nowTime") Date nowTime);
+
+    @Query("select g from Group g where g.endtime < :nowTime")
+    Iterable<Group> findAllWithNowTimeAfter(
+            @Param("nowTime") Date nowTime);
 	
 }

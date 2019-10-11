@@ -81,6 +81,7 @@
         <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
         <li class="active"><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
         <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
+        <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
         <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
             <ul class="submenu">
             <li><a href="#">一般使用者 </a></li>
@@ -127,10 +128,17 @@
                         <tr>
                             <td class="valueTitle" style="width: 111px">名称：</td>
                             <td><input name="pname" id="name" class="usrValue"></td>
+                            <td class="valueTitle" style="width: 111px">货物状态：</td>
+                            <td>
+                                <div class="dropdown">
+                                    <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" th:each="s:${sLst}" th:onclick="addStateValue([[${sStat.index}]])">
+                                            [[${sStat.index}]] - [[${s.value}]]</a>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
-                    </table>
-
-                    <table align="center" style="width: 80%;">
                         <tr>
                             <td class="valueTitle" style="width: 111px">价格：</td>
                             <td><input name="price" id="price" class="usrValue"></td>
@@ -147,12 +155,12 @@
                                 <input type="text" readonly name="endtime" id="endtime" class="usrValue">
                             </td>
                         </tr>
-                        <tr>
-                            <td class="valueTitle" style="width: 111px">图片：</td>
-                            <td><input type="file" name="file" id="file"><br></td>
-                            <td class="valueTitle" style="width: 111px"><a>查看图片</a></td>
-                            <td></td>
-                        </tr>
+<!--                        <tr>-->
+<!--                            <td class="valueTitle" style="width: 111px">图片：</td>-->
+<!--                            <td><input type="file" name="file" id="file"><br></td>-->
+<!--                            <td class="valueTitle" style="width: 111px"><a>查看图片</a></td>-->
+<!--                            <td></td>-->
+<!--                        </tr>-->
                     </table>
 
                     <table align="center" style="width: 80%;">
@@ -190,7 +198,7 @@
                 <div class="btn-group mr2" style="float: right; position: relative; top:80px">
                     <button class="btn btn-sm btn-outline-secondary" onclick="insertP()">新增产品</button>
                     <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
-                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="showExport()">导出表单</button>
                 </div>
             </td>
         </table>
@@ -208,23 +216,23 @@
                     <th>团号</th>
                     <th>名称</th>
                     <th>价格</th>
-                    <th>库存</th>
-                    <th>开团时间</th>
-                    <th>截团时间</th>
+                    <th>订购数量</th>
+                    <th>剩余可定数量</th>
+                    <th>货物状态</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tr th:each="p:${pLst}">
-                <td><input type="checkbox" name="pItem" th:id="${p.id}"></td>
+                <td><input th:if="${p.state.id eq 1}" type="checkbox" name="pItem" th:id="${p.id}"></td>
                 <td><p th:text="${p.group.id}"></p></td>
                 <td><p th:text="${p.pname}"></p></td>
                 <td><p th:text="${p.price}"></p></td>
+                <td><p th:text="${p.ordercount}"></p></td>
                 <td><p th:text="${p.pcount}"></p></td>
-                <td><p th:text="${#dates.format(p.group.starttime, 'MM-dd HH:mm')}"></p></td>
-                <td><p th:text="${#dates.format(p.group.endtime, 'MM-dd HH:mm')}"></p></td>
+                <td><p th:text="${p.state.value}"></p></td>
                 <td>
                     <button class="btn btn-info" style="font-size: 12px;"
-                            th:onclick="modifyP([[${p.id}]],[[${p.group.id}]],[[${p.pname}]],[[${p.price}]],[[${p.pcount}]],[[${#dates.format(p.group.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(p.group.endtime, 'yyyy-MM-dd HH:mm:ss')}]],[[${p.description}]])">修改
+                            th:onclick="modifyP([[${p.id}]],[[${p.group.id}]],[[${p.pname}]],[[${p.price}]],[[${p.pcount}]],[[${p.state.id}]],[[${#dates.format(p.group.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(p.group.endtime, 'yyyy-MM-dd HH:mm:ss')}]],[[${p.description}]])">修改
                     </button>
                     <!--<button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyP([[${pStat.index}]])">修改</button>-->
                     <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteProduct([[${p.id}]])">删除</button>

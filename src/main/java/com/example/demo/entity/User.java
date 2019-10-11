@@ -21,6 +21,9 @@ public class User implements Serializable {
 
 	@OneToMany(mappedBy = "user")
 	private List<Orders> orders;
+
+	@OneToMany(mappedBy = "user")
+	private List<Payment> payments;
 	
 	public String getUsername() {
 		return username;
@@ -66,5 +69,8 @@ public class User implements Serializable {
 	}
 	public Iterable<Orders> getOrders() {
 		return orders;
+	}
+	public Iterable<Payment> getPayments() {
+		return payments;
 	}
 }

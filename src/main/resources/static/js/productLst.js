@@ -86,7 +86,7 @@ function insertP(){
 
 }
 
-function modifyP(id, gid,name,price,count,startTime,endTime,description){
+function modifyP(id, gid,name,price,count,state,startTime,endTime,description){
     document.getElementById("insertProduct").style.display='block';
 
     document.getElementById("formTitle").innerHTML = "修改产品";
@@ -98,6 +98,7 @@ function modifyP(id, gid,name,price,count,startTime,endTime,description){
     document.getElementById("name").value = name;
     document.getElementById("price").value = price;
     document.getElementById("count").value = count;
+    document.getElementById("state").value = state;
     document.getElementById("starttime").value = startTime;
     document.getElementById("endtime").value = endTime;
     document.getElementById("description").value = description;
@@ -238,9 +239,28 @@ function addTimeValue(gid, stime, endtime) {
     document.getElementById("endtime").value = endtime;
 }
 
+function addStateValue(stateValue) {
+    document.getElementById("state").value = stateValue;
+}
+
 function checkedAll(obj) {
     $("input[name='pItem']").each(function(index) {
         if(document.getElementById('productTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
     });
+}
+
+function showExport(){
+    var ids = [];
+    $("input[name='pItem']:checked").each(function(index) {
+        ids.push($(this).attr('id'));
+    });
+
+    if(ids.length>0){
+        console.log(ids);
+        location.href="/admin/exportSelectedProductData?ids="+ids;
+    }else{
+        location.href="/admin/exportProductData";
+    }
+
 }

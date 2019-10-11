@@ -82,6 +82,7 @@
         <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
         <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
         <li class="active"><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
+        <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
         <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
             <!--<ul class="submenu">-->
             <!--<li><a href="#">Web Design </a></li>-->
@@ -96,7 +97,7 @@
 </div>
 
 <div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding: 50px">
+    <div class="container" style="height:100%; padding-top: 50px">
 
         <div id="insertOrder" class="modal" style="display: none">
 
@@ -200,6 +201,7 @@
                         <div class="dropdown-menu">
                             <a class="dropdown-item" th:each="s:${sLst}" th:onclick="setState([[${sStat.index}]])">
                                 批量设为 [[${s.value}]]</a>
+                            <a class="dropdown-item" onclick="deleteGroup()">批量导入</a>
                             <a class="dropdown-item" style="color: darkred" onclick="deleteGroup()">批量删除</a>
                         </div>
                     </div>
@@ -224,18 +226,20 @@
                     <th>数量</th>
                     <th>价格</th>
                     <th>状态</th>
+                    <th>QQ号</th>
                     <th>QQ昵称</th>
                     <th>操作</th>
                 </tr>
             </thead>
             <tr th:each="o:${oLst}">
-                <td><input type="checkbox" name="oItem" th:id="${o.id}"></td>
+                <td style="width: 80px"><input type="checkbox" name="oItem" th:id="${o.id}"></td>
                 <td><p th:text="${o.id}"></p></td>
                 <td><p th:text="${o.product.group.id}"></p></td>
                 <td><p th:text="${o.product.pname}"></p></td>
-                <td><p th:text="${o.ocount}"></p></td>
-                <td><p th:text="'￥'+${o.price}"></p></td>
-                <td><p th:text="${o.state.value}"></p></td>
+                <td style="width: 70px"><p th:text="${o.ocount}"></p></td>
+                <td style="width: 90px"><p th:text="'￥'+${o.price}"></p></td>
+                <td style="width: 100px"><p th:text="${o.state.value}"></p></td>
+                <td style="width: 120px"><p th:text="${o.user.username}"></p></td>
                 <td style="width: 160px"><p th:text="${o.user.uname}"></p></td>
                 <td>
                     <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state.id}]], [[${o.user.username}]])">修改</button>

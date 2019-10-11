@@ -1,10 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.dao.*;
-import com.example.demo.entity.Group;
-import com.example.demo.entity.Orders;
-import com.example.demo.entity.Product;
-import com.example.demo.entity.User;
+import com.example.demo.entity.*;
+import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,6 +27,10 @@ public class UserController {
     GroupDAO groupDao;
     @Autowired
     StateDAO stateDao;
+    @Autowired
+    PaymentDAO paymentDao;
+    @Autowired
+    private OrderService orderService;
 
 
     @RequestMapping("/index")
@@ -77,20 +79,7 @@ public class UserController {
     public String addOrder(String pId, int count, Principal principal){
 
         try{
-            Orders o = new Orders();
-            Product p = productDao.findById(pId).get();
-            o.setUser(userDao.findById(principal.getName()).get());
-            o.setOcount(count);
-            o.setProduct(p);
-            Date now = new Date();
-            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-            o.setTime(format.format(now));
-            o.setId(now.getTime()+"");
-            o.setState(stateDao.findById(0L).get());
-            o.setPrice(Integer.parseInt(productDao.findById(pId).get().getPrice())*count+"");
-            orderDao.save(o);
-            p.setPcount(p.getPcount()-count);
-            productDao.save(p);
+            orderService.addOrder(pId, count, principal);
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -119,20 +108,9 @@ public class UserController {
                 counts.add(productNum);
             }
 
-            for (int i = 0; i < pids.size(); i++) {
-                Product p = productDao.findById(pids.get(i)).get();
-                o.setOcount(Integer.parseInt(counts.get(i)));
-                o.setProduct(p);
-                Date now = new Date();
-                SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-                o.setTime(format.format(now));
-                o.setId(now.getTime()+"");
-                o.setState(stateDao.findById(0L).get());
-                o.setPrice(Integer.parseInt(productDao.findById(pids.get(i)).get().getPrice())*Integer.parseInt(counts.get(i))+"");
-                orderDao.save(o);
-                p.setPcount(p.getPcount()-Integer.parseInt(counts.get(i)));
-                productDao.save(p);
-            }
+            for (int i = 0; i < pids.size(); i++)
+                orderService.addOrder(pids.get(i), Integer.parseInt(counts.get(i)), principal);
+
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -184,6 +162,33 @@ public class UserController {
         u.setPassword(uOld.getPassword());
         userDao.save(u);
         return "1";
+
+    }
+
+    @RequestMapping(value = "/user/addPayment", method = RequestMethod.POST)
+    @ResponseBody
+    public String addPayment(String ids, double price, Principal principal){
+        long id = Long.parseLong(new Date().getTime()+""+Integer.parseInt(principal.getName()));
+        StringBuilder remark = new StringBuilder();
+        while(id>0) {
+            long tmp = id % 62;
+            if (tmp < 10)
+                remark.append(tmp);
+            else if (tmp < 36)
+                remark.append((char) (tmp + 87));
+            else
+                remark.append((char) (tmp + 29));
+            id = id / 62;
+        }
+        Payment p = new Payment();
+        p.setId(remark.toString());
+        p.setTotprice(price);
+        p.setState(0);
+        p.setValue(ids);
+        p.setUser(userDao.findById(principal.getName()).get());
+
+        paymentDao.save(p);
+        return remark.toString();
 
     }
 }

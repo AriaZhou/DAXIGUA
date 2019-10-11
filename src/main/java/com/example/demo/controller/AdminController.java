@@ -1,13 +1,18 @@
 package com.example.demo.controller;
 
+import com.example.demo.UploadUtil;
 import com.example.demo.dao.*;
 import com.example.demo.entity.*;
+import com.example.demo.service.OrderService;
+import com.example.demo.service.ProductService;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletOutputStream;
@@ -16,10 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class AdminController {
@@ -34,6 +36,14 @@ public class AdminController {
     GroupDAO groupDao;
     @Autowired
     StateDAO stateDao;
+    @Autowired
+    PStateDAO pstateDao;
+    @Autowired
+    PaymentDAO paymentDao;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ProductService productService;
 
     @RequestMapping("/admin")
     @ResponseBody
@@ -147,10 +157,22 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/productLst");
 
-        Iterable<Product> pLst = productDao.findAll();
+        Iterable<Group> gAfterLst = groupDao.findAllWithNowTimeAfter(new Date());
+        Iterable<Product> pLst;
+        for(Group g :gAfterLst){
+            pLst = productDao.fingbygroupinsatte0(g.getId());
+            for (Product p : pLst) {
+                p.setState(pstateDao.findById((long) 1).get());
+                productDao.save(p);
+            }
+        }
+
+        pLst = productDao.findAll();
         model.addObject("pLst", pLst);
         Iterable<Group> gLst = groupDao.findAll();
         model.addObject("gLst", gLst);
+        Iterable<PState> sLst = pstateDao.findAll();
+        model.addObject("sLst", sLst);
         model.addObject("username", principal.getName());
 
         return model;
@@ -233,6 +255,26 @@ public class AdminController {
 
     }
 
+    @RequestMapping("/admin/exportSelectedProductData")
+    public void exportSelectedProductData(HttpServletRequest request, HttpServletResponse response){
+        String tempIds = request.getParameter("ids");
+
+        if(tempIds.contains(",")){
+            List<String> ids = Arrays.asList(tempIds.split(","));
+            productService.exportProduct(ids,response);
+        }else{
+            List<String> ids = new ArrayList<>();
+            ids.add(tempIds);
+            productService.exportProduct(ids,response);
+        }
+
+    }
+
+    @RequestMapping("/admin/exportProductData")
+    public void exportProductData(HttpServletResponse response){
+        productService.exportProduct(null,response);
+    }
+
     @RequestMapping("/admin/revealAllOrder")
     @ResponseBody
     public ModelAndView revealAllOrder(Principal principal) {
@@ -257,11 +299,7 @@ public class AdminController {
     public String addOrder(@ModelAttribute Orders o) {
 
         try{
-            Date now = new Date();
-            SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
-            o.setTime(format.format(now));
-            o.setId(""+now.getTime());
-            orderDao.save(o);
+            orderService.addOrder(o);
             return "1";
         }catch (Exception e){
             System.out.println("----error----");
@@ -356,158 +394,18 @@ public class AdminController {
 
         if(tempIds.contains(",")){
             List<String> ids = Arrays.asList(tempIds.split(","));
-            this.export(ids,response);
+            orderService.export(ids,response);
         }else{
             List<String> ids = new ArrayList<>();
             ids.add(tempIds);
-            this.export(ids,response);
+            orderService.export(ids,response);
         }
 
     }
 
     @RequestMapping("/admin/exportData")
     public void exportData(HttpServletResponse response){
-        this.export(null,response);
-    }
-
-    /**
-     * 导出数据保存成Excel
-     * @param ids
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    private void export(List<String> ids, HttpServletResponse response) {
-        Iterable<Orders> list= null;
-        if(null == ids){
-            list = orderDao.findAll();
-        }else{
-            list = orderDao.findAllById(ids);
-        }
-
-        String fileName = new Date().getTime()+"";
-
-        // 第一步，创建一个webbook，对应一个Excel文件
-        HSSFWorkbook wb = new HSSFWorkbook();
-        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-        HSSFSheet sheet = wb.createSheet("订单记录");
-        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-        HSSFRow row = sheet.createRow(0);
-
-//        HSSFFont font = wb.createFont();
-//        font.setFontName("宋体"); //字体
-//        font.setBold(HSSFFont.BOLDWEIGHT_BOLD); //宽度
-
-        // 第四步，创建单元格，并设置值表头 设置表头居中
-//        HSSFCellStyle style = wb.createCellStyle();
-//        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
-//        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
-//        style.setFont(font);
-
-        HSSFCell cell = row.createCell(0);
-        cell.setCellValue("订单号");
-//        cell.setCellStyle(style);
-        cell = row.createCell(1);
-        cell.setCellValue("团号");
-//        cell.setCellStyle(style);
-        cell = row.createCell(2);
-        cell.setCellValue("名称");
-//        cell.setCellStyle(style);
-        cell = row.createCell(3);
-        cell.setCellValue("数量");
-//        cell.setCellStyle(style);
-        cell = row.createCell(4);
-        cell.setCellValue("价格");
-//        cell.setCellStyle(style);
-        cell = row.createCell(5);
-        cell.setCellValue("状态");
-//        cell.setCellStyle(style);
-        cell = row.createCell(6);
-        cell.setCellValue("QQ");
-//        cell.setCellStyle(style);
-        cell = row.createCell(7);
-        cell.setCellValue("昵称");
-//        cell.setCellStyle(style);
-        cell = row.createCell(8);
-        cell.setCellValue("地址");
-//        cell.setCellStyle(style);
-        cell = row.createCell(9);
-        cell.setCellValue("电话");
-//        cell.setCellStyle(style);
-
-        // 第五步，写入实体数据
-        int i = 0;
-        for (Orders o : list)
-        {
-            row = sheet.createRow(i + 1);
-            // 第四步，创建单元格，并设置值
-            HSSFCell cell2 = row.createCell(0);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getId());
-            cell2 = row.createCell(1);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getProduct().getGroup().getId());
-            cell2 = row.createCell(2);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getProduct().getPname());
-            cell2 = row.createCell(3);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getOcount());
-            cell2 = row.createCell(4);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(Double.parseDouble(o.getPrice()));
-            cell2 = row.createCell(5);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getState().getId()+" - "+o.getState().getValue());
-            cell2 = row.createCell(6);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getUsername());
-            cell2 = row.createCell(7);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getUname());
-            cell2 = row.createCell(8);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getAddress());
-            cell2 = row.createCell(9);
-//            cell2.setCellStyle(style);
-            cell2.setCellValue(o.getUser().getPhone());
-            i++;
-        }
-        //设置自动调整宽度
-        for (int j = 0; j < 9; j++) {
-            sheet.autoSizeColumn(j);
-        }
-        // 第六步，保存文件
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-        try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            wb.write(os);
-            byte[] content = os.toByteArray();
-            InputStream is = new ByteArrayInputStream(content);
-            response.reset();
-            response.setContentType("application/vnd.ms-excel;charset=utf-8");
-            response.setHeader("Content-Disposition", "attachment;filename="+ new String((fileName + ".xls").getBytes(), "utf-8"));
-            ServletOutputStream out = response.getOutputStream();
-            bis = new BufferedInputStream(is);
-            bos = new BufferedOutputStream(out);
-            byte[] buff = new byte[2048];
-            int bytesRead;
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
-            }
-        } catch (Exception e) {
-            System.out.println("=====export exception=====\n"+ e);
-        }finally {
-            try {
-                if(bis != null)
-                    bis.close();
-                if(bos != null)
-                    bos.close();
-            } catch (IOException e) {
-                System.out.println("=====export exception=====\n"+ e);
-            }
-        }
+        orderService.export(null,response);
     }
 
     @RequestMapping("/admin/revealAllUser")
@@ -599,6 +497,109 @@ public class AdminController {
             System.out.println("----error----");
             return  "0";
         }
+    }
+
+    @RequestMapping("/admin/revealAllPayment")
+    @ResponseBody
+    public ModelAndView revealAllPayment(Principal principal) {
+
+        ModelAndView model = new ModelAndView("admin/paymentLst");
+
+        Iterable<Payment> pLst = paymentDao.findAll();
+        for (Payment p:pLst) {
+            p.setValue(p.getValue().replaceAll(" ","\n"));
+        }
+        model.addObject("pLst", pLst);
+        model.addObject("username", principal.getName());
+
+        return model;
+    }
+
+    @RequestMapping("/admin/deletePayment")
+    @ResponseBody
+    public String deletePayment(String paymentid){
+
+        try{
+            paymentDao.deleteById(paymentid);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return  "0";
+        }
+
+    }
+
+    @RequestMapping("/admin/deletePaymentGroup")
+    @ResponseBody
+    public String deletePaymentGroup(String paymentid){
+
+        try{
+            List<String> ids = new ArrayList<>();
+            if(paymentid.contains(","))
+                ids = Arrays.asList(paymentid.split(","));
+            else
+                ids.add(paymentid);
+            paymentDao.deleteAll(paymentDao.findAllById(ids));
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
+    }
+
+    @RequestMapping("/admin/setPaymentTrue")
+    @ResponseBody
+    public String setPaymentTrue(String paymentid){
+
+        try{
+            Payment p = paymentDao.findById(paymentid).get();
+            Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(p.getValue().split(" ")));
+
+            for (Orders o : orders){
+                o.setState(stateDao.findById((long)1).get());
+                orderDao.save(o);
+            }
+            p.setState(1);
+            paymentDao.save(p);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
+    }
+
+    /**
+     * 数据上传导入
+     * @param file
+     * @param model
+     * @param request
+     */
+    @RequestMapping("/admin/uploadpayment")
+    public ModelMap uploadExcel(ModelMap model, HttpServletRequest request, @RequestParam("excelFile") MultipartFile file){
+        System.out.println("upload");
+        int num=0;
+        try {
+            List<Payment>list= UploadUtil.doUploadFile(file, request);
+            for (Payment p : list){
+                System.out.println(p.getId());
+            }
+            //num=sListService.doUploadFile(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("导入失败");
+            return new ModelMap("info", "导入失败");
+        }
+//		model.addAttribute("info", ""+num+"条记录导入成功");
+        System.out.println(num+"条记录导入成功");
+        return new ModelMap("info", num+"条记录导入成功");
     }
 
 }

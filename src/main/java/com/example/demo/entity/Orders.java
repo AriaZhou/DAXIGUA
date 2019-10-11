@@ -23,7 +23,7 @@ public class Orders implements Serializable {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "state")
+    @JoinColumn(name = "ostate")
     private State state;
 
     public String getId() {

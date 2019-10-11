@@ -18,6 +18,7 @@ public class Product implements Serializable {
     private String description;
     private int pcount;
     private int enabled;
+    private int ordercount;
 
     @OneToMany(mappedBy = "product")
     private List<Orders> orders;
@@ -25,6 +26,10 @@ public class Product implements Serializable {
     @ManyToOne
     @JoinColumn(name = "groupid")
     private Group group;
+
+    @ManyToOne
+    @JoinColumn(name = "pstate")
+    private PState state;
 
     public String getId() {
         return id;
@@ -82,5 +87,23 @@ public class Product implements Serializable {
     }
     public void setGroup(Group group) {
         this.group = group;
+    }
+    public PState getState() {
+        return state;
+    }
+    public void setState(PState pstate) {
+        this.state = pstate;
+    }
+    public String getUploadtime() {
+        return uploadtime;
+    }
+    public void setUploadtime(String uploadtime) {
+        this.uploadtime = uploadtime;
+    }
+    public int getOrdercount() {
+        return ordercount;
+    }
+    public void setOrdercount(int ordercount) {
+        this.ordercount = ordercount;
     }
 }
