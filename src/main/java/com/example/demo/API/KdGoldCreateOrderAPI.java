@@ -10,7 +10,11 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.example.demo.entity.Orders;
+import com.example.demo.entity.User;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+
 import java.security.MessageDigest;
 
 /**
@@ -40,35 +44,9 @@ public class KdGoldCreateOrderAPI {
      * Json方式 在线下单
      * @throws Exception
      */
-    public String orderOnlineByJson() throws Exception{
-        String requestData= "{'OrderCode': '012657700312'," +
-                "'ShipperCode':'YTO'," +
-                "'PayType':1," +
-                "'ExpType':1," +
-                "'Cost':1.0," +
-                "'OtherCost':1.0," +
-                "'Sender':" +
-                "{" +
-                "'Company':'LV','Name':'Taylor','Mobile':'15018442396','ProvinceName':'上海','CityName':'上海','ExpAreaName':'青浦区','Address':'明珠路73号'}," +
-                "'Receiver':" +
-                "{" +
-                "'Company':'GCCUI','Name':'Yann','Mobile':'15018442396','ProvinceName':'北京','CityName':'北京','ExpAreaName':'朝阳区','Address':'三里屯街道雅秀大厦'}," +
-                "'Commodity':" +
-                "[{" +
-                "'GoodsName':'鞋子','Goodsquantity':1,'GoodsWeight':1.0}]," +
-                "'AddService':" +
-                "[{" +
-                "'Name':'COD','Value':'1020'}]," +
-                "'Weight':1.0," +
-                "'Quantity':1," +
-                "'Volume':0.0," +
-                "'Remark':'小心轻放'," +
-                "'Commodity':" +
-                "[{" +
-                "'GoodsName':'鞋子'," +
-                "'Goodsquantity':1," +
-                "'GoodsWeight':1.0}]" +
-                "}";
+    public String orderOnlineByJson(Orders o, User admin) throws Exception{
+        String requestData=
+                "{ 'OrderCode': '012657018199', 'ShipperCode': 'SF', 'PayType': 1, 'MonthCode': '1234567890', 'ExpType': 1, 'Cost': 1.0, 'OtherCost': 1.0, 'Sender': { 'Company': 'LV', 'Name': 'Taylor', 'Mobile': '15018442396', 'ProvinceName': '上海','CityName': '上海市', 'ExpAreaName': '青浦区', 'Address': '明珠路'},'Receiver': { 'Company': 'GCCUI', 'Name': 'Yann', 'Mobile': '15018442396', 'ProvinceName': '北京', 'CityName': '北京市', 'ExpAreaName': '朝阳区', 'Address': '三里屯街道'},'Commodity': [{ 'GoodsName': '鞋子', 'Goodsquantity': 1, 'GoodsWeight': 1.0}],'AddService': [{ 'Name': 'COD', 'Value': '1020',' CustomerID ': '1234567890'}],'Weight': 1.0, 'Quantity': 1, 'Volume': 0.0, 'Remark': '小心轻放'}";
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("RequestData", urlEncoder(requestData, "UTF-8"));
@@ -114,7 +92,7 @@ public class KdGoldCreateOrderAPI {
      * @throws UnsupportedEncodingException
      */
     private String base64(String str, String charset) throws UnsupportedEncodingException{
-        String encoded = Base64.encode(str.getBytes(charset));
+        String encoded = base64Encode(str.getBytes(charset));
         return encoded;
     }
 
@@ -212,6 +190,48 @@ public class KdGoldCreateOrderAPI {
             }
         }
         return result.toString();
+    }
+
+    private static char[] base64EncodeChars = new char[] {
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+            'w', 'x', 'y', 'z', '0', '1', '2', '3',
+            '4', '5', '6', '7', '8', '9', '+', '/' };
+
+    public static String base64Encode(byte[] data) {
+        StringBuffer sb = new StringBuffer();
+        int len = data.length;
+        int i = 0;
+        int b1, b2, b3;
+        while (i < len) {
+            b1 = data[i++] & 0xff;
+            if (i == len)
+            {
+                sb.append(base64EncodeChars[b1 >>> 2]);
+                sb.append(base64EncodeChars[(b1 & 0x3) << 4]);
+                sb.append("==");
+                break;
+            }
+            b2 = data[i++] & 0xff;
+            if (i == len)
+            {
+                sb.append(base64EncodeChars[b1 >>> 2]);
+                sb.append(base64EncodeChars[((b1 & 0x03) << 4) | ((b2 & 0xf0) >>> 4)]);
+                sb.append(base64EncodeChars[(b2 & 0x0f) << 2]);
+                sb.append("=");
+                break;
+            }
+            b3 = data[i++] & 0xff;
+            sb.append(base64EncodeChars[b1 >>> 2]);
+            sb.append(base64EncodeChars[((b1 & 0x03) << 4) | ((b2 & 0xf0) >>> 4)]);
+            sb.append(base64EncodeChars[((b2 & 0x0f) << 2) | ((b3 & 0xc0) >>> 6)]);
+            sb.append(base64EncodeChars[b3 & 0x3f]);
+        }
+        return sb.toString();
     }
 }
 

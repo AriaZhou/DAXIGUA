@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../css/myPage.css}" />
 
 <!--    选择城市-->
-    <script type="text/javascript" src="../../static/js/jquery.min.js" th:href="@{../js/jquery.min.js}"></script>
-    <script type="text/javascript" src="../../static/js/citydata.js" th:href="@{../js/citydata.js}"></script>
-    <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:href="@{../js/cityPicker-1.0.0.js}"></script>
+    <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
+    <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
+    <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
 
 </head>
@@ -37,8 +37,7 @@
 
         <div style="padding-top: 160px">
             <form id="basicInfo" onsubmit="return false">
-                <table align="center" style="border-radius: 9px; border: #d19090 dashed 2px; width: 60%;
-                        min-width: fit-content; border-collapse: separate; border-spacing: 0;">
+                <table align="center" class="basicInfo">
                     <tr>
                         <td class="usrTitle">基本信息</td>
                     </tr>
@@ -65,20 +64,28 @@
                     <tr>
                         <td class="usrRow">
                             <table align="center">
-                                <td class="valueTitle">手机号：</td>
+                                <td class="valueTitle">收件人姓名：</td>
+                                <td><input name="receiver" id="receiver" th:field="${userInfo.receiver}" class="usrValue"></td>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="usrRow">
+                            <table align="center">
+                                <td class="valueTitle">收件人手机号：</td>
                                 <td><input name="phone" id="phone" th:field="${userInfo.phone}" class="usrValue"></td>
                             </table>
                         </td>
                     </tr>
                     <tr>
-                        <td class="usrRow" style="padding-bottom: 26px">
+                        <td class="usrRow">
                             <table align="center">
-                                <td class="valueTitle">邮寄地址：</td>
+                                <td class="valueTitle">地址：</td>
                                 <td>
                                     <div class="city-picker-selector" id="city-picker-search">
                                         <div class="selector-item storey province">
-                                            <a href="javascript:;" class="selector-name reveal df-color ">请选择省份</a>
-                                            <input type="hidden" name="userProvinceId" class="input-price val-error" value="" data-required="userProvinceId">
+                                            <input name="province" href="javascript:;" class="selector-name reveal df-color ">[[${userInfo.province}]]</input>
+                                            <input type="hidden" name="province" class="input-price val-error" value="" data-required="province" th:field="${userInfo.province}">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -87,8 +94,8 @@
                                             </div>
                                         </div>
                                         <div class="selector-item storey city">
-                                            <a href="javascript:;" class="selector-name reveal df-color forbid">请选择城市</a>
-                                            <input type="hidden" name="userCityId" class="input-price val-error" value="" data-required="userCityId">
+                                            <input name="city"  href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.city}]]</input>
+                                            <input type="hidden" name="city" class="input-price val-error" value="" data-required="city" th:field="${userInfo.city}">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -97,8 +104,8 @@
                                             </div>
                                         </div>
                                         <div class="selector-item storey district">
-                                            <a href="javascript:;" class="selector-name reveal df-color forbid">请选择区县</a>
-                                            <input type="hidden" name="userDistrictId" class="input-price val-error" value="" data-required="userDistrictId">
+                                            <input name="district"  href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.district}]]</input>
+                                            <input type="hidden" name="district" class="input-price val-error" value="" data-required="district" th:field="${userInfo.district}">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -114,7 +121,7 @@
                     <tr>
                         <td class="usrRow" style="padding-bottom: 26px">
                             <table align="center">
-                                <td class="valueTitle">邮寄地址：</td>
+                                <td class="valueTitle">详细地址：</td>
                                 <td><input name="address" id="address" th:field="${userInfo.address}" class="usrValue"></td>
                             </table>
                         </td>
@@ -153,8 +160,18 @@
             return width+6;
         };
 
+        document.body.onload=function(){
+            $("input").each(function(){
+                if($(this).attr('class')!=="input-search" && $(this).val()!==''){
+                    var width=textWidth($(this).val());
+                    $(this).width(width)
+                }
+            });
+        };
 
         function modifyUser() {
+            console.log($('#basicInfo').serialize());
+
             $.ajax({
                 cache: true,
                 type: "POST",
@@ -181,12 +198,23 @@
 
         $(function () {
             //模拟城市-联动/搜索
-            $('#city-picker-search').cityPicker({
+            var select = $('#city-picker-search').cityPicker({
                 dataJson: cityData,
                 renderMode: true,
                 search: true,
-                linkage: true
+                linkage: true,
+                storage: name
             });
+
+            //设置城市
+            select.setCityVal([{
+                'name': '[[${userInfo.province}]]'
+            }, {
+                'name': '[[${userInfo.city}]]'
+            }, {
+                'name': '[[${userInfo.district}]]'
+            }]);
+
         });
 
     </script>

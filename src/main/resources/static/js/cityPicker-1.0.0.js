@@ -22,15 +22,15 @@
     var defaults = {
         dataJson: null,
         selectpattern: [{
-                field: 'userProvinceId',
+                field: 'province',
                 placeholder: '请选择省份'
             },
             {
-                field: 'userCityId',
+                field: 'city',
                 placeholder: '请选择城市'
             },
             {
-                field: 'userDistrictId',
+                field: 'district',
                 placeholder: '请选择区县'
             }
         ],
