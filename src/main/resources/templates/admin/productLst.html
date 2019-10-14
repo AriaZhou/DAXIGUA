@@ -98,7 +98,7 @@
 <div style="padding-left: 200px">
     <div class="container" style="height:100%; padding: 50px">
 
-        <div id="insertProduct" class="modal" style="display: none">
+        <div id="insertProduct" class="modal" style="display: none; overflow: scroll;">
 
             <form class="modal-content animate" id="productInfo" method="post" action="/upload" enctype="multipart/form-data">
                 <input name="id" id="id" hidden>
@@ -223,7 +223,7 @@
                 </tr>
             </thead>
             <tr th:each="p:${pLst}">
-                <td><input th:if="${p.state.id eq 1}" type="checkbox" name="pItem" th:id="${p.id}"></td>
+                <td><input type="checkbox" name="pItem" th:id="${p.id}"></td>
                 <td><p th:text="${p.group.id}"></p></td>
                 <td><p th:text="${p.pname}"></p></td>
                 <td><p th:text="${p.price}"></p></td>

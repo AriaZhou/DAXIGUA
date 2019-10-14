@@ -16,47 +16,16 @@ function onSearch(obj){
     }
 }
 
-// (function($) {
-//         $.expr[":"].Contains = function(a, i, m) {
-//             return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-//         };
-//         function filterList(header, list) {
-//             //@header 头部元素
-//             //@list 无需列表
-//             //创建一个搜素表单
-//             var form = $("<form>").attr({
-//                 "class":"filterform",
-//                 action:"#"
-//             }), input = $("<input>").attr({
-//                 "class":"filterinput",
-//                 type:"text"
-//             });
-//             $(form).append(input).appendTo(header);
-//             $(input).change(function() {
-//                 var filter = $(this).val();
-//                 if (filter) {
-//                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
-//                     $("li", list).not($matches).slideUp();
-//                     $matches.slideDown();
-//                 } else {
-//                     $(list).find("li").slideDown();
-//                 }
-//                 return false;
-//             }).keyup(function() {
-//                 $(this).change();
-//             });
-//         }
-//         $(function() {
-//             filterList($("#form"), $("#demo-list"));
-//         });
-//     })(jQuery);
-
 var uusername;
 var uname;
 var uemail;
 var uaddress;
 var upassword;
 var uphone;
+var ureceiver;
+var uprovince;
+var ucity;
+var udistrict;
 
 function rollBack(){
 
@@ -66,6 +35,10 @@ function rollBack(){
     document.getElementById("address").value = uaddress;
     document.getElementById("password").value = upassword;
     document.getElementById("phone").value = uphone;
+    document.getElementById("receiver").value = ureceiver;
+    document.getElementById("province").value = uprovince;
+    document.getElementById("city").value = ucity;
+    document.getElementById("district").value = udistrict;
 
     $("#insertUser").find("input").each(function(){
         var width=textWidth($(this).val());
@@ -87,6 +60,10 @@ function insertU(){
     document.getElementById("address").value = null;
     document.getElementById("password").value = null;
     document.getElementById("phone").value = null;
+    document.getElementById("receiver").value = null;
+    document.getElementById("province").value = null;
+    document.getElementById("city").value = null;
+    document.getElementById("district").value = null;
 
     $("#insertUser").find("input").each(function(){
         var width=textWidth($(this).val());
@@ -95,7 +72,7 @@ function insertU(){
 
 }
 
-function modifyU(username,name,email,address,phone,password){
+function modifyU(username,name,email,receiver,province,city,district,address,phone){
     document.getElementById("insertUser").style.display='block';
 
     document.getElementById("formTitle").innerHTML = "修改用户";
@@ -106,15 +83,23 @@ function modifyU(username,name,email,address,phone,password){
     document.getElementById("name").value = name;
     document.getElementById("email").value = email;
     document.getElementById("address").value = address;
-    document.getElementById("password").value = password;
+    document.getElementById("password").value = '00000000';
     document.getElementById("phone").value = phone;
+    document.getElementById("receiver").value = receiver;
+    document.getElementById("province").value = province;
+    document.getElementById("city").value = city;
+    document.getElementById("district").value = district;
 
     uusername = username;
     uname = name;
     uemail = email;
     uaddress = address;
-    upassword = password;
+    upassword = '00000000';
     uphone = phone;
+    ureceiver = receiver;
+    uprovince = province;
+    ucity = city;
+    udistrict = district;
 
     $("#insertUser").find("input").each(function(){
         var width=textWidth($(this).val());
@@ -122,6 +107,15 @@ function modifyU(username,name,email,address,phone,password){
     });
 
 }
+
+//获取文本宽度
+function textWidth(text){
+    var sensor = $('<pre>'+ text +'</pre>').css({display: 'none'});
+    $('body').append(sensor);
+    var width = sensor.width();
+    sensor.remove();
+    return width+6;
+};
 
 function modifyUser() {
 

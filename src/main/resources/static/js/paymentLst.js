@@ -16,41 +16,6 @@ function onSearch(obj){
     }
 }
 
-// (function($) {
-//         $.expr[":"].Contains = function(a, i, m) {
-//             return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-//         };
-//         function filterList(header, list) {
-//             //@header 头部元素
-//             //@list 无需列表
-//             //创建一个搜素表单
-//             var form = $("<form>").attr({
-//                 "class":"filterform",
-//                 action:"#"
-//             }), input = $("<input>").attr({
-//                 "class":"filterinput",
-//                 type:"text"
-//             });
-//             $(form).append(input).appendTo(header);
-//             $(input).change(function() {
-//                 var filter = $(this).val();
-//                 if (filter) {
-//                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
-//                     $("li", list).not($matches).slideUp();
-//                     $matches.slideDown();
-//                 } else {
-//                     $(list).find("li").slideDown();
-//                 }
-//                 return false;
-//             }).keyup(function() {
-//                 $(this).change();
-//             });
-//         }
-//         $(function() {
-//             filterList($("#form"), $("#demo-list"));
-//         });
-//     })(jQuery);
-
 function deleteSinglePayment(name) {
     $.ajax({
         cache: true,
@@ -139,11 +104,47 @@ function showExport(){
 
 }
 
-function setPaymentTrue(name) {
+function dispalyPriceBox(pid){
+    document.getElementById("insertPrice").style.display="block";
+    document.getElementById("paidId").value = pid;
+}
+
+function setPaymentTrue() {
+
     $.ajax({
         cache: true,
         type: "POST",
         url: "/admin/setPaymentTrue",
+        data:{
+            paymentid : document.getElementById("paidId").value,
+            actualPrice : document.getElementById("paidPrice").value,
+        },
+        async: false,
+        error: function(request){
+            alert("删除失败，请重试。");
+            return false;
+            // alert("Connection error:"+request.error);
+        },
+        success: function(data){
+            if(data==="0"){
+                alert("修改失败，请重试。");
+                return false;
+            }else{
+                alert("修改成功");
+                window.location.reload();
+                return false;
+
+            }
+        }
+    });
+}
+
+
+function setPaymentFalse(name) {
+    $.ajax({
+        cache: true,
+        type: "POST",
+        url: "/admin/setPaymentFalse",
         data:{
             paymentid : name,
         },
@@ -167,43 +168,6 @@ function setPaymentTrue(name) {
     });
 }
 
-function uploadExcel(){
-    var excelFile=$("#excelFile").val();
-    if(excelFile==""||excelFile.length==0){
-        alert("请选择文件路径!(.xlsx)");
-        return;
-    }
-    if(excelFile.indexOf(".xlsx")==-1){
-        alert("请选择正确格式文件!(.xlsx)");
-        return;
-    }
-
-    $.ajax({
-        type: "POST",
-        url: "/admin/uploadpayment",
-        data: {'excelFile':new FormData($("#uploadE")[0])},
-        dataType : "json",
-        enctype: 'multipart/form-data',
-        processData: false,
-        contentType: false,
-        cache: false,
-        clearForm:true,
-        async: false,
-        error: function(request){
-            alert("删除失败，请重试。");
-            return false;
-            // alert("Connection error:"+request.error);
-        },
-        success: function(data){
-            if(data==="0"){
-                alert("修改失败，请重试。");
-                return false;
-            }else{
-                alert("修改成功");
-                window.location.reload();
-                return false;
-
-            }
-        }
-    });
+function importPayment() {
+    window.location.reload();
 }

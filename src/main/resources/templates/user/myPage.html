@@ -9,31 +9,66 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!--<link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../../static/css/myPage.css}" />-->
-    <link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../css/myPage.css}" />
 
-<!--    选择城市-->
+    <!--    选择城市-->
     <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
     <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
     <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
+
+    <link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../css/myPage.css}" />
+    <link rel="stylesheet" href="../../static/register.css" th:href="@{../css/register.css}" />
+
 
 </head>
 <body>
 
     <div class="container" >
 
-        <div class="dropdown" style="float: right;padding-top: 60px">
-            <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-                    th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
-            <div class="dropdown-menu" style="border-color: #d1b6b1;">
-                <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
-                <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
-                <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
-                <form action="#" th:action="@{/logout}" method="post">
-                    <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
-                </form>
-            </div>
+        <div id="modifyPassword" class="modal" style="display: none; overflow: scroll;">
+
+            <form class="modal-content animate" onsubmit="return false"
+                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+
+                <span onclick="document.getElementById('insertPrice').style.display='none'" class="close" title="Close Modal"
+                      style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+
+                <div class="container" align="center">
+                    <p>请输入旧密码: </p>
+                    <input type="password" id="oldPassword" style="width: 90%"/>
+                    <p>请输入新密码: </p>
+                    <input type="password" id="newPassword" style="width: 90%"/>
+                    <table><td><p>请重复新密码: </p></td><td><p style="color: darkred" id="errorMsg" hidden="hidden">密码不一致！ </p></td></table>
+                    <input type="password" id="newPasswordAgain" style="width: 90%"/>
+                    <br>
+                    <table>
+                        <td><button id="confirm" value="导入" type="submit" class="btn btn-info" style="margin-top: 20px; font-size: 10pt" onclick="modifyPassword()">确认修改</button></td>
+                    </table>
+
+                </div>
+            </form>
         </div>
+
+        <table style="float: right;">
+            <td style="padding: 60px 20px 0 0">
+                <button type="button" class="btn btn-info" th:text="修改密码" style="background-color: #d19090; border-color: #d19090;" onclick="document.getElementById('modifyPassword').style.display='block';"></button>
+            </td>
+            <td style="padding-top: 60px">
+                <div class="dropdown">
+                    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
+                            th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
+                    <div class="dropdown-menu" style="border-color: #d1b6b1;">
+                        <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
+                        <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+                        <a class="dropdown-item" th:href="@{/user/myPayment}" style="font-size: 13px">我的支付订单</a>
+                        <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
+                        <form action="#" th:action="@{/logout}" method="post">
+                            <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </table>
 
         <div style="padding-top: 160px">
             <form id="basicInfo" onsubmit="return false">
@@ -42,8 +77,8 @@
                         <td class="usrTitle">基本信息</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 18px; color: #886d6d; padding-bottom: 6px; text-align: center">
-                            QQ：<input name="username" id="username" style="border: none;font-size: 18px; color: #886d6d;" th:field="${userInfo.username}"></td>
+                        <td style="font-size: 16px; color: #886d6d; padding-bottom: 6px; text-align: center">
+                            QQ：<input name="username" id="username" style="border: none;font-size: 16px; color: #886d6d;" th:field="${userInfo.username}" readonly></td>
                     </tr>
                     <tr>
                         <td class="usrRow">
@@ -203,7 +238,7 @@
                 renderMode: true,
                 search: true,
                 linkage: true,
-                storage: name
+                storage: false
             });
 
             //设置城市
@@ -216,6 +251,44 @@
             }]);
 
         });
+
+        function modifyPassword() {
+
+            var oldPassword = document.getElementById("oldPassword").value;
+            var newPassword = document.getElementById("newPassword").value;
+            var newPasswordAgain = document.getElementById("newPasswordAgain").value;
+
+            if(newPassword!==newPasswordAgain){
+                document.getElementById("errorMsg").hidden=false;
+                return false;
+            }
+
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/user/modifyPassword",
+                data:{
+                    oldPsw: oldPassword,
+                    newPsw: newPassword
+                },
+                async: false,
+                error: function(request){
+                    alert("修改失败，请重试。");
+                    return false;
+                    // alert("Connection error:"+request.error);
+                },
+                success: function(data){
+                    if(data==="0"){
+                        alert("修改失败，请重试。");
+                        return false;
+                    }else{
+                        alert(data);
+                        window.location.reload();
+                        return false;
+                    }
+                }
+            });
+        }
 
     </script>
 

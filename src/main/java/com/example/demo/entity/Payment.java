@@ -13,6 +13,7 @@ public class Payment implements Serializable {
 	private String id;
 	private String value;
 	private double totprice;
+	private double actualprice;
 	private int state;
 
 	@ManyToOne
@@ -48,5 +49,13 @@ public class Payment implements Serializable {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public double getActualprice() {
+		return actualprice;
+	}
+
+	public void setActualprice(double actualprice) {
+		this.actualprice = actualprice;
 	}
 }

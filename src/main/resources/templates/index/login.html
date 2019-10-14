@@ -34,7 +34,7 @@
 	        
 	     </br>
 	     </br>
-	     <button id="checkSubmit" type="submit" value="Log in" onclick="return checkPsw()" th:text="送出"></button>
+	     <button id="checkSubmit" type="submit" value="Log in" onclick="return checkPsw()">送出</button>
 	      
 	     <label style="font-size: 10pt;">
 	     <input type="checkbox" checked="checked" name="remember"> 记住我（记不住）
@@ -79,40 +79,10 @@ function checkPsw() {
 	else{
         phone.readOnly=true;
         psw.readOnly=true;
-        submit.text="登入中...";
+        submit.innerText="登入中...";
 
         return true;
     }
-	// else{
-    //
-    //     phone.readOnly=true;
-    //     psw.readOnly=true;
-    //     submit.value="登入中...";
-    //     submit.disabled=true;
-    //
-    //     $.ajax({
-    //         cache: true,
-    //         type: "POST",
-    //         url:"/userSignIn",
-    //         data:$('#signIn').serialize(),
-    //         async: false,
-    //         error: function(request) {
-    //             alert("Connection error:"+request.error);
-    //         },
-    //         success: function(data) {
-    //             if(data == "0"){
-    //                 document.getElementById('errorMsg').hidden = false;
-    //
-    //
-    //             }else{
-    //                 document.getElementById('user').hidden = false;
-    //                 document.getElementById('user').innerHtml = data
-    //                 modal.style.display = "none";
-    //
-    //             }
-    //         }
-    //     });
-    // }
 
 }  
 </script>

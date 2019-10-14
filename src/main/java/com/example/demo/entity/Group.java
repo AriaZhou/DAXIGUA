@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -24,7 +23,7 @@ public class Group implements Serializable {
     private Date endtime;
 
     @OneToMany(mappedBy = "group")
-    private List<Product> products;
+    private List<Product> Products;
 
     public String getId() {
         return id;
@@ -45,6 +44,6 @@ public class Group implements Serializable {
         this.endtime = endtime;
     }
     public Iterable<Product> getProducts() {
-        return products;
+        return Products;
     }
 }

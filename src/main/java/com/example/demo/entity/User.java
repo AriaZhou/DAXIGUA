@@ -3,10 +3,12 @@ package com.example.demo.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Table(name = "user")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = -2957645392914180170L;
@@ -75,10 +77,9 @@ public class User implements Serializable {
 	public Iterable<Orders> getOrders() {
 		return orders;
 	}
-<<<<<<< HEAD
 	public Iterable<Payment> getPayments() {
 		return payments;
-=======
+	}
 	public String getProvince() {
 		return province;
 	}
@@ -102,6 +103,5 @@ public class User implements Serializable {
 	}
 	public void setReceiver(String receiver) {
 		this.receiver = receiver;
->>>>>>> 0d428d32e9b221dd610fcd6cb0f45d2994da1e91
 	}
 }

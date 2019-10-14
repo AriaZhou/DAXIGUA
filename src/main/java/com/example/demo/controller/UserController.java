@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.math.BigInteger;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -63,7 +63,7 @@ public class UserController {
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
 
-            Iterable<Product> pLst = productDao.findByGroupId(groupid);
+            Iterable<Product> pLst = productDao.findByGroupIdVali(groupid);
             model.addObject("productLst",pLst);
 
         }catch(Exception e){
@@ -139,7 +139,7 @@ public class UserController {
         User u = userDao.findById(principal.getName()).get();
         model.addObject("userInfo",u);
 
-        Iterable<Orders> orderLst = userDao.findById(principal.getName()).get().getOrders();
+        Iterable<Orders> orderLst = orderDao.findbyidAndOrderByState(principal.getName());
         model.addObject("orderLst",orderLst);
 
         return model;
@@ -168,27 +168,81 @@ public class UserController {
     @RequestMapping(value = "/user/addPayment", method = RequestMethod.POST)
     @ResponseBody
     public String addPayment(String ids, double price, Principal principal){
-        long id = Long.parseLong(new Date().getTime()+""+Integer.parseInt(principal.getName()));
+        BigInteger id = new BigInteger(new Date().getTime()+""+Integer.parseInt(principal.getName().substring(2,4)));
+        BigInteger zero = new BigInteger("0");
+        BigInteger divider = new BigInteger("62");
         StringBuilder remark = new StringBuilder();
-        while(id>0) {
-            long tmp = id % 62;
+        while(id.compareTo(zero) == 1) {
+            long tmp = id.remainder(divider).longValue();
             if (tmp < 10)
                 remark.append(tmp);
             else if (tmp < 36)
                 remark.append((char) (tmp + 87));
             else
                 remark.append((char) (tmp + 29));
-            id = id / 62;
+            id = id.divide(divider);
         }
         Payment p = new Payment();
         p.setId(remark.toString());
         p.setTotprice(price);
         p.setState(0);
+        p.setActualprice(0);
         p.setValue(ids);
+
+        Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(ids.split(" ")));
+
+        for (Orders o : orders){
+            o.setState(stateDao.findById((long)1).get());
+            orderDao.save(o);
+        }
+
         p.setUser(userDao.findById(principal.getName()).get());
 
         paymentDao.save(p);
         return remark.toString();
+
+    }
+
+    @RequestMapping("/user/myPayment")
+    @ResponseBody
+    public ModelAndView myPayment(Principal principal){
+
+        ModelAndView model = new ModelAndView("user/myPayment");
+        User u = userDao.findById(principal.getName()).get();
+        model.addObject("userInfo",u);
+
+        Iterable<Payment> payLst = paymentDao.findbyidAndOrderByState(principal.getName());
+        for (Payment p:payLst) {
+            p.setValue(p.getValue().replaceAll(" ","\n"));
+        }
+        model.addObject("payLst",payLst);
+
+        return model;
+    }
+
+    @RequestMapping("/user/deletePayment")
+    @ResponseBody
+    public String deletePayment(String payid, Principal principal){
+
+        for (Orders o : orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")))){
+            o.setState(stateDao.findById((long)0).get());
+            orderDao.save(o);
+        }
+        paymentDao.deleteById(payid);
+        return "1";
+
+    }
+
+    @RequestMapping("/user/searchPaymentDetail")
+    @ResponseBody
+    public String searchPaymentDetail(String payid, Principal principal){
+
+        String detail = "";
+        for (Orders o : orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")))){
+            detail+=o.getProduct().getGroup().getId() + "：  " + o.getProduct().getPname()+" ✖️"+o.getOcount()+"\n";
+            orderDao.save(o);
+        }
+        return detail;
 
     }
 }

@@ -4,17 +4,19 @@ import com.example.demo.UploadUtil;
 import com.example.demo.dao.*;
 import com.example.demo.entity.*;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.PaymentService;
 import com.example.demo.service.ProductService;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +46,10 @@ public class AdminController {
     private OrderService orderService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private PaymentService paymentService;
+    @Resource
+    private BCryptPasswordEncoder bCryptPasswordEncoder;  //注入bcryct加密
 
     @RequestMapping("/admin")
     @ResponseBody
@@ -70,7 +76,7 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/groupLst");
 
-        Iterable<Group> gLst = groupDao.findAll();
+        Iterable<Group> gLst = groupDao.findALLByState();
         model.addObject("gLst", gLst);
         model.addObject("username", principal.getName());
 
@@ -140,6 +146,16 @@ public class AdminController {
 
         try{
 //            p.setUsername(principal.getName());
+            Group gg = groupDao.findById(g.getId()).get();
+            //时间推后的话产品状态要跟着改
+            if(gg.getEndtime().getTime() < new Date().getTime() && g.getEndtime().getTime() > new Date().getTime()){
+                for(Product p : gg.getProducts()){
+                    if(p.getPcount()>0){
+                        p.setState(pstateDao.findById((long)0).get());
+                        productDao.save(p);
+                    }
+                }
+            }
             groupDao.save(g);
             return "1";
         }catch (Exception e){
@@ -157,6 +173,7 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/productLst");
 
+        //超过时间的产品要修改状态
         Iterable<Group> gAfterLst = groupDao.findAllWithNowTimeAfter(new Date());
         Iterable<Product> pLst;
         for(Group g :gAfterLst){
@@ -167,9 +184,9 @@ public class AdminController {
             }
         }
 
-        pLst = productDao.findAll();
+        pLst = productDao.findALLByState();
         model.addObject("pLst", pLst);
-        Iterable<Group> gLst = groupDao.findAll();
+        Iterable<Group> gLst = groupDao.findAllWithNowTimeBefore(new Date());
         model.addObject("gLst", gLst);
         Iterable<PState> sLst = pstateDao.findAll();
         model.addObject("sLst", sLst);
@@ -281,9 +298,9 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/orderLst");
 
-        Iterable<Orders> oLst = orderDao.findAll();
+        Iterable<Orders> oLst = orderDao.findALLByState();
         model.addObject("oLst", oLst);
-        Iterable<Group> gLst = groupDao.findAll();
+        Iterable<Group> gLst = groupDao.findAllWithNowTimeBefore(new Date());
         model.addObject("gLst", gLst);
         Iterable<Product> pLst = productDao.findAll();
         model.addObject("pLst", pLst);
@@ -415,9 +432,6 @@ public class AdminController {
         ModelAndView model = new ModelAndView("admin/userLst");
 
         Iterable<User> uLst = userDao.findAll();
-        for (User u:uLst) {
-            u.setPassword(u.getPassword().split("}")[1]);
-        }
         model.addObject("uLst", uLst);
         model.addObject("username", principal.getName());
 
@@ -432,7 +446,7 @@ public class AdminController {
             if(userDao.existsById(u.getUsername())){
                 return "0";
             }
-            u.setPassword("{noop}"+u.getPassword());
+            u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
             u.setRole("ROLE_USER");
             userDao.save(u);
             return "1";
@@ -486,8 +500,11 @@ public class AdminController {
     public String modifyUser(@ModelAttribute User u) {
 
         try{
-            System.out.println(u.getPassword());
-            u.setPassword("{noop}"+u.getPassword());
+            if(!u.getPassword().equals("00000000")){
+                u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
+            }else {
+                u.setPassword(userDao.findById(u.getUsername()).get().getPassword());
+            }
             u.setRole("ROLE_USER");
             userDao.save(u);
             return "1";
@@ -505,7 +522,7 @@ public class AdminController {
 
         ModelAndView model = new ModelAndView("admin/paymentLst");
 
-        Iterable<Payment> pLst = paymentDao.findAll();
+        Iterable<Payment> pLst = paymentDao.findALLByState();
         for (Payment p:pLst) {
             p.setValue(p.getValue().replaceAll(" ","\n"));
         }
@@ -554,7 +571,7 @@ public class AdminController {
 
     @RequestMapping("/admin/setPaymentTrue")
     @ResponseBody
-    public String setPaymentTrue(String paymentid){
+    public String setPaymentTrue(String paymentid, String actualPrice){
 
         try{
             Payment p = paymentDao.findById(paymentid).get();
@@ -562,9 +579,37 @@ public class AdminController {
 
             for (Orders o : orders){
                 o.setState(stateDao.findById((long)1).get());
-                orderDao.save(o);
+//                for(Payment pp : paymentDao.findbyOrderid("%"+o.getId()+"%"))
+//                    paymentDao.delete(pp);
             }
-            p.setState(1);
+            orderDao.saveAll(orders);
+            p.setState(2);
+            p.setActualprice(Double.parseDouble(actualPrice));
+            paymentDao.save(p);
+            return "1";
+        }catch (Exception e){
+            System.out.println("----error----");
+            System.out.println(e.getMessage());
+            System.out.println("----error----");
+            return "0";
+        }
+
+    }
+
+    @RequestMapping("/admin/setPaymentFalse")
+    @ResponseBody
+    public String setPaymentFalse(String paymentid){
+
+        try{
+            Payment p = paymentDao.findById(paymentid).get();
+            Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(p.getValue().split(" ")));
+
+            for (Orders o : orders)
+                o.setState(stateDao.findById((long)0).get());
+
+            orderDao.saveAll(orders);
+            p.setState(0);
+            p.setActualprice(0);
             paymentDao.save(p);
             return "1";
         }catch (Exception e){
@@ -579,27 +624,29 @@ public class AdminController {
     /**
      * 数据上传导入
      * @param file
-     * @param model
-     * @param request
      */
-    @RequestMapping("/admin/uploadpayment")
-    public ModelMap uploadExcel(ModelMap model, HttpServletRequest request, @RequestParam("excelFile") MultipartFile file){
-        System.out.println("upload");
+    @RequestMapping(value = "/admin/uploadpayment", method = RequestMethod.POST)
+    @ResponseBody
+    public void uploadExcel(@RequestParam("excelFile") MultipartFile file, Principal principal, HttpServletRequest request, HttpServletResponse response){
         int num=0;
         try {
-            List<Payment>list= UploadUtil.doUploadFile(file, request);
-            for (Payment p : list){
-                System.out.println(p.getId());
-            }
+            List<Payment>list= paymentService.paymentImport(file.getOriginalFilename(),file,response);
+            for (Payment p : list)
+                num++;
+
             //num=sListService.doUploadFile(list);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("导入失败");
-            return new ModelMap("info", "导入失败");
         }
-//		model.addAttribute("info", ""+num+"条记录导入成功");
-        System.out.println(num+"条记录导入成功");
-        return new ModelMap("info", num+"条记录导入成功");
+    }
+
+    @RequestMapping("/admin/downloadTemplate")
+    @ResponseBody
+    public void downloadTemplate(HttpServletRequest request, HttpServletResponse response){
+
+        paymentService.exportTemplate(request,response);
+
     }
 
 }

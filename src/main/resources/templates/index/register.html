@@ -6,6 +6,12 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../../static/register.css" th:href="@{../css/register.css}" />
 
+    <!--    选择城市-->
+    <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
+    <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
+    <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
+
 </head>
 <body>
 
@@ -25,7 +31,7 @@
         <div class="container">
             <table th:if="${registerError}" >
                 <td>
-                    <p id="errorMsg" style="color:red;" class="error">该手机号已注册过，请登录</p>
+                    <p id="errorMsg" style="color:red;padding: 10px 0 10px 0" class="error">该QQ号已注册过，请登录</p>
                 </td>
                 <td>
                     <a th:href="@{/login}">立即登录</a>
@@ -43,11 +49,54 @@
                 <td><p id="emptyname" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入昵称！</p></td></table></label>
             <input type="text" id="name" placeholder="请输入昵称" name="uname">
 
+            <label for="phone"><table><td><b>收件人姓名</b></td>
+                <td><p id="emptyreceiver" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入收件人姓名！</p></td></table></label>
+            <input type="text" id="receiver" placeholder="请输入收件人姓名" name="receiver">
+
             <label for="phone"><table><td><b>手机号码</b></td>
                 <td><p id="emptyphone" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入手机号码！</p></td></table></label>
             <input type="text" id="phone" placeholder="请输入手机号码" name="phone">
 
-            <label for="address"><table><td><b>地址</b></td>
+            <label for="phone"><table><td><b>地址</b></td>
+                <td><p id="empty" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入地址！</p></td></table></label>
+            <table align="center" style="margin: 16px 0 16px 0">
+                <td>
+                    <div class="city-picker-selector" id="city-picker-search">
+                        <div class="selector-item storey province">
+                            <input name="province" href="javascript:;" class="selector-name reveal df-color ">请选择省份</input>
+                            <input type="hidden" name="province" class="input-price val-error" value="" data-required="province">
+                            <div class="selector-list listing hide">
+                                <div class="selector-search">
+                                    <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                </div>
+                                <ul></ul>
+                            </div>
+                        </div>
+                        <div class="selector-item storey city">
+                            <input name="city"  href="javascript:;" class="selector-name reveal df-color forbid">请选择城市</input>
+                            <input type="hidden" name="city" class="input-price val-error" value="" data-required="city">
+                            <div class="selector-list listing hide">
+                                <div class="selector-search">
+                                    <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                </div>
+                                <ul></ul>
+                            </div>
+                        </div>
+                        <div class="selector-item storey district">
+                            <input name="district"  href="javascript:;" class="selector-name reveal df-color forbid">请选择地区</input>
+                            <input type="hidden" name="district" class="input-price val-error" value="" data-required="district">
+                            <div class="selector-list listing hide">
+                                <div class="selector-search">
+                                    <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                </div>
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </table>
+
+            <label for="address"><table><td><b>详细地址</b></td>
                 <td><p id="emptyaddress" style="color: #f44336;font-size: 11px;padding-left: 6px" hidden="hidden"> 请输入地址！</p></td></table></label>
             <input type="text" id="address" placeholder="请输入地址" name="address">
 
@@ -76,6 +125,7 @@
     var username = document.getElementById('username');
     var email = document.getElementById('email');
     var name = document.getElementById('name');
+    var receiver = document.getElementById('receiver');
     var address = document.getElementById('address');
     var phone = document.getElementById('phone');
     var password = document.getElementById('password');
@@ -94,6 +144,7 @@
         document.getElementById('emptyqq').hidden=true;
         document.getElementById('emptyemail').hidden=true;
         document.getElementById('emptyname').hidden=true;
+        document.getElementById('emptyreceiver').hidden=true;
         document.getElementById('emptyaddress').hidden=true;
         document.getElementById('emptyphone').hidden=true;
         document.getElementById('emptypsw').hidden=true;
@@ -109,6 +160,10 @@
         }
         else if(name.value===''){
             document.getElementById('emptyname').hidden=false;
+            return false;
+        }
+        else if(receiver.value===''){
+            document.getElementById('emptyreceiver').hidden=false;
             return false;
         }
         else if(address.value===''){
@@ -135,6 +190,18 @@
             return true;
         }
     }
+
+    $(function () {
+        //模拟城市-联动/搜索
+        var select = $('#city-picker-search').cityPicker({
+            dataJson: cityData,
+            renderMode: true,
+            search: true,
+            linkage: true,
+            storage: false
+        });
+
+    });
 </script>
 
 

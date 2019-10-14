@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, multipart/form-data">
     <title>支付管理</title>
 
 <!--    我自己的-->
@@ -99,20 +99,45 @@
 <div style="padding-left: 200px">
     <div class="container" style="height:100%; padding: 50px">
 
-        <div id="insertPayment" class="modal" style="display: none">
+        <div id="insertPayment" class="modal" style="display: none; overflow: scroll;">
 
-            <form class="modal-content animate" id="orderInfo" onsubmit="return false" style="max-width: 300px;padding: 60px 0 30px 0;">
+            <form class="modal-content animate" th:action="@{/admin/uploadpayment}" id="uploadE" enctype="multipart/form-data"
+                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
 
                 <span onclick="document.getElementById('insertPayment').style.display='none'" class="close" title="Close Modal"
                       style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
 
                 <div class="container" align="center">
-                    <form id="uploadE" enctype="multipart/form-data">
-                        <input id="excelFile" type="file" name="excelFile"
-                               accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
-                        <br>
-                        <button id="excel_button" value="导入" onclick="uploadExcel()" class="btn btn-info" style="margin-top: 20px; font-size: 10pt">确认导入</button>
-                    </form>
+                    <input id="excelFile" type="file" name="excelFile"
+                           accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
+                    <br>
+                    <table style="width: 100%">
+                        <td><button class="btn btn-secondary" style="font-size: 10pt;margin: 30px 0px 0 40px;" onclick="location.href='/admin/downloadTemplate';return false;">下载模板</button></td>
+                        <td><button id="excel_button" value="导入" type="submit" class="btn btn-info" style="font-size: 10pt;margin: 30px 20px 0 0px;" onclick="importPayment()">确认导入</button></td>
+                    </table>
+
+                </div>
+            </form>
+        </div>
+
+        <div id="insertPrice" class="modal" style="display: none; overflow: scroll;">
+
+            <form class="modal-content animate" onsubmit="return false"
+                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+
+                <span onclick="document.getElementById('insertPrice').style.display='none'" class="close" title="Close Modal"
+                      style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+
+                <div class="container" align="center">
+                    <p>请输入实付金额: </p>
+                    <input type="hidden" id="paidId">
+                    <input id="paidPrice" type="text"/>
+                    <br>
+                    <table>
+                         <td><button id="confirm" value="导入" type="submit" class="btn btn-info" style="margin-top: 20px; font-size: 10pt"
+                         onclick="setPaymentTrue()">确认核销</button></td>
+                    </table>
+
                 </div>
             </form>
         </div>
@@ -140,7 +165,8 @@
                     <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
                     <th>支付订单号</th>
                     <th>订单号</th>
-                    <th>支付金额</th>
+                    <th>应付</th>
+                    <th>实付</th>
                     <th>状态</th>
                     <th>QQ号</th>
                     <th>QQ昵称</th>
@@ -152,14 +178,15 @@
                 <td><p th:text="${p.id}"></p></td>
                 <td style="width: 160px"><p th:text="${p.value}"></p></td>
                 <td><p th:text="${p.totprice}"></p></td>
+                <td><p th:text="${p.actualprice}"></p></td>
                 <td><p th:if="${p.state eq 0}">未支付/未销账</p>
-                    <p th:if="${p.state eq 1}">已销账</p>
-                    <p th:if="${p.state eq 2}">金额有误</p></td>
+                    <p th:if="${p.state eq 1}">金额有误</p>
+                    <p th:if="${p.state eq 2}">已销账</p></td>
                 <td style="width: 120px"><p th:text="${p.user.username}"></p></td>
                 <td style="width: 160px"><p th:text="${p.user.uname}"></p></td>
                 <td style="width: 160px">
-                    <button class="btn btn-info" style="font-size: 12px;" th:if="${p.state ne 1}" th:onclick="setPaymentTrue([[${p.id}]])">支付</button>
-                    <button class="btn btn-secondary" style="font-size: 12px;" th:if="${p.state eq 1}" th:onclick="return false">已支付</button>
+                    <button class="btn btn-info" style="font-size: 12px;" th:if="${p.state ne 2}" th:onclick="dispalyPriceBox([[${p.id}]])">销账</button>
+                    <button class="btn btn-secondary" style="font-size: 12px;" th:if="${p.state eq 2}" th:onclick="setPaymentFalse([[${p.id}]])">撤销</button>
                     <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSinglePayment([[${p.id}]])">删除</button>
                 </td>
             </tr>
@@ -198,6 +225,7 @@
     $(function() {
         $("#paymentTable").tablesorter();
     });
+
 </script>
 
 </body>

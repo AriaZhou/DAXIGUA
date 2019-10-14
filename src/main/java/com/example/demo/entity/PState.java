@@ -1,7 +1,5 @@
 package com.example.demo.entity;
 
-import com.example.demo.dao.ProductDAO;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -20,7 +18,7 @@ public class PState implements Serializable {
     private String value;
 
     @OneToMany(mappedBy = "state")
-    private List<Product> products;
+    private List<Product> Products;
 
     public Long getId() {
         return id;
@@ -35,6 +33,6 @@ public class PState implements Serializable {
         this.value = value;
     }
     public Iterable<Product> getProduct() {
-        return products;
+        return Products;
     }
 }
