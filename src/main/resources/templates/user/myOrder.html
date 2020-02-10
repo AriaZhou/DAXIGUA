@@ -1,101 +1,149 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>我的订单</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
+
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
+
+    <!--    我自己的-->
     <link rel="stylesheet" href="../css/myOrder.css" th:href="@{../css/myOrder.css}" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/all.css" th:href="@{../css/all.css}" />
+    <script src="../../static/js/myOrder.js" th:src="@{../js/myOrder.js}" type="text/javascript"></script>
+
+    <!--    tablesorter-->
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
+
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-    <div id="payment" class="modal" style="display: none; overflow: scroll;">
-        <form class="modal-content animate" style="width: 90%;">
-            <span onclick="document.getElementById('payment').style.display='none'; window.location.reload();" class="close" title="Close Modal"
-                  style="margin: 2%; font-size: 40px">&times;</span>
-            <div class="container" align="center">
-                <p style="margin-bottom: 6px">你共需要支付</p>
-                <p style="font-size: 18pt; color: #D19090" id="totPrice">100元</p>
-                <p style="margin-bottom: 6px">请扫描以下二维码进行支付</p>
-                <table>
-                    <td><img style="width: 100%; height: auto; margin-bottom: 12px" width="40%" src="../picture/img_0006.jpg"></td>
-                    <td><img style="width: 100%; height: auto; margin-bottom: 12px" width="40%" src="../picture/img_0007.jpg"></td>
-                </table>
-                <p style="margin-bottom: 6px">请在支付备注栏填写以下信息：</p>
-                <div class="paycode">
-                    <button class="btn" onclick="return copyText()"><i class="fas fa-copy"></i></button>
-                    <textarea id="remark" readonly></textarea>
+        <div id="payment" class="modal" style="display: none; overflow: scroll;">
+            <form class="modal-content animate" style="width: 90%;">
+                <span onclick="document.getElementById('payment').style.display='none'; window.location.reload();" class="close" title="Close Modal" style="margin: 2%; font-size: 40px">&times;</span>
+                <div class="container" align="center">
+                    <p style="margin-bottom: 6px">你共需要支付</p>
+                    <p style="font-size: 18pt; color: #D19090" id="totPrice">100元</p>
+                    <p style="margin-bottom: 6px">请扫描以下二维码进行支付</p>
+                    <table>
+                        <td width="50%"><img id="zfbImg" style="width: 100%; height: auto; margin-bottom: 12px" src="../picture/img_0006.jpg"></td>
+                        <td width="50%"><img id="wxImg" style="width: 100%; height: auto; margin-bottom: 12px" src="../picture/img_0007.jpg"></td>
+                    </table>
+                    <p style="margin-bottom: 6px">请在支付备注栏填写以下信息：</p>
+                    <div class="paycode">
+                        <button class="btn" onclick="return copyText()"><i class="fas fa-copy"></i></button>
+                        <textarea id="remark" readonly></textarea>
+                    </div>
+                    <p style="color: darkred; font-size: 11pt">#务必填写正确的备注信息，以免无法自动销账。</p>
+                    <p style="padding-bottom: 10px">（预计订单会在一周内销账成功，若有问题自行戳瓜瓜。）</p>
                 </div>
-                <p style="color: darkred; font-size: 11pt">#务必填写正确的备注信息，以免无法自动销账。</p>
-                <p style="padding-bottom: 10px">（预计订单会在一周内销账成功，若有问题自行戳瓜瓜。）</p>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
 
-    <table style="float: right;">
-        <td style="padding: 60px 20px 0 0">
-            <button type="button" class="btn btn-info" th:text="批量支付" style="background-color: #d19090; border-color: #d19090;" onclick="paymentForm()"></button>
-        </td>
-        <td style="padding-top: 60px">
-            <div class="dropdown">
-                <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-                        th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
-                <div class="dropdown-menu" style="border-color: #d1b6b1;">
-                    <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
-                    <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
-                    <a class="dropdown-item" th:href="@{/user/myPayment}" style="font-size: 13px">我的支付订单</a>
-                    <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
-                    <form action="#" th:action="@{/logout}" method="post">
-                        <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
-                    </form>
+        <table style="float: right;">
+            <td style="padding: 60px 20px 0 0">
+                <button type="button" class="btn btn-info" th:text="批量支付" style="background-color: #d19090; border-color: #d19090;" onclick="paymentForm()"></button>
+            </td>
+            <td style="padding: 60px 20px 0 0">
+                <button type="button" class="btn btn-info" th:text="批量清货" style="background-color: #d19090; border-color: #d19090;" onclick="freightForm()"></button>
+            </td>
+            <td style="padding-top: 60px">
+                <div class="dropdown">
+                    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle" th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
+                    <div class="dropdown-menu" style="border-color: #d1b6b1;">
+                        <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
+                        <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
+                        <a class="dropdown-item" th:href="@{/user/myPayment}" style="font-size: 13px">我的支付订单</a>
+                        <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
+                        <form action="#" th:action="@{/logout}" method="post">
+                            <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px" />
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </td>
-    </table>
-
-    <div style="padding-top: 160px">
-        <table class="table" style="min-width: 930px" id="orderTable">
-            <tr>
-                <th style="border-top: 2px solid #d19090;"><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
-                <th style="border-top: 2px solid #d19090;"><p>订单号</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>团号</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>名称</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>数量</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>价格</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>货物状态</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>付款状态</p></th>
-                <th style="border-top: 2px solid #d19090;"><p>操作</p></th>
-            </tr>
-            <div th:each="o:${orderLst}">
-                <tr>
-                    <td><input type="checkbox" name="oItem" th:id="${o.id}" th:if="${o.state.id eq 0}"></td>
-                    <td><p th:text="${o.id}">id</p></td>
-                    <td><p th:text="${o.product.group.id}">3254</p></td>
-                    <td><p th:text="${o.product.pname}">46546</p></td>
-                    <td><p th:text="${o.ocount}">4</p></td>
-                    <td><p th:text="'￥'+${o.price}">34</p></td>
-                    <td><p th:text="${o.product.state.value}">0</p></td>
-                    <td><p th:text="${o.state.value}">0</p></td>
-                    <td>
-                        <button class="btn btn-info" style="font-size: 12px;" th:if="${o.state.id eq 0}" th:onclick="singlepaymentForm([[${o.price}]],[[${o.id}]])">支付货款</button>
-                        <input type="button" class="btn btn-info" style="font-size: 12px;" th:if="${o.state.id eq 1}" onclick="location.href='/user/myPayment'" value="待支付">
-                        <button class="btn btn-secondary" style="font-size: 12px;" th:if="${o.state.id ne 0 and o.state.id ne 1}" onclick="return false">已支付</button>
-                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262" th:if="${o.state.id eq 0}" th:onclick="deleteOrder([[${o.id}]],[[${o.state.id}]])">取消订单</button>
-                    </td>
-                </tr>
-            </div>
+            </td>
         </table>
-    </div>
+
+        <div style="padding-top: 160px">
+            <table class="tablesorter table" style="min-width: 930px" id="orderTable">
+                <thead>
+                    <tr>
+                        <th style="border-top: 2px solid #d19090;"><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选(货款)</th>
+                        <th style="border-top: 2px solid #d19090;"><input type="checkbox" onchange="checkedAllFreight(this)">&nbsp;&nbsp;全选(运费)</th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>订单号</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>团号</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>名称</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>数量</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>价格</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>货物状态</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>付款状态</p>
+                        </th>
+                        <th style="border-top: 2px solid #d19090;">
+                            <p>操作</p>
+                        </th>
+                    </tr>
+                </thead>
+                <div th:each="o:${orderLst}">
+                    <tr>
+                        <td style="width: 100px"><input type="checkbox" name="oItem" th:id="${o.id}" th:if="${o.state.id eq 0}"></td>
+                        <td style="width: 100px"><input type="checkbox" name="foItem" th:id="${o.id}+' '+${o.product.state.id}" th:if="${o.state.id eq 2 and (o.product.state.id eq 4 or o.product.state.id eq 5)}"></td>
+                        <td>
+                            <p th:text="${o.id}">id</p>
+                        </td>
+                        <td>
+                            <p th:text="${o.product.group.id}">3254</p>
+                        </td>
+                        <td>
+                            <p th:text="${o.product.pname}">46546</p>
+                        </td>
+                        <td>
+                            <p th:text="${o.ocount}">4</p>
+                        </td>
+                        <td>
+                            <p th:text="'￥'+${o.price}">34</p>
+                        </td>
+                        <td>
+                            <p th:text="${o.product.state.value}">0</p>
+                        </td>
+                        <td>
+                            <p th:text="${o.state.value}">0</p>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" style="font-size: 12px;" th:if="${o.state.id eq 0}" th:onclick="singlepaymentForm([[${o.price}]],[[${o.id}]])">支付货款</button>
+                            <button class="btn btn-info" style="font-size: 12px;" th:if="${o.state.id eq 2 and (o.product.state.id eq 4 or o.product.state.id eq 5)}" th:onclick="singleFreightpaymentForm([[${o.price}]],[[${o.id}]],[[${o.product.state.id}]])">支付运费</button>
+                            <input type="button" class="btn btn-info" style="font-size: 12px;" th:if="${o.state.id eq 1 or o.state.id eq 3}" onclick="location.href='/user/myPayment'" value="待支付">
+                            <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262" th:if="${o.state.id eq 0}" th:onclick="deleteOrder([[${o.id}]],[[${o.state.id}]])">取消订单</button>
+                        </td>
+                    </tr>
+                </div>
+            </table>
+        </div>
 
 
-    <div align="center">
-        <p th:if="!${#arrays.isEmpty(orderLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
+        <div align="center">
+            <p th:if="!${#arrays.isEmpty(orderLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
     </div>
 
     <div align="center">
@@ -103,124 +151,12 @@
     </div>
 </div>
 
-</body>
-
 <script>
-
-    function deleteOrder(name, state) {
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/user/deleteOrder",
-            data:{
-                orderid : name,
-            },
-            async: false,
-            error: function(request){
-                alert("删除失败，请重试。");
-                // alert("Connection error:"+request.error);
-            },
-            success: function(data){
-                if(data==="0"){
-                    alert("删除失败，请重试。");
-                }else{
-
-                    alert("删除成功");
-                    window.location.reload();
-                    return false;
-
-                }
-            }
-        });
-    }
-
-    function checkedAll(obj) {
-        $("input[name='oItem']").each(function(index) {
-            if(document.getElementById('orderTable').rows[index+1].style.display === '')
-                this.checked = obj.checked;
-        });
-    }
-
-    function paymentForm(){
-        if($("input[name='oItem']:checked").length===0){
-            alert('请先勾选你需要支付的订单');
-            return;
-        }
-
-        var totalPrice=0;
-        var remark="";
-        $("input[name='oItem']").each(function(index) {
-            if($(this).is(':checked')){
-                remark += parseInt($(this).attr('id'))+" ";
-                totalPrice+=parseFloat(document.getElementById('orderTable').rows[index+1].cells[5].getElementsByTagName('p')[0].innerHTML.split('￥')[1]);
-            }
-        });
-
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/user/addPayment",
-            data:{
-                ids : remark,
-                price: totalPrice
-            },
-            async: false,
-            error: function(request){
-                alert("好像出问题了，重试一下吧。");
-                return false;
-                // alert("Connection error:"+request.error);
-            },
-            success: function(data){
-                if(data==="0"){
-                    alert("好像出问题了，重试一下吧。");
-                    return false;
-                }else{
-                    document.getElementById('totPrice').innerHTML=totalPrice+" 元";
-                    document.getElementById('remark').innerHTML=data;
-                    document.getElementById('payment').style.display='block';
-                    return false;
-                }
-            }
-        });
-    }
-
-    function singlepaymentForm(price, id){
-
-        $.ajax({
-            cache: true,
-            type: "POST",
-            url: "/user/addPayment",
-            data:{
-                ids : id,
-                price: price
-            },
-            async: false,
-            error: function(request){
-                alert("好像出问题了，重试一下吧。");
-                return false;
-                // alert("Connection error:"+request.error);
-            },
-            success: function(data){
-                if(data==="0"){
-                    alert("有人买了这个商品了，不能删了哦。");
-                    return false;
-                }else{
-                    document.getElementById('totPrice').innerHTML=price+" 元";
-                    document.getElementById('remark').innerHTML=data;
-                    document.getElementById('payment').style.display='block';
-                    return false;
-                }
-            }
-        });
-    }
-
-    function copyText(){
-        var copyText = document.getElementById("remark");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        document.execCommand("copy");
-        return false;
-    }
+    $(function() {
+        $("#orderTable").tablesorter();
+    });
 </script>
+
+</body>
 
 </html>

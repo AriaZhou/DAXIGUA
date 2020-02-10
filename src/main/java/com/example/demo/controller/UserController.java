@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.dao.*;
 import com.example.demo.entity.*;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.PaymentService;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import com.example.demo.Variable;
 
 @RestController
 public class UserController {
@@ -28,11 +31,17 @@ public class UserController {
     @Autowired
     StateDAO stateDao;
     @Autowired
+    PTypeDAO pTypeDAO;
+    @Autowired
+    PaStateDAO pastateDao;
+    @Autowired
     PaymentDAO paymentDao;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private PaymentService paymentService;
 
-
+    //显示所有正在开的团
     @RequestMapping("/index")
     @ResponseBody
     public ModelAndView userIndex(Principal principal) {
@@ -54,6 +63,7 @@ public class UserController {
         return model;
     }
 
+    //显示所有货物
     @RequestMapping("/user/revealProduct")
     @ResponseBody
     public ModelAndView revealProduct(Principal principal, String groupid) {
@@ -89,6 +99,7 @@ public class UserController {
         }
     }
 
+    //批量添加货物
     @RequestMapping(value = "/user/addOrderGroup", method = RequestMethod.POST)
     @ResponseBody
     public String addOrderGroup(String productid, String productNum, Principal principal){
@@ -131,6 +142,7 @@ public class UserController {
         return model;
     }
 
+    //我的订单
     @RequestMapping("/user/myOrder")
     @ResponseBody
     public ModelAndView myOrder(Principal principal){
@@ -149,6 +161,11 @@ public class UserController {
     @ResponseBody
     public String deleteOrder(String orderid, Principal principal){
 
+        Orders o = orderDao.findById(orderid).get();
+        Product p = productDao.findProductForUpdate(o.getProduct().getId());
+        p.setPcount(p.getPcount()+o.getOcount());
+        p.setOrdercount(p.getOrdercount()-o.getOcount());
+        productDao.save(p);
         orderDao.deleteById(orderid);
         return "1";
 
@@ -158,6 +175,15 @@ public class UserController {
     @ResponseBody
     public String modifyUser(@ModelAttribute User u){
         User uOld = userDao.findById(u.getUsername()).get();
+        if(u.getProvince().isEmpty()){
+            u.setProvince(uOld.getProvince());
+        }
+        if(u.getCity().isEmpty()){
+            u.setCity(uOld.getCity());
+        }
+        if(u.getDistrict().isEmpty()){
+            u.setDistrict(uOld.getDistrict());
+        }
         u.setRole(uOld.getRole());
         u.setPassword(uOld.getPassword());
         userDao.save(u);
@@ -165,44 +191,25 @@ public class UserController {
 
     }
 
+    //添加货物支付订单
     @RequestMapping(value = "/user/addPayment", method = RequestMethod.POST)
     @ResponseBody
     public String addPayment(String ids, double price, Principal principal){
-        BigInteger id = new BigInteger(new Date().getTime()+""+Integer.parseInt(principal.getName().substring(2,4)));
-        BigInteger zero = new BigInteger("0");
-        BigInteger divider = new BigInteger("62");
-        StringBuilder remark = new StringBuilder();
-        while(id.compareTo(zero) == 1) {
-            long tmp = id.remainder(divider).longValue();
-            if (tmp < 10)
-                remark.append(tmp);
-            else if (tmp < 36)
-                remark.append((char) (tmp + 87));
-            else
-                remark.append((char) (tmp + 29));
-            id = id.divide(divider);
-        }
-        Payment p = new Payment();
-        p.setId(remark.toString());
-        p.setTotprice(price);
-        p.setState(0);
-        p.setActualprice(0);
-        p.setValue(ids);
 
-        Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(ids.split(" ")));
-
-        for (Orders o : orders){
-            o.setState(stateDao.findById((long)1).get());
-            orderDao.save(o);
-        }
-
-        p.setUser(userDao.findById(principal.getName()).get());
-
-        paymentDao.save(p);
-        return remark.toString();
+        return paymentService.addPayment(ids,price,principal);
 
     }
 
+    //添加运费支付订单
+    @RequestMapping(value = "/user/addFreightPayment", method = RequestMethod.POST)
+    @ResponseBody
+    public String addFreightPayment(String ids, int type, Principal principal){
+
+        return paymentService.addFreightPayment(type,ids,principal);
+
+    }
+
+    //我的支付订单
     @RequestMapping("/user/myPayment")
     @ResponseBody
     public ModelAndView myPayment(Principal principal){
@@ -211,6 +218,7 @@ public class UserController {
         User u = userDao.findById(principal.getName()).get();
         model.addObject("userInfo",u);
 
+        //插入换行符，让界面更好看
         Iterable<Payment> payLst = paymentDao.findbyidAndOrderByState(principal.getName());
         for (Payment p:payLst) {
             p.setValue(p.getValue().replaceAll(" ","\n"));
@@ -220,29 +228,26 @@ public class UserController {
         return model;
     }
 
+    //删除支付订单
     @RequestMapping("/user/deletePayment")
     @ResponseBody
     public String deletePayment(String payid, Principal principal){
 
-        for (Orders o : orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")))){
-            o.setState(stateDao.findById((long)0).get());
-            orderDao.save(o);
+        Payment p = paymentDao.findById(payid).get();
+        Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")));
+        for (Orders o : orders){
+            //判断支付类别，回滚订单状态
+            if(p.getType().getId()==Payment.PASTYPE_PRODUCT){
+                o.setState(stateDao.findById(Orders.OSTATE_UNPAID).get());
+            }else{
+                o.setState(stateDao.findById(Orders.OSTATE_PRODUCT_PAID).get());
+            }
         }
+
+        orderDao.saveAll(orders);
         paymentDao.deleteById(payid);
         return "1";
 
     }
 
-    @RequestMapping("/user/searchPaymentDetail")
-    @ResponseBody
-    public String searchPaymentDetail(String payid, Principal principal){
-
-        String detail = "";
-        for (Orders o : orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")))){
-            detail+=o.getProduct().getGroup().getId() + "：  " + o.getProduct().getPname()+" ✖️"+o.getOcount()+"\n";
-            orderDao.save(o);
-        }
-        return detail;
-
-    }
 }

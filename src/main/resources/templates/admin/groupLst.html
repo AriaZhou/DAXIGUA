@@ -5,15 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>开团管理</title>
 
-<!--    我自己的-->
+    <!--    我自己的-->
     <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
     <script src="../../static/js/groupLst.js" th:src="@{../js/groupLst.js}" type="text/javascript"></script>
 
-<!--    jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-<!--    侧边栏-->
+    <!--    侧边栏-->
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
         body{background:#f0f0f0;margin: 0px;}
@@ -35,10 +32,8 @@
             width:100%;
         }
     </style>
-    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(function(){
             //顶部导航切换
@@ -49,14 +44,21 @@
         })
     </script>
 
-<!--    bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
 
-<!--    Time picker-->
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
+
+
+    <!--    Time picker-->
     <script src="../../static/laydate/laydate.js" th:src="@{../laydate/laydate.js}" type="text/javascript"></script>
 
 <!--    tablesorter-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.30.5/js/jquery.tablesorter.min.js"></script>
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
+
 </head>
 <body>
 
@@ -82,6 +84,7 @@
         <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
         <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
         <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
+        <li><a th:href="@{/admin/revealAllShipment}">出货管理 </a></li>
         <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
             <ul class="submenu">
             <li><a href="#">一般使用者 </a></li>
@@ -96,7 +99,7 @@
 </div>
 
 <div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding: 50px">
+    <div class="container" style="height:100%; padding: 50px 0 0 0">
 
         <div id="insertGroup" class="modal" style="display: none; overflow: scroll;">
 
@@ -154,21 +157,50 @@
             </form>
         </div>
 
+        <div id="confirmBox" class="modal" style="display: none; overflow: scroll;">
+
+            <form class="modal-content animate" onsubmit="return false" style="max-width: 600px;padding-top: 30px;">
+
+                <span onclick="document.getElementById('confirmBox').style.display='none'" class="close" title="Close Modal"
+                      style="margin: 26px; font-size: 40px">&times;</span>
+
+                <div class="container">
+                    <table align="center">
+                        <tr><td class="usrRow"><p>你即将删除团，该团相关的产品也会一并删除，确定？</p></td></tr>
+                        <tr>
+                            <td class="usrRow">
+                                <table align="center">
+                                    <td style="padding-right: 6px"><button class="btn btn-danger" style="font-size: 14px; background-color: #d16262;" onclick="deleteGroup()">确定</button></td>
+                                    <td style="padding-left: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="document.getElementById('confirmBox').style.display='none'">取消</button></td>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr><td width="100%"><p align="center" style="font-size: 13px; color: #f44336">**若已有与该团相关订单将不允许删除</p></td></tr>
+                    </table>
+
+                </div>
+            </form >
+        </div>
+
         <table style="width: 100%" th:name="buttonGroup">
             <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >开团管理</a></td>
             <td style="width: 100%">
                 <div class="btn-group mr2" style="float: right; position: relative; top:80px">
                     <button class="btn btn-sm btn-outline-secondary" onclick="insertG()">开个新团</button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="showConfirm(null)">批量删除</button>
                     <button class="btn btn-sm btn-outline-secondary">导出表单</button>
                 </div>
             </td>
         </table>
 
         <table>
-            <td>搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px"></td>
-            <td><button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary"
-                        onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button></td>
+            <td>搜寻：<input id="searchBar" th:value="${searchbar}" class="usrValue" style="width: 200px; margin-top: 46px"></td>
+            <td>
+                <div class="btn-group mr2" style="float: right; position: relative;">
+                    <button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="sendSearch()">搜寻</button>
+                    <button style="margin: 46px 0 0 0;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button>
+                </div>
+            </td>
         </table>
 
         <table id="groupTable" class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
@@ -181,18 +213,22 @@
                     <th>操作</th>
                 </tr>
             </thead>
-            <tr th:each="g:${gLst}">
-                <td><input type="checkbox" name="gItem" th:id="${g.id}"></td>
-                <td><p th:text="${g.id}"></p></td>
-                <td><p th:text="${#dates.format(g.starttime, 'yyyy/MM/dd HH:mm')}"></p></td>
-                <td><p th:text="${#dates.format(g.endtime, 'yyyy/MM/dd HH:mm')}"></p></td>
-                <td>
-                    <button class="btn btn-info" style="font-size: 12px;"
-                            th:onclick="modifyG([[${g.id}]],[[${#dates.format(g.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(g.endtime, 'yyyy-MM-dd HH:mm:ss')}]])">修改
-                    </button>
-                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSingleGroup([[${g.id}]])">删除</button>
-                </td>
-            </tr>
+            <tbody id="loadMoreData">
+                <div th:fragment="groupDetailList">
+                    <tr th:each="g:${gLst}">
+                    <td><input type="checkbox" name="gItem" th:id="${g.id}"></td>
+                    <td><a th:text="${g.id}" th:href="@{/admin/revealProductByParam(param=${g.id})}" target="_blank"></a></td>
+                    <td><p th:text="${#dates.format(g.starttime, 'yyyy/MM/dd HH:mm')}"></p></td>
+                    <td><p th:text="${#dates.format(g.endtime, 'yyyy/MM/dd HH:mm')}"></p></td>
+                    <td>
+                        <button class="btn btn-info" style="font-size: 12px;"
+                                th:onclick="modifyG([[${g.id}]],[[${#dates.format(g.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(g.endtime, 'yyyy-MM-dd HH:mm:ss')}]])">修改
+                        </button>
+                        <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="showConfirm([[${g.id}]])">删除</button>
+                    </td>
+                </tr>
+                </div>
+            </tbody>
 
         </table>
 
@@ -200,13 +236,14 @@
 
         <!--</div>-->
 
-        <div align="center">
-            <p th:if="!${#arrays.isEmpty(gLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
+        <div align="center" id="buttonMsg">
+            <button th:if="${!#arrays.isEmpty(gLst)}" class="btn btn-info" onclick="loadMore()">加载更多</button>
         </div>
 
         <div align="center">
             <p th:if="${#arrays.isEmpty(gLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
         </div>
+
 
     </div>
 </div>

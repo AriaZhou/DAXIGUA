@@ -1,45 +1,54 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>修改资料</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!--<link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../../static/css/myPage.css}" />-->
+
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
+
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
 
     <!--    选择城市-->
     <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
     <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
     <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
     <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
+    <script src="../../static/js/myPage.js" th:src="@{../js/myPage.js}" type="text/javascript"></script>
 
     <link rel="stylesheet" href="../../static/css/myPage.css" th:href="@{../css/myPage.css}" />
-    <link rel="stylesheet" href="../../static/register.css" th:href="@{../css/register.css}" />
-
 
 </head>
+
 <body>
 
-    <div class="container" >
+    <div class="container">
 
         <div id="modifyPassword" class="modal" style="display: none; overflow: scroll;">
 
-            <form class="modal-content animate" onsubmit="return false"
-                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+            <form class="modal-content animate" onsubmit="return false" method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
 
-                <span onclick="document.getElementById('insertPrice').style.display='none'" class="close" title="Close Modal"
-                      style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+                <span onclick="document.getElementById('modifyPassword').style.display='none'" class="close" title="Close Modal" style="position: absolute; margin: 5px; right: 10px; top:-6px; font-size: 30px">&times;</span>
 
                 <div class="container" align="center">
-                    <p>请输入旧密码: </p>
-                    <input type="password" id="oldPassword" style="width: 90%"/>
-                    <p>请输入新密码: </p>
-                    <input type="password" id="newPassword" style="width: 90%"/>
-                    <table><td><p>请重复新密码: </p></td><td><p style="color: darkred" id="errorMsg" hidden="hidden">密码不一致！ </p></td></table>
-                    <input type="password" id="newPasswordAgain" style="width: 90%"/>
+                    <p style="padding: 15px">请输入旧密码: </p>
+                    <input type="password" id="oldPassword" style="width: 90%" />
+                    <p style="padding: 15px">请输入新密码: </p>
+                    <input type="password" id="newPassword" style="width: 90%" />
+                    <table>
+                        <td>
+                            <p style="padding: 15px">请重复新密码: </p>
+                        </td>
+                        <td>
+                            <p style="color: darkred" id="errorMsg" hidden="hidden">密码不一致！ </p>
+                        </td>
+                    </table>
+                    <input type="password" id="newPasswordAgain" style="width: 90%" />
                     <br>
                     <table>
                         <td><button id="confirm" value="导入" type="submit" class="btn btn-info" style="margin-top: 20px; font-size: 10pt" onclick="modifyPassword()">确认修改</button></td>
@@ -55,15 +64,14 @@
             </td>
             <td style="padding-top: 60px">
                 <div class="dropdown">
-                    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
-                            th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
+                    <button type="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle" th:text="${userInfo.uname}" style="background-color: #d19090; border-color: #d19090;"></button>
                     <div class="dropdown-menu" style="border-color: #d1b6b1;">
                         <a class="dropdown-item" th:href="@{/index}" style="font-size: 13px">要西瓜吗</a>
                         <a class="dropdown-item" th:href="@{/user/myOrder}" style="font-size: 13px">我的订单</a>
                         <a class="dropdown-item" th:href="@{/user/myPayment}" style="font-size: 13px">我的支付订单</a>
                         <a class="dropdown-item" th:href="@{/user/modifyData}" style="font-size: 13px">修改资料</a>
                         <form action="#" th:action="@{/logout}" method="post">
-                            <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px"/>
+                            <input class="dropdown-item" type="submit" value="登出" style="font-size: 13px" />
                         </form>
                     </div>
                 </div>
@@ -77,9 +85,11 @@
                         <td class="usrTitle">基本信息</td>
                     </tr>
                     <tr>
-                        <td style="font-size: 16px; color: #886d6d; padding-bottom: 6px; text-align: center">
-                            QQ：<input name="username" id="username" style="border: none;font-size: 16px; color: #886d6d;" th:field="${userInfo.username}" readonly></td>
+                        <td style="font-size: 18px; color: #886d6d; padding-bottom: 6px; text-align: center">
+                            <p name="username" id="username" style="border: none;font-size: 18px; color: #886d6d;" th:text="'QQ：'+${userInfo.username}"></p></td>
                     </tr>
+                    <tr>
+                        <input name="username" th:field="${userInfo.username}" readonly hidden></tr>
                     <tr>
                         <td class="usrRow">
                             <table align="center">
@@ -120,7 +130,7 @@
                                     <div class="city-picker-selector" id="city-picker-search">
                                         <div class="selector-item storey province">
                                             <input name="province" href="javascript:;" class="selector-name reveal df-color ">[[${userInfo.province}]]</input>
-                                            <input type="hidden" name="province" class="input-price val-error" value="" data-required="province" th:field="${userInfo.province}">
+                                            <input type="hidden" name="province" class="input-price val-error" value="[[${userInfo.province}]" data-required="province">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -129,8 +139,8 @@
                                             </div>
                                         </div>
                                         <div class="selector-item storey city">
-                                            <input name="city"  href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.city}]]</input>
-                                            <input type="hidden" name="city" class="input-price val-error" value="" data-required="city" th:field="${userInfo.city}">
+                                            <input name="city" href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.city}]]</input>
+                                            <input type="hidden" name="city" class="input-price val-error" value="[[${userInfo.city}]" data-required="city">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -139,8 +149,8 @@
                                             </div>
                                         </div>
                                         <div class="selector-item storey district">
-                                            <input name="district"  href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.district}]]</input>
-                                            <input type="hidden" name="district" class="input-price val-error" value="" data-required="district" th:field="${userInfo.district}">
+                                            <input name="district" href="javascript:;" class="selector-name reveal df-color forbid">[[${userInfo.district}]]</input>
+                                            <input type="hidden" name="district" class="input-price val-error" value="[[${userInfo.district}]" data-required="district">
                                             <div class="selector-list listing hide">
                                                 <div class="selector-search">
                                                     <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
@@ -180,117 +190,56 @@
 
     </div>
 
-    <script>
-        $("input").unbind("input").bind("input",function(){
-            var width=textWidth($(this).val());
-            $(this).width(width)
+<script>
+    $("input").unbind("input").bind("input", function () {
+        var width = textWidth($(this).val());
+        $(this).width(width)
+    });
+
+    //获取文本宽度
+    function textWidth(text) {
+        var sensor = $('<pre>' + text + '</pre>').css({
+            display: 'none'
         });
+        $('body').append(sensor);
+        var width = sensor.width();
+        sensor.remove();
+        return width + 6;
+    };
 
-        //获取文本宽度
-        function textWidth(text){
-            var sensor = $('<pre>'+ text +'</pre>').css({display: 'none'});
-            $('body').append(sensor);
-            var width = sensor.width();
-            sensor.remove();
-            return width+6;
-        };
-
-        document.body.onload=function(){
-            $("input").each(function(){
-                if($(this).attr('class')!=="input-search" && $(this).val()!==''){
-                    var width=textWidth($(this).val());
-                    $(this).width(width)
-                }
-            });
-        };
-
-        function modifyUser() {
-            console.log($('#basicInfo').serialize());
-
-            $.ajax({
-                cache: true,
-                type: "POST",
-                url: "/user/modifyUser",
-                data:$('#basicInfo').serialize(),
-                async: false,
-                error: function(request){
-                    alert("修改失败，请重试。");
-                    return false;
-                    // alert("Connection error:"+request.error);
-                },
-                success: function(data){
-                    if(data==="0"){
-                        alert("修改失败，请重试。");
-                        return false;
-                    }else{
-                        alert("修改成功");
-                        window.location.reload();
-                        return false;
-                    }
-                }
-            });
-        }
-
-        $(function () {
-            //模拟城市-联动/搜索
-            var select = $('#city-picker-search').cityPicker({
-                dataJson: cityData,
-                renderMode: true,
-                search: true,
-                linkage: true,
-                storage: false
-            });
-
-            //设置城市
-            select.setCityVal([{
-                'name': '[[${userInfo.province}]]'
-            }, {
-                'name': '[[${userInfo.city}]]'
-            }, {
-                'name': '[[${userInfo.district}]]'
-            }]);
-
-        });
-
-        function modifyPassword() {
-
-            var oldPassword = document.getElementById("oldPassword").value;
-            var newPassword = document.getElementById("newPassword").value;
-            var newPasswordAgain = document.getElementById("newPasswordAgain").value;
-
-            if(newPassword!==newPasswordAgain){
-                document.getElementById("errorMsg").hidden=false;
-                return false;
+    document.body.onload = function () {
+        $("input").each(function () {
+            if ($(this).attr('class') !== "input-search" && $(this).val() !== '') {
+                var width = textWidth($(this).val());
+                $(this).width(width)
             }
+        });
+    };
 
-            $.ajax({
-                cache: true,
-                type: "POST",
-                url: "/user/modifyPassword",
-                data:{
-                    oldPsw: oldPassword,
-                    newPsw: newPassword
-                },
-                async: false,
-                error: function(request){
-                    alert("修改失败，请重试。");
-                    return false;
-                    // alert("Connection error:"+request.error);
-                },
-                success: function(data){
-                    if(data==="0"){
-                        alert("修改失败，请重试。");
-                        return false;
-                    }else{
-                        alert(data);
-                        window.location.reload();
-                        return false;
-                    }
-                }
-            });
-        }
 
-    </script>
+    $(function () {
+        //模拟城市-联动/搜索
+        var select = $('#city-picker-search').cityPicker({
+            dataJson: cityData,
+            renderMode: true,
+            search: true,
+            linkage: true,
+            storage: false
+        });
+
+        //设置城市
+        select.setCityVal([{
+            'name': '[[${userInfo.province}]]'
+        }, {
+            'name': '[[${userInfo.city}]]'
+        }, {
+            'name': '[[${userInfo.district}]]'
+        }]);
+
+    });
+
+</script>
 
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -9,9 +10,7 @@
     <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
     <script src="../../static/js/oderLst.js" th:src="@{../js/oderLst.js}" type="text/javascript"></script>
-
-    <!--    jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
 
     <!--    侧边栏-->
     <style type="text/css">
@@ -35,10 +34,8 @@
         width:100%;
         }
     </style>
-    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(function(){
             //顶部导航切换
@@ -49,217 +46,343 @@
         })
     </script>
 
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
+
     <!--    bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
 
-    <!--    Time picker-->
-    <script src="../../static/laydate/laydate.js" th:src="@{../laydate/laydate.js}" type="text/javascript"></script>
 
-<!--    tablesorter-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.30.5/js/jquery.tablesorter.min.js"></script>
+    <!--    tablesorter-->
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
 
 </head>
+
 <body>
 
-<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+    <div id="jquery-accordion-menu" class="jquery-accordion-menu red">
 
-    <div class="toutou">
-        <img src="../picture/img_0016.png">
-        <p>[[${username}]]</p>
-        <div class="toutoubuttons" style="padding-left: 6px">
-            <button><a href="#">修改资料</a></button>
+        <div class="toutou">
+            <img src="../picture/img_0016.png">
+            <p>[[${username}]]</p>
+            <div class="toutoubuttons" style="padding-left: 6px">
+                <button><a href="#">修改资料</a></button>
+            </div>
+            <div class="toutoubuttons" style="padding-right: 6px">
+                <form action="#" th:action="@{/logout}" method="post">
+                    <button><a style="color: white">登出账号</a></button>
+                </form>
+            </div>
         </div>
-        <div class="toutoubuttons" style="padding-right: 6px">
-            <form action="#" th:action="@{/logout}" method="post">
-                <button><a style="color: white">登出账号</a></button>
-            </form>
-        </div>
+
+        <ul id="demo-list">
+
+            <li><a th:href="@{/admin}"> 首页 </a></li>
+            <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
+            <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
+            <li class="active"><a th:href="@{/admin/revealAllOrder(page=0)}">订单管理 </a></li>
+            <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
+            <li><a th:href="@{/admin/revealAllShipment}">出货管理 </a></li>
+            <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
+            <li><a href="#">系统管理 </a></li>
+            <li><a href="#">Contact </a></li>
+
+        </ul>
     </div>
 
-    <ul id="demo-list">
+    <div style="padding-left: 200px">
+        <div class="container" style="height:100%; padding: 50px 0 0 0">
 
-        <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
-        <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
-        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
-        <li class="active"><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
-        <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
-        <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
-            <!--<ul class="submenu">-->
-            <!--<li><a href="#">Web Design </a></li>-->
-            <!--<li><a href="#">Hosting </a></li>-->
-            <!--<li><a href="#">Consulting </a></li>-->
-            <!--</ul>-->
-        </li>
-        <li><a href="#">系统管理 </a></li>
-        <li><a href="#">Contact </a></li>
+            <div id="insertOrder" class="modal" style="display: none; overflow: scroll;">
 
-    </ul>
-</div>
+                <form class="modal-content animate" id="orderInfo" onsubmit="return false;" enctype="multipart/form-data">
 
-<div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding-top: 50px">
+                    <span onclick="document.getElementById('insertOrder').style.display='none'" class="close" title="Close Modal" style="margin: 26px; font-size: 40px">&times;</span>
 
-        <div id="insertOrder" class="modal" style="display: none; overflow: scroll;">
+                    <input name="id" id="id" hidden>
 
-            <form class="modal-content animate" id="orderInfo" onsubmit="return false">
+                    <div class="container">
 
-                <span onclick="document.getElementById('insertOrder').style.display='none'" class="close" title="Close Modal"
+                        <table align="center">
+                            <tr>
+                                <td class="usrTitle" id="formTitle">新增订单</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
+                                    <div class="dropdown">
+                                        团号：<input name="groupid" id="groupid" class="dropdown-toggle" data-toggle="dropdown" readonly style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
+                                        <div class="dropdown-menu" id="oGroupLst">
+                                            <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addNameValue([[${g.id}]])">[[${g.id}]]</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table align="center" style="width: 80%;">
+                            <tr>
+                                <td class="valueTitle" style="width: 111px">产品：</td>
+                                <td>
+                                    <input name="product" id="productid" hidden>
+                                    <input name="productValue" id="productValue" class="usrValue dropdown-toggle" data-toggle="dropdown" readonly>
+                                    <div class="dropdown-menu" id="oProductLst">
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table align="center" style="width: 80%;">
+                            <tr>
+                                <td class="valueTitle" style="width: 111px">数量：</td>
+                                <td><input name="ocount" id="ocount" class="usrValue" readonly onchange="changePriceValue(this.value)"></td>
+                                <td class="valueTitle" style="width: 111px">价格：</td>
+                                <td><input name="price" id="price" class="usrValue" readonly></td>
+                            </tr>
+                            <tr>
+                                <td class="valueTitle" style="width: 111px">状态：</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" th:each="s:${sLst}" th:onclick="addStateValue([[${sStat.index}]])">
+                                                [[${sStat.index}]] - [[${s.value}]]</a>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="valueTitle" style="width: 111px">下单QQ：</td>
+                                <td><input name="user" id="user" class="usrValue"></td>
+                            </tr>
+                        </table>
+
+                        <table align="center" style="width: 80%;">
+                            <tr>
+                                <td class="valueTitle" style="width: 111px">备注：</td>
+                                <td><textarea name="description" id="description" style="height: 140px; margin: 19px 0 19px 0" class="usrValue"></textarea></td>
+                            </tr>
+                        </table>
+
+                        <table align="center">
+                            <tr>
+                                <td class="usrRow">
+                                    <table align="center">
+                                        <td style="padding-right: 6px"><button id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
+                                        <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addOrder()">确认新增</button></td>
+                                        <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyOrder()">确认修改</button></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%">
+                                    <p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </form>
+            </div>
+
+            <div id="insertOrderGroup" class="modal" style="display: none; overflow: scroll;">
+
+                <form class="modal-content animate" th:action="@{/admin/uploadOrders}" id="uploadE" enctype="multipart/form-data" method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+
+                    <span onclick="document.getElementById('insertOrderGroup').style.display='none'" class="close" title="Close Modal" style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+
+                    <div class="container" align="center">
+                        <input id="excelFile" type="file" name="excelFile" accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
+                        <br>
+                        <table style="width: 100%">
+                            <td><button class="btn btn-secondary" style="font-size: 10pt;margin: 30px 0px 0 40px;" onclick="location.href='/admin/downloadOrderTemplate';return false;">下载模板</button></td>
+                            <td><button id="excel_button" value="导入" type="submit" class="btn btn-info" style="font-size: 10pt;margin: 30px 20px 0 0px;">确认导入</button></td>
+                        </table>
+
+                    </div>
+                </form>
+            </div>
+
+            <div id="confirmBox" class="modal" style="display: none; overflow: scroll;">
+
+                <form class="modal-content animate" onsubmit="return false" style="max-width: 400px;padding-top: 30px;">
+
+                <span onclick="document.getElementById('confirmBox').style.display='none'" class="close" title="Close Modal"
                       style="margin: 26px; font-size: 40px">&times;</span>
 
-                <input name="id" id="id" hidden>
+                    <div class="container">
+                        <table align="center">
+                            <tr><td class="usrRow"><p>你即将删除该订单，确定？</p></td></tr>
+                            <tr>
+                                <td class="usrRow">
+                                    <table align="center">
+                                        <td style="padding-right: 6px"><button class="btn btn-danger" style="font-size: 14px; background-color: #d16262;" onclick="deleteOrder()">确定</button></td>
+                                        <td style="padding-left: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="document.getElementById('confirmBox').style.display='none'">取消</button></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td width="100%"><p align="center" style="font-size: 13px; color: #f44336">**请谨慎处理</p></td></tr>
+                        </table>
 
-                <div class="container">
-
-                    <table align="center">
-                        <tr>
-                            <td class="usrTitle" id="formTitle">新增订单</td>
-                        </tr>
-                        <tr>
-                            <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
-                                <div class="dropdown">
-                                    团号：<input name="groupid" id="groupid" class="dropdown-toggle" data-toggle="dropdown" readonly
-                                               style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
-                                    <div class="dropdown-menu">
-                                        <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addNameValue([[${g.id}]])">[[${g.id}]]</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <table align="center" style="width: 80%;">
-                        <tr>
-                            <td class="valueTitle" style="width: 111px">产品：</td>
-                            <td>
-                                <input name="product" id="name" class="usrValue dropdown-toggle" data-toggle="dropdown" readonly>
-                                <div class="dropdown-menu" id="oProductLst">
-                                    <a th:each="p:${pLst}" th:title="${p.group.id}" hidden class="dropdown-item"
-                                        th:onclick="addPriceValue([[${p.id}]],[[${p.pname}]],[[${p.price}]])">[[${p.id}]] - [[${p.pname}]]</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <table align="center" style="width: 80%;">
-                        <tr>
-                            <td class="valueTitle" style="width: 111px">数量：</td>
-                            <td><input name="ocount" id="ocount" class="usrValue" readonly onchange="changePriceValue(this.value)"></td>
-                            <td class="valueTitle" style="width: 111px">价格：</td>
-                            <td><input name="price" id="price" class="usrValue" readonly></td>
-                        </tr>
-                        <tr>
-                            <td class="valueTitle" style="width: 111px">状态：</td>
-                            <td>
-                                <div class="dropdown">
-                                    <input name="state" id="state" class="dropdown-toggle usrValue" data-toggle="dropdown" readonly>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" th:each="s:${sLst}" th:onclick="addStateValue([[${sStat.index}]])">
-                                            [[${sStat.index}]] - [[${s.value}]]</a>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="valueTitle" style="width: 111px">下单QQ：</td>
-                            <td><input name="user" id="user" class="usrValue"></td>
-                        </tr>
-                    </table>
-
-                    <table align="center" style="width: 80%;">
-                        <tr>
-                            <td class="valueTitle" style="width: 111px">备注：</td>
-                            <td><textarea name="description" id="description" style="height: 140px; margin: 19px 0 19px 0" class="usrValue"></textarea></td>
-                        </tr>
-                    </table>
-
-                    <table align="center">
-                        <tr>
-                            <td class="usrRow">
-                                <table align="center">
-                                    <td style="padding-right: 6px"><button  id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addOrder()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyOrder()">确认修改</button></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100%">
-                                <p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>
-                            </td>
-                        </tr>
-                    </table>
-
-                </div>
-            </form>
-        </div>
-
-        <table style="width: 100%">
-            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >订单管理</a></td>
-            <td style="width: 100%">
-                <div class="btn-group mr2" style="float: right; position: relative; top:80px">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="insertO()">新增订单</button>
-                    <div class="dropdown">
-                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle"  style="border-radius: 0" data-toggle="dropdown" >批量操作</button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" th:each="s:${sLst}" th:onclick="setState([[${sStat.index}]])">
-                                批量设为 [[${s.value}]]</a>
-                            <a class="dropdown-item" onclick="deleteGroup()">批量导入</a>
-                            <a class="dropdown-item" style="color: darkred" onclick="deleteGroup()">批量删除</a>
-                        </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="showExport()">导出表单</button>
-                </div>
-            </td>
-        </table>
+                </form>
+            </div>
 
-        <table>
-            <td>搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px"></td>
-            <td><button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary"
-                onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button></td>
-        </table>
+            <div id="successImportLst" th:if="${success}" class="modal" style="display: block; overflow: scroll;">
 
-        <table id="orderTable" class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
-                    <th>订单号</th>
-                    <th>团号</th>
-                    <th>名称</th>
-                    <th>数量</th>
-                    <th>价格</th>
-                    <th>状态</th>
-                    <th>QQ号</th>
-                    <th>QQ昵称</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tr th:each="o:${oLst}">
-                <td style="width: 80px"><input type="checkbox" name="oItem" th:id="${o.id}"></td>
-                <td><p th:text="${o.id}"></p></td>
-                <td><p th:text="${o.product.group.id}"></p></td>
-                <td><p th:text="${o.product.pname}"></p></td>
-                <td style="width: 70px"><p th:text="${o.ocount}"></p></td>
-                <td style="width: 90px"><p th:text="'￥'+${o.price}"></p></td>
-                <td style="width: 100px"><p th:text="${o.state.value}"></p></td>
-                <td style="width: 120px"><p th:text="${o.user.username}"></p></td>
-                <td style="width: 160px"><p th:text="${o.user.uname}"></p></td>
-                <td>
-                    <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.price}]], [[${o.ocount}]], [[${o.state.id}]], [[${o.user.username}]])">修改</button>
-                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteOrder([[${o.id}]])">删除</button>
+                <form class="modal-content animate" onsubmit="return false;" enctype="multipart/form-data">
+
+                    <div th:if="${failCount > 0}" class="alert alert-danger">
+                        <strong>导入失败!</strong> 有 [[${failCount}]] 笔资料汇入失败
+                        <a style="text-decoration:underline; size: 9pt" th:href="@{/admin/exportErrorOrders(errorList=${failOLst})}">点此导出</a>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong>导入成功!</strong> 成功汇入 [[${successCount}]] 笔资料
+                    </div>
+
+                    <a th:href='@{/admin/revealAllOrder}' class="close" title="Close Modal" style="font-size: 40px">&times;</a>
+
+                    <div class="container">
+                        <table class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
+                            <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>团号</th>
+                                <th>名称</th>
+                                <th>数量</th>
+                                <th>价格</th>
+                                <th>状态</th>
+                                <th>QQ号</th>
+                                <th>QQ昵称</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="o:${successOLst}">
+                                <td>
+                                    <p th:text="${o.id}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${o.product.group.id}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${o.product.pname}"></p>
+                                </td>
+                                <td style="width: 70px">
+                                    <p th:text="${o.ocount}"></p>
+                                </td>
+                                <td style="width: 90px">
+                                    <p th:text="'￥'+${o.price}"></p>
+                                </td>
+                                <td style="width: 100px">
+                                    <p th:text="${o.state.value}"></p>
+                                </td>
+                                <td style="width: 120px">
+                                    <p th:text="${o.user.username}"></p>
+                                </td>
+                                <td style="width: 160px">
+                                    <p th:text="${o.user.uname}"></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <table style="width: 100%">
+                <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap">订单管理</a></td>
+                <td style="width: 100%">
+                    <div class="btn-group mr2" style="float: right; position: relative; top:80px">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" style="border-bottom-right-radius: 0; border-top-right-radius: 0;" data-toggle="dropdown">新增订单</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" onclick="insertO()">单个新增</a>
+                                <a class="dropdown-item" onclick="document.getElementById('insertOrderGroup').style.display='block'">批量导入</a>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" style="border-radius: 0" data-toggle="dropdown">批量操作</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" th:each="s:${sLst}" th:onclick="setState([[${sStat.index}]])">
+                                    批量设为 [[${s.value}]]</a>
+                                <a class="dropdown-item" style="color: darkred" onclick="showConfirm(null)">批量删除</a>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="showExport()">导出表单</button>
+                    </div>
                 </td>
-            </tr>
+            </table>
 
-        </table>
+            <table>
+                <td>搜寻：<input id="searchBar" th:value="${searchbar}" class="usrValue" style="width: 200px; margin-top: 46px"></td>
+                <td>
+                    <div class="btn-group mr2" style="float: right; position: relative;">
+                        <button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="sendSearch()">搜寻</button>
+                        <button style="margin: 46px 0 0 0;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button>
+                    </div>
+                </td>
+            </table>
 
-        <!--<div style="height: 2000px">-->
+            <table id="orderTable" class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
+                        <th>订单号</th>
+                        <th>团号</th>
+                        <th>名称</th>
+                        <th>数量</th>
+                        <th>价格</th>
+                        <th>状态</th>
+                        <th>QQ号</th>
+                        <th>QQ昵称</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="loadMoreData">
+                    <div th:fragment="orderDetailList">
+                        <tr th:each="o:${oLst}">
+                            <td style="width: 80px"><input type="checkbox" name="oItem" th:id="${o.id}"></td>
+                            <td>
+                                <p th:text="${o.id}"></p>
+                            </td>
+                            <td>
+                                <p th:text="${o.product.group.id}"></p>
+                            </td>
+                            <td>
+                                <p th:text="${o.product.pname}"></p>
+                            </td>
+                            <td style="width: 70px">
+                                <p th:text="${o.ocount}"></p>
+                            </td>
+                            <td style="width: 90px">
+                                <p th:text="'￥'+${o.price}"></p>
+                            </td>
+                            <td style="width: 100px">
+                                <p th:text="${o.state.value}"></p>
+                            </td>
+                            <td style="width: 120px">
+                                <p th:text="${o.user.username}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <p th:text="${o.user.uname}"></p>
+                            </td>
+                            <td>
+                                <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyO([[${o.id}]], [[${o.product.group.id}]], [[${o.product.id}]], [[${o.product.pname}]], [[${o.product.price}]],[[${o.price}]], [[${o.ocount}]], [[${o.state.id}]], [[${o.user.username}]])">修改</button>
+                                <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="showConfirm([[${o.id}]])">删除</button>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
+            </table>
 
-        <!--</div>-->
+            <!--<div style="height: 2000px">-->
 
-        <div align="center">
-            <p th:if="!${#arrays.isEmpty(oLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
-        </div>
+            <!--</div>-->
+            <div align="center" id="buttonMsg">
+                <button th:if="${!#arrays.isEmpty(oLst)}" class="btn btn-info" onclick="loadMore()">加载更多</button>
+            </div>
 
-        <div align="center">
-            <p th:if="${#arrays.isEmpty(oLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
-        </div>
+            <div align="center">
+                <p th:if="${#arrays.isEmpty(oLst)}"  style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
+            </div>
 
     </div>
 </div>

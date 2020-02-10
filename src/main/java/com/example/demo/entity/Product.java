@@ -10,6 +10,14 @@ public class Product implements Serializable {
 
     private static final long serialVersionUID = -2957645392914180170L;
 
+    //product state
+    public static final long PSTATE_ONSALE = 0;//开团中
+    public static final long PSTATE_OVERSALE = 1;//已截团
+    public static final long PSTATE_ON_THE_WAY = 2;//出货中
+    public static final long PSTATE_READY = 3;//可清货
+    public static final long PSTATE_DANDAN = 4;//淡淡清货
+    public static final long PSTATE_GUIYUAN = 5;//桂圆清货
+
     @Id
     private String id;
     private String username;

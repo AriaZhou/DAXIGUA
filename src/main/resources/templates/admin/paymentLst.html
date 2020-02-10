@@ -1,20 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, multipart/form-data">
     <title>支付管理</title>
 
-<!--    我自己的-->
+    <!--    我自己的-->
     <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="../../static/css/userLst.css" th:href="@{../css/userLst.css}" />
     <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
     <script src="../../static/js/userLst.js" th:src="@{../js/paymentLst.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
 
-<!--    jQuery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
-<!--    侧边栏-->
+    <!--    侧边栏-->
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
         body{background:#f0f0f0;margin: 0px;}
@@ -33,13 +32,11 @@
             text-overflow:ellipsis;
             -o-text-overflow:ellipsis;
             white-space:nowrap;]
-            width:100%;
+        width:100%;
         }
     </style>
-    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(function(){
             //顶部导航切换
@@ -50,160 +47,275 @@
         })
     </script>
 
-<!--    bootstrap-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
 
-<!--    Time picker-->
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
+
+    <!--    Time picker-->
     <script src="../../static/laydate/laydate.js" th:src="@{../laydate/laydate.js}" type="text/javascript"></script>
 
-<!--    tablesorter-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.30.5/js/jquery.tablesorter.min.js"></script>
+    <!--    tablesorter-->
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
+
 </head>
+
 <body>
 
-<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+    <div id="jquery-accordion-menu" class="jquery-accordion-menu red">
 
-    <div class="toutou">
-        <img src="../picture/img_0016.png">
-        <p>[[${username}]]</p>
-        <div class="toutoubuttons" style="padding-left: 6px">
-            <button><a href="#">修改资料</a></button>
+        <div class="toutou">
+            <img src="../picture/img_0016.png">
+            <p>[[${username}]]</p>
+            <div class="toutoubuttons" style="padding-left: 6px">
+                <button><a href="#">修改资料</a></button>
+            </div>
+            <div class="toutoubuttons" style="padding-right: 6px">
+                <form action="#" th:action="@{/logout}" method="post">
+                    <button><a style="color: white">登出账号</a></button>
+                </form>
+            </div>
         </div>
-        <div class="toutoubuttons" style="padding-right: 6px">
-            <form action="#" th:action="@{/logout}" method="post">
-                <button><a style="color: white">登出账号</a></button>
-            </form>
-        </div>
+
+        <ul id="demo-list">
+
+            <li><a href="#" th:href="@{/admin}"> 首页 </a></li>
+            <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
+            <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
+            <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
+            <li class="active"><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
+            <li><a th:href="@{/admin/revealAllShipment}">出货管理 </a></li>
+            <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
+                <ul class="submenu">
+                    <li><a href="#">一般使用者 </a></li>
+                    <li><a href="#">管理人员 </a></li>
+                </ul>
+            </li>
+            <li><a href="#">系统管理 </a></li>
+            <li><a href="#">Contact </a></li>
+
+        </ul>
+
     </div>
 
-    <ul id="demo-list">
+    <div style="padding-left: 200px">
+        <div class="container" style="height:100%; padding: 50px 0 0 0">
 
-        <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
-        <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
-        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
-        <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
-        <li class="active"><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
-        <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
-            <ul class="submenu">
-            <li><a href="#">一般使用者 </a></li>
-            <li><a href="#">管理人员 </a></li>
-            </ul>
-        </li>
-        <li><a href="#">系统管理 </a></li>
-        <li><a href="#">Contact </a></li>
+            <div id="successImportLst" th:if="${success}" class="modal" style="display: block; overflow: scroll;">
 
-    </ul>
+                <form class="modal-content animate" onsubmit="return false;" enctype="multipart/form-data">
 
-</div>
+                    <div th:if="${failCount > 0}" class="alert alert-danger">
+                        <strong>导入失败!</strong> 有 [[${failCount}]] 笔订单销账失败
+                        <a style="text-decoration:underline; size: 9pt" th:href="@{/admin/exportErrorPayments(errorList=${failLst})}">点此导出</a>
+                    </div>
 
-<div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding: 50px">
+                    <div class="alert alert-success">
+                        <strong>导入成功!</strong> 成功汇入 [[${successCount}]] 笔资料
+                    </div>
 
-        <div id="insertPayment" class="modal" style="display: none; overflow: scroll;">
+                    <a th:href='@{/admin/revealAllPayment}' class="close" title="Close Modal" style="font-size: 40px">&times;</a>
 
-            <form class="modal-content animate" th:action="@{/admin/uploadpayment}" id="uploadE" enctype="multipart/form-data"
-                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+                    <div class="container">
+                        <table class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
+                            <thead>
+                            <tr>
+                                <th>支付订单号</th>
+                                <th>订单号</th>
+                                <th>应付</th>
+                                <th>实付</th>
+                                <th>状态</th>
+                                <th>QQ号</th>
+                                <th>QQ昵称</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="p:${successLst}">
+                                <td>
+                                    <p th:text="${p.id}"></p>
+                                </td>
+                                <td style="width: 160px">
+                                    <p style="text-decoration: underline" th:text="${p.value}" th:onclick="showDetail([[${p.id}]])"></p>
+                                    </p>
+                                </td>
+                                <td>
+                                    <p th:text="${p.totprice}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${p.actualprice}"></p>
+                                </td>
+                                <td>
+                                    <p th:text="${p.state.value}">未支付/未销账</p>
+                                </td>
+                                <td style="width: 120px">
+                                    <p th:text="${p.user.username}"></p>
+                                </td>
+                                <td style="width: 160px">
+                                    <p th:text="${p.user.uname}"></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
 
-                <span onclick="document.getElementById('insertPayment').style.display='none'" class="close" title="Close Modal"
-                      style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+            <div id="insertPayment" class="modal" style="display: none; overflow: scroll;">
 
-                <div class="container" align="center">
-                    <input id="excelFile" type="file" name="excelFile"
-                           accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
-                    <br>
-                    <table style="width: 100%">
-                        <td><button class="btn btn-secondary" style="font-size: 10pt;margin: 30px 0px 0 40px;" onclick="location.href='/admin/downloadTemplate';return false;">下载模板</button></td>
-                        <td><button id="excel_button" value="导入" type="submit" class="btn btn-info" style="font-size: 10pt;margin: 30px 20px 0 0px;" onclick="importPayment()">确认导入</button></td>
-                    </table>
+                <form class="modal-content animate" th:action="@{/admin/uploadPayment}" id="uploadE" enctype="multipart/form-data" method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
 
-                </div>
-            </form>
-        </div>
+                    <span onclick="document.getElementById('insertPayment').style.display='none'" class="close" title="Close Modal" style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
 
-        <div id="insertPrice" class="modal" style="display: none; overflow: scroll;">
+                    <div class="container" align="center">
+                        <input id="excelFile" type="file" name="excelFile" accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
+                        <br>
+                        <table style="width: 100%">
+                            <td><button class="btn btn-secondary" style="font-size: 10pt;margin: 30px 0px 0 40px;" onclick="location.href='/admin/downloadPaymentTemplate';return false;">下载模板</button></td>
+                            <td><button id="excel_button" value="导入" type="submit" class="btn btn-info" style="font-size: 10pt;margin: 30px 20px 0 0px;" onclick="importPayment()">确认导入</button></td>
+                        </table>
 
-            <form class="modal-content animate" onsubmit="return false"
-                  method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+                    </div>
+                </form>
+            </div>
 
-                <span onclick="document.getElementById('insertPrice').style.display='none'" class="close" title="Close Modal"
-                      style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+            <div id="insertPrice" class="modal" style="display: none; overflow: scroll;">
 
-                <div class="container" align="center">
-                    <p>请输入实付金额: </p>
-                    <input type="hidden" id="paidId">
-                    <input id="paidPrice" type="text"/>
-                    <br>
-                    <table>
-                         <td><button id="confirm" value="导入" type="submit" class="btn btn-info" style="margin-top: 20px; font-size: 10pt"
-                         onclick="setPaymentTrue()">确认核销</button></td>
-                    </table>
+                <form class="modal-content animate" onsubmit="return false" method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
 
-                </div>
-            </form>
-        </div>
+                    <span onclick="document.getElementById('insertPrice').style.display='none'" class="close" title="Close Modal" style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
 
-        <table style="width: 100%" th:name="buttonGroup">
-            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >开团管理</a></td>
-            <td style="width: 100%">
-                <div class="btn-group mr2" style="float: right; position: relative; top:80px">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('insertPayment').style.display='block'">导入订单</button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
-                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
-                </div>
-            </td>
-        </table>
+                    <div class="container" align="center">
+                        <p>请输入实付金额: </p>
+                        <input type="hidden" id="paidId">
+                        <input id="paidPrice" type="text" />
+                        <br>
+                        <table>
+                            <td><button id="confirm" value="导入" type="submit" class="btn btn-info" style="margin-top: 20px; font-size: 10pt" onclick="setPaymentTrue()">确认核销</button></td>
+                        </table>
 
-        <table>
-            <td>搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px"></td>
-            <td><button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary"
-                        onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button></td>
-        </table>
+                    </div>
+                </form>
+            </div>
 
-        <table id="paymentTable" class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
-                    <th>支付订单号</th>
-                    <th>订单号</th>
-                    <th>应付</th>
-                    <th>实付</th>
-                    <th>状态</th>
-                    <th>QQ号</th>
-                    <th>QQ昵称</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tr th:each="p:${pLst}">
-                <td style="width: 100px"><input type="checkbox" name="pItem" th:id="${p.id}"></td>
-                <td><p th:text="${p.id}"></p></td>
-                <td style="width: 160px"><p th:text="${p.value}"></p></td>
-                <td><p th:text="${p.totprice}"></p></td>
-                <td><p th:text="${p.actualprice}"></p></td>
-                <td><p th:if="${p.state eq 0}">未支付/未销账</p>
-                    <p th:if="${p.state eq 1}">金额有误</p>
-                    <p th:if="${p.state eq 2}">已销账</p></td>
-                <td style="width: 120px"><p th:text="${p.user.username}"></p></td>
-                <td style="width: 160px"><p th:text="${p.user.uname}"></p></td>
-                <td style="width: 160px">
-                    <button class="btn btn-info" style="font-size: 12px;" th:if="${p.state ne 2}" th:onclick="dispalyPriceBox([[${p.id}]])">销账</button>
-                    <button class="btn btn-secondary" style="font-size: 12px;" th:if="${p.state eq 2}" th:onclick="setPaymentFalse([[${p.id}]])">撤销</button>
-                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSinglePayment([[${p.id}]])">删除</button>
+            <div id="orderDetial" class="modal" style="display: none; overflow: scroll;">
+                <form class="modal-content animate" style="width: 400px; max-height: 90%">
+                    <span onclick="document.getElementById('orderDetial').style.display='none'" class="close" title="Close Modal" style="margin: 2%; font-size: 40px">&times;</span>
+                    <div class="container" align="center" style="padding-top:50px">
+                        <p style="horiz-align: center; height: 100%; " id="detailValue">100元</p>
+                        <br><br>
+                    </div>
+                </form>
+            </div>
+
+            <div id="confirmBox" class="modal" style="display: none; overflow: scroll;">
+
+                <form class="modal-content animate" onsubmit="return false" style="max-width: 400px;padding-top: 30px;">
+
+                <span onclick="document.getElementById('confirmBox').style.display='none'" class="close" title="Close Modal"
+                      style="margin: 26px; font-size: 40px">&times;</span>
+
+                    <div class="container">
+                        <table align="center">
+                            <tr><td class="usrRow"><p>你即将删除该订单，确定？</p></td></tr>
+                            <tr>
+                                <td class="usrRow">
+                                    <table align="center">
+                                        <td style="padding-right: 6px"><button class="btn btn-danger" style="font-size: 14px; background-color: #d16262;" onclick="deletePayment()">确定</button></td>
+                                        <td style="padding-left: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="document.getElementById('confirmBox').style.display='none'">取消</button></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td width="100%"><p align="center" style="font-size: 13px; color: #f44336">**请谨慎处理</p></td></tr>
+                        </table>
+
+                    </div>
+                </form>
+            </div>
+
+            <table style="width: 100%" th:name="buttonGroup">
+                <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap">支付管理</a></td>
+                <td style="width: 100%">
+                    <div class="btn-group mr2" style="float: right; position: relative; top:80px">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('insertPayment').style.display='block'">导入订单</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="showConfirm()" disabled>批量删除</button>
+                        <button class="btn btn-sm btn-outline-secondary">导出表单</button>
+                    </div>
                 </td>
-            </tr>
+            </table>
 
-        </table>
+            <table>
+                <td>搜寻：<input id="searchBar" th:value="${searchbar}" class="usrValue" style="width: 200px; height: 28px; margin-top: 46px"></td>
+                <td>
+                    <div class="btn-group mr2" style="float: right; position: relative;">
+                        <button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="sendSearch()">搜寻</button>
+                        <button style="margin: 46px 0 0 0;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button>
+                    </div>
+                </td>
+            </table>
 
-        <!--<div style="height: 2000px">-->
+            <table id="paymentTable" class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
+                        <th>支付订单号</th>
+                        <th>订单号</th>
+                        <th>应付</th>
+                        <th>实付</th>
+                        <th>状态</th>
+                        <th>QQ号</th>
+                        <th>QQ昵称</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="loadMoreData">
+                    <div th:fragment="paymentDetailList">
+                        <tr th:each="p:${pLst}">
+                            <td style="width: 100px"><input type="checkbox" name="pItem" th:id="${p.id}"></td>
+                            <td>
+                                <p th:text="${p.id}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <p style="text-decoration: underline" th:text="${p.value}" th:onclick="showDetail([[${p.id}]])"></p>
+                                </p>
+                            </td>
+                            <td>
+                                <p th:text="${p.totprice}"></p>
+                            </td>
+                            <td>
+                                <p th:text="${p.actualprice}"></p>
+                            </td>
+                            <td>
+                                <p th:text="${p.state.value}">未支付/未销账</p>
+                            </td>
+                            <td style="width: 120px">
+                                <p th:text="${p.user.username}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <p th:text="${p.user.uname}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <button class="btn btn-info" style="font-size: 12px;" th:if="${p.state.id ne 2}" th:onclick="dispalyPriceBox([[${p.id}]])">销账</button>
+                                <button class="btn btn-secondary" style="font-size: 12px;" th:if="${p.state.id eq 2}" th:onclick="setPaymentFalse([[${p.id}]])">撤销</button>
+                                <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="showConfirm([[${p.id}]])" disabled>删除</button>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
 
-        <!--</div>-->
+            </table>
 
-        <div align="center">
-            <p th:if="!${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
-        </div>
+            <!--<div style="height: 2000px">-->
 
-        <div align="center">
-            <p th:if="${#arrays.isEmpty(pLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
-        </div>
+            <!--</div>-->
+
+            <div align="center" id="buttonMsg">
+                <button th:if="${!#arrays.isEmpty(pLst)}" class="btn btn-info" onclick="loadMore()">加载更多</button>
+            </div>
+
+            <div align="center">
+                <p th:if="${#arrays.isEmpty(pLst)}"  style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
+            </div>
 
     </div>
 </div>

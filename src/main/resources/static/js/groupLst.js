@@ -16,44 +16,15 @@ function onSearch(obj){
     }
 }
 
-// (function($) {
-//         $.expr[":"].Contains = function(a, i, m) {
-//             return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-//         };
-//         function filterList(header, list) {
-//             //@header 头部元素
-//             //@list 无需列表
-//             //创建一个搜素表单
-//             var form = $("<form>").attr({
-//                 "class":"filterform",
-//                 action:"#"
-//             }), input = $("<input>").attr({
-//                 "class":"filterinput",
-//                 type:"text"
-//             });
-//             $(form).append(input).appendTo(header);
-//             $(input).change(function() {
-//                 var filter = $(this).val();
-//                 if (filter) {
-//                     $matches = $(list).find("a:Contains(" + filter + ")").parent();
-//                     $("li", list).not($matches).slideUp();
-//                     $matches.slideDown();
-//                 } else {
-//                     $(list).find("li").slideDown();
-//                 }
-//                 return false;
-//             }).keyup(function() {
-//                 $(this).change();
-//             });
-//         }
-//         $(function() {
-//             filterList($("#form"), $("#demo-list"));
-//         });
-//     })(jQuery);
-
+function sendSearch() {
+    var param = document.getElementById('searchBar');
+    window.location.href="/admin/revealGroupByParam?param=" + param.value;
+}
 
 var mStartTime;
 var mEndTime;
+var page=0;
+var deleteLst = [];
 
 function rollBack(){
     document.getElementById("starttime").value = mStartTime;
@@ -145,52 +116,36 @@ function addGroup() {
     });
 }
 
-function deleteSingleGroup(name) {
+function showConfirm(id){
+    deleteLst = [];
+    if(id != null)
+    {
+        deleteLst.push(id);
+    }
+    else
+    {
+        $("input[name = 'gItem']:checked").each(function () {
+            deleteLst.push($(this).attr('id'));
+        });
+
+        if(deleteLst.length === 0){
+            alert("您选一个啊，点checkbox！");
+            return false;
+        }
+    }
+
+    document.getElementById("confirmBox").style.display='block';
+}
+
+function deleteGroup(){
+    document.getElementById('confirmBox').style.display='none';
+
     $.ajax({
         cache: true,
         type: "POST",
         url: "/admin/deleteGroup",
         data:{
-            groupid : name
-        },
-        async: false,
-        error: function(request){
-            alert("删除失败，请重试。");
-            return false;
-            // alert("Connection error:"+request.error);
-        },
-        success: function(data){
-            if(data==="0"){
-                alert("删除失败，请重试。");
-                return false;
-            }else{
-
-                alert("删除成功");
-                window.location.reload();
-                return false;
-
-            }
-        }
-    });
-}
-
-function deleteGroup(){
-    var ids = [];
-    $("input[name = 'gItem']:checked").each(function () {
-        ids.push($(this).attr('id'));
-    });
-
-    if(ids.length === 0){
-        alert("您选一个啊，点checkbox！");
-        return false;
-    }
-
-    $.ajax({
-        cache: true,
-        type: "POST",
-        url: "/admin/deleteGroupGroup",
-        data:{
-            groupid : ids.toString()
+            groupid : deleteLst.toString()
         },
         async: false,
         error: function(request){
@@ -215,6 +170,39 @@ function checkedAll(obj) {
     $("input[name='gItem']").each(function(index) {
         if(document.getElementById('groupTable').rows[index+1].style.display === '')
             this.checked = obj.checked;
+    });
+}
+
+function loadMore() {
+    var param = document.getElementById('searchBar');
+    page = page + 1;
+
+    $.ajax({
+        cache: true,
+        type: "POST",
+        url: "/admin/loadMoreGroup",
+        data: {
+            param: param.value,
+            page: page
+        },
+        async: false,
+        error: function (request) {
+            alert("修改失败，请重试。");
+            return false;
+            // alert("Connection error:"+request.error);
+        },
+        success: function (data) {
+            var div = document.createElement('table');
+            div.innerHTML = data.trim();
+            if(div.childNodes.length != 1){
+                $('#loadMoreData').append(div.childNodes.item(1).childNodes);
+            }
+            else{
+                document.getElementById('buttonMsg').innerHTML = '<p style="color: #888888; font-size: 12pt">没有更多了</p>';
+            }
+            return false;
+
+        }
     });
 }
 

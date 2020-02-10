@@ -22,6 +22,10 @@ public class LoginSuccessHandle implements AuthenticationSuccessHandler {
             response.sendRedirect(basePath + "admin");
             return;
         }
+        else if (roles.contains("ROLE_USER")) {
+            response.sendRedirect(basePath + "index");
+            return;
+        }
         response.sendRedirect(basePath + "index");
     }
 }

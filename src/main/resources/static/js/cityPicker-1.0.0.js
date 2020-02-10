@@ -92,9 +92,9 @@
             var config = this.options,
                 selectemplet = '',
                 placeholder, field, forbid, citygrade, active, hide,
-                searchStr = config.search ? '<div class="selector-search">'
-                    +'<input type="text" class="input-search" value="" placeholder="拼音、中文搜索" />'
-                +'</div>' : '';
+                searchStr = config.search ? '<div class="selector-search">' +
+                '<input type="text" class="input-search" value="" placeholder="拼音、中文搜索" />' +
+                '</div>' : '';
 
             for (var i = 0; i < config.level; i++) { //循环定义的级别
                 placeholder = config.selectpattern[i].placeholder; //默认提示语
@@ -106,16 +106,16 @@
 
                 if (config.renderMode) {
                     //模拟
-                    selectemplet += '<div class="selector-item storey ' + citygrade + '" data-index="' + i + '">'
-                        +'<a href="javascript:;" class="selector-name reveal df-color ' + forbid + '">' + placeholder + '</a>'
-                        +'<input type=hidden name="' + field + '" class="input-price val-error" value="" data-required="' + field + '">'
-                        +'<div class="selector-list listing hide">'+ searchStr +'<ul></ul></div>'
-                    +'</div>';
+                    selectemplet += '<div class="selector-item storey ' + citygrade + '" data-index="' + i + '">' +
+                        '<a id="' + citygrade + '" href="javascript:;" class="selector-name reveal df-color ' + forbid + '">' + placeholder + '</a>' +
+                        '<input id="input' + field + '" type=hidden name="' + field + '" class="input-price val-error" value="'+placeholder+'" data-required="' + field + '">' +
+                        '<div class="selector-list listing hide">' + searchStr + '<ul></ul></div>' +
+                        '</div>';
                 } else {
                     //原生
-                    selectemplet += '<select name="' + field + '" data-index="' + i + '" class="' + citygrade + '">'
-                        +'<option>' + placeholder + '</option>'
-                    +'</select>';
+                    selectemplet += '<select name="' + field + '" data-index="' + i + '" class="' + citygrade + '">' +
+                        '<option>' + placeholder + '</option>' +
+                        '</select>';
                 }
             }
 
@@ -131,15 +131,15 @@
                 name = config.shorthand ? $target.data('title') : $target.text(), //开启了简写就拿简写，否则就拿全称中文
                 storage = config.storage ? id : name, //存储的是数字还是中文
                 code = config.renderMode ? $target.data('code') : $target.find('.caller:selected').data('code'),
-                placeholder = index+1 < config.level ? config.selectpattern[index+1].placeholder : '',
-                placeStr = !config.renderMode ? '<option class="caller">'+placeholder+'</option>'+ effect.montage.apply(self, [config.dataJson, id]) : '<li class="caller hide">'+placeholder+'</li>'+ effect.montage.apply(self, [config.dataJson, id]),
+                placeholder = index + 1 < config.level ? config.selectpattern[index + 1].placeholder : '',
+                placeStr = !config.renderMode ? '<option class="caller">' + placeholder + '</option>' + effect.montage.apply(self, [config.dataJson, id]) : '<li class="caller hide">' + placeholder + '</li>' + effect.montage.apply(self, [config.dataJson, id]),
                 linkage = !config.linkage ? placeStr : effect.montage.apply(self, [config.dataJson, id]),
                 $storey = $selector.find('.storey').eq(index + 1),
                 $listing = $selector.find('.listing').eq(index + 1);
-                $selector = self.$selector;
+            $selector = self.$selector;
 
             //选择选项后触发自定义事件choose(选择)事件
-            $selector.trigger('choose-' + grade[index] +'.citypicker', [$target, storage]);
+            $selector.trigger('choose-' + grade[index] + '.citypicker', [$target, storage]);
 
             //赋值给隐藏域-区号
             $selector.find('[role="code"]').val(code);
@@ -159,7 +159,7 @@
                 }
             } else {
                 //原生: 下一级附上对应的城市选项，执行点击事件
-				$target.next().html(linkage).trigger('change').find('.caller').eq(0).prop('selected', true);
+                $target.next().html(linkage).trigger('change').find('.caller').eq(0).prop('selected', true);
             }
         },
         show: function (event) {
@@ -194,9 +194,9 @@
                 return false;
             }
 
-            $.each(this.options.dataJson, function(key, value) {
+            $.each(this.options.dataJson, function (key, value) {
                 //拼音或者名称搜索
-                if(value.pinyin.toLocaleLowerCase().search(inputVal) > -1 || value.name.search(inputVal) > -1 || value.id.search(inputVal) > -1 ){
+                if (value.pinyin.toLocaleLowerCase().search(inputVal) > -1 || value.name.search(inputVal) > -1 || value.id.search(inputVal) > -1) {
                     result.push(value);
                 }
             });
@@ -211,7 +211,7 @@
             var self = this,
                 config = self.options,
                 code = config.code ? '<input type="hidden" role="code" name="' + config.code + '" value="">' : '';
-                //是否开启存储区号，是就加入一个隐藏域
+            //是否开启存储区号，是就加入一个隐藏域
 
             //添加拼接好的模板
             $selector.html(effect.seTemplet.call(self) + code);
@@ -261,28 +261,28 @@
                 arrayVal = val;
 
             $.each(arrayVal, function (key, value) {
-                var $original = $selector.find('.'+grade[key]);
-                var $forward = $selector.find('.'+grade[key+1]);
+                var $original = $selector.find('.' + grade[key]);
+                var $forward = $selector.find('.' + grade[key + 1]);
 
                 if (config.renderMode) {
                     $original.find('.reveal').text(value.name).removeClass('df-color forbid').siblings('.input-price').val(value.id);
 
                     $forward.find('ul').html(effect.montage.apply(self, [config.dataJson, value.id]));
-                    $original.find('.caller[data-id="'+value.id+'"]').addClass('active');
+                    $original.find('.caller[data-id="' + value.id + '"]').addClass('active');
                 } else {
                     $forward.html(effect.montage.apply(self, [config.dataJson, value.id]));
-                    $original.find('.caller[value="'+value.id+'"]').prop('selected', true);
+                    $original.find('.caller[value="' + value.id + '"]').prop('selected', true);
                 }
-                
+
             });
         }
     };
 
     //模拟：执行点击区域外的就隐藏列表;
-	$(document).on('click.citypicker', function (event){
-		if($selector && $selector.find(event.target).length < 1) {
-			$selector.find('.listing').addClass('hide');
-		}
+    $(document).on('click.citypicker', function (event) {
+        if ($selector && $selector.find(event.target).length < 1) {
+            $selector.find('.listing').addClass('hide');
+        }
     });
 
     $.fn.cityPicker = function (options) {

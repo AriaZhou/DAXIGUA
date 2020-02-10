@@ -1,32 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>用户管理</title>
 
-<!--    我自己的-->
-    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="../../static/css/userLst.css" th:href="@{../css/userLst.css}" />
-    <link rel="stylesheet" href="../../static/css/productLst.css" th:href="@{../css/productLst.css}" />
-    <script src="../../static/js/userLst.js" th:src="@{../js/userLst.js}" type="text/javascript"></script>
-
-    <!--    选择城市-->
-    <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
-    <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
-    <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
-
-<!--    jQuery-->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-<!--    侧边栏-->
+    <!--    侧边栏-->
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
-        body{margin: 0px;}
+        body{background:#f0f0f0;margin: 0px;}
         .filterinput{
             background-color:rgba(249, 244, 244, 0);
             border-radius:15px;
@@ -42,10 +25,10 @@
             text-overflow:ellipsis;
             -o-text-overflow:ellipsis;
             white-space:nowrap;]
-            width:100%;
+        width:100%;
         }
     </style>
-    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
+
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function(){
@@ -57,238 +40,297 @@
         })
     </script>
 
-<!--    tablesorter-->
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.30.5/js/jquery.tablesorter.min.js"></script>
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
+
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
+
+    <!--    选择城市-->
+    <script type="text/javascript" src="../../static/js/jquery.min.js" th:src="@{../js/jquery.min.js}"></script>
+    <script type="text/javascript" src="../../static/js/citydata.js" th:src="@{../js/citydata.js}"></script>
+    <script type="text/javascript" src="../../static/js/cityPicker-1.0.0.js" th:src="@{../js/cityPicker-1.0.0.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/city-picker.css" th:href="@{../css/city-picker.css}">
+
+    <!--    我自己的-->
+    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../../static/css/userLst.css" th:href="@{../css/userLst.css}" />
+    <script src="../../static/js/userLst.js" th:src="@{../js/userLst.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+
+    <!--    tablesorter-->
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
+
 </head>
+
 <body>
 
-<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+    <div id="jquery-accordion-menu" class="jquery-accordion-menu red">
 
-    <div class="toutou">
-        <img src="../picture/img_0016.png">
-        <p>[[${username}]]</p>
-        <div class="toutoubuttons" style="padding-left: 6px">
-            <button><a href="#">修改资料</a></button>
+        <div class="toutou">
+            <img src="../picture/img_0016.png">
+            <p>[[${username}]]</p>
+            <div class="toutoubuttons" style="padding-left: 6px">
+                <button><a href="#">修改资料</a></button>
+            </div>
+            <div class="toutoubuttons" style="padding-right: 6px">
+                <form action="#" th:action="@{/logout}" method="post">
+                    <button><a style="color: white">登出账号</a></button>
+                </form>
+            </div>
         </div>
-        <div class="toutoubuttons" style="padding-right: 6px">
-            <form action="#" th:action="@{/logout}" method="post">
-                <button><a style="color: white">登出账号</a></button>
-            </form>
-        </div>
+
+        <ul id="demo-list">
+
+            <li><a href="#" th:href="@{/admin}"> 首页 </a></li>
+            <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
+            <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
+            <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
+            <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
+            <li><a th:href="@{/admin/revealAllShipment}">出货管理 </a></li>
+            <li class="active"><a th:href="@{/admin/revealAllUser}">用户管理 </a>
+                <ul class="submenu">
+                    <li><a href="#">一般使用者 </a></li>
+                    <li><a href="#">管理人员 </a></li>
+                </ul>
+            </li>
+            <li><a href="#">系统管理 </a></li>
+            <li><a href="#">Contact </a></li>
+
+        </ul>
+
     </div>
 
-    <ul id="demo-list">
+    <div style="padding-left: 200px">
+        <div class="container" style="height:100%; padding: 50px 0 0 0">
 
-        <li><a href="#"  th:href="@{/admin}"> 首页 </a></li>
-        <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
-        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
-        <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
-        <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
-        <li class="active"><a th:href="@{/admin/revealAllUser}">用户管理 </a>
-            <ul class="submenu">
-            <li><a href="#">一般使用者 </a></li>
-            <li><a href="#">管理人员 </a></li>
-            </ul>
-        </li>
-        <li><a href="#">系统管理 </a></li>
-        <li><a href="#">Contact </a></li>
+            <div id="insertUser" class="modal" style="display: none; overflow: scroll;">
 
-    </ul>
+                <form class="modal-content animate" id="userInfo" onsubmit="return false">
 
-</div>
+                    <span onclick="document.getElementById('insertUser').style.display='none'" class="close" title="Close Modal" style="margin: 26px; font-size: 40px">&times;</span>
 
-<div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding: 50px">
+                    <div class="container">
 
-        <div id="insertUser" class="modal" style="display: none; overflow: scroll;">
-
-            <form class="modal-content animate" id="userInfo" onsubmit="return false">
-
-                <span onclick="document.getElementById('insertUser').style.display='none'" class="close" title="Close Modal"
-                        style="margin: 26px; font-size: 40px">&times;</span>
-
-                <div class="container" >
-
-                    <table align="center">
-                        <tr>
-                            <td class="userTitle" id="formTitle">基本信息</td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">QQ：</td>
-                                    <td><input name="username" id="username" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">密码：</td>
-                                    <td><input name="password" id="password" type="password" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">群昵称：</td>
-                                    <td><input name="uname" id="name" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">邮箱：</td>
-                                    <td><input name="email" id="email" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">收件人姓名：</td>
-                                    <td><input name="receiver" id="receiver" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">收件人手机号：</td>
-                                    <td><input name="phone" id="phone" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td class="valueTitle">地址：</td>
-                                    <td>
-                                        <div class="city-picker-selector" id="city-picker-search">
-                                            <div class="selector-item storey province">
-                                                <a name="province" href="javascript:;" class="selector-name reveal df-color ">广东省</a>
-                                                <input type="hidden" id="province" name="province" class="input-price val-error" value="" data-required="province">
-                                                <div class="selector-list listing hide">
-                                                    <div class="selector-search">
-                                                        <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                        <table align="center">
+                            <tr>
+                                <td class="userTitle" id="formTitle">基本信息</td>
+                            </tr>
+                            <tr>
+                                <td  class="userRow">
+                                    <p name="username" id="usernameValue" style="border: none;font-size: 20px; color: #886d6d;"></p>
+                                </td>
+                            </tr>
+                            <tr><input name="username" id="username" hidden></tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">密码：</td>
+                                        <td><input name="password" id="password" type="password" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">群昵称：</td>
+                                        <td><input name="uname" id="name" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">邮箱：</td>
+                                        <td><input name="email" id="email" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">收件人姓名：</td>
+                                        <td><input style="width:100%" name="receiver" id="receiver" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">收件人手机号：</td>
+                                        <td><input name="phone" id="phone" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">地址：</td>
+                                        <td>
+                                            <div class="city-picker-selector" id="city-picker-search">
+                                                <div class="selector-item storey province">
+                                                    <a name="province" href="javascript:;" class="selector-name reveal df-color ">广东省</a>
+                                                    <input type="hidden" name="province" class="input-price val-error" value="" data-required="province">
+                                                    <div class="selector-list listing hide">
+                                                        <div class="selector-search">
+                                                            <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                                        </div>
+                                                        <ul></ul>
                                                     </div>
-                                                    <ul></ul>
+                                                </div>
+                                                <div class="selector-item storey city">
+                                                    <a name="city" href="javascript:;" class="selector-name reveal df-color forbid">东莞市</a>
+                                                    <input type="hidden" name="city" class="input-price val-error" value="" data-required="city">
+                                                    <div class="selector-list listing hide">
+                                                        <div class="selector-search">
+                                                            <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                                        </div>
+                                                        <ul></ul>
+                                                    </div>
+                                                </div>
+                                                <div class="selector-item storey district">
+                                                    <a name="district" href="javascript:;" class="selector-name reveal df-color forbid">麻涌镇</a>
+                                                    <input type="hidden" name="district" class="input-price val-error" value="" data-required="district">
+                                                    <div class="selector-list listing hide">
+                                                        <div class="selector-search">
+                                                            <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
+                                                        </div>
+                                                        <ul></ul>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="selector-item storey city">
-                                                <a name="city"  href="javascript:;" class="selector-name reveal df-color forbid">东莞市</a>
-                                                <input type="hidden" id="city" name="city" class="input-price val-error" value="" data-required="city">
-                                                <div class="selector-list listing hide">
-                                                    <div class="selector-search">
-                                                        <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
-                                                    </div>
-                                                    <ul></ul>
-                                                </div>
-                                            </div>
-                                            <div class="selector-item storey district">
-                                                <a name="district"  href="javascript:;" class="selector-name reveal df-color forbid">麻涌镇</a>
-                                                <input type="hidden" id="district" name="district" class="input-price val-error" value="" data-required="district">
-                                                <div class="selector-list listing hide">
-                                                    <div class="selector-search">
-                                                        <input type="text" class="input-search" value="" placeholder="拼音、中文搜索">
-                                                    </div>
-                                                    <ul></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="userRow" style="padding-bottom: 26px">
-                                <table align="center">
-                                    <td class="valueTitle">详细地址：</td>
-                                    <td><input name="address" id="address" class="userValue"></td>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                                        </td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="userRow" style="padding-bottom: 26px">
+                                    <table align="center" style="width:100%">
+                                        <td class="valueTitle">详细地址：</td>
+                                        <td><input name="address" id="address" class="userValue"></td>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
 
-                    <table align="center">
-                        <tr>
-                            <td class="userRow">
-                                <table align="center">
-                                    <td style="padding-right: 6px"><button id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
-                                    <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addUser()">确认新增</button></td>
-                                    <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyUser()">确认修改</button></td>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="100%">
-                                <p align="center" style="font-size: 13px; color: #f44336">**资料有变动时请及时更新</p>
-                            </td>
-                        </tr>
-                    </table>
+                        <table align="center">
+                            <tr>
+                                <td class="userRow">
+                                    <table align="center">
+                                        <td style="padding-right: 6px"><button id="rollback" class="btn btn-secondary" style="font-size: 14px" onclick="rollBack()">复原资料</button></td>
+                                        <td style="padding-left: 6px"><button id="insertConfirm" class="btn btn-info" style="font-size: 14px" onclick="addUser()">确认新增</button></td>
+                                        <td style="padding-left: 6px"><button id="modifyConfirm" class="btn btn-info" style="font-size: 14px" onclick="modifyUser()">确认修改</button></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%">
+                                    <p align="center" style="font-size: 13px; color: #f44336; padding: 4px 0 16px 0">**资料有变动时请及时更新</p>
+                                </td>
+                            </tr>
+                        </table>
 
-                </div>
-            </form>
-        </div>
+                    </div>
+                </form>
+            </div>
 
-        <table style="width: 100%" th:name="buttonGroup">
-            <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >开团管理</a></td>
-            <td style="width: 100%">
-                <div class="btn-group mr2" style="float: right; position: relative; top:80px">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="insertU()">新增用户</button>
-                    <button class="btn btn-sm btn-outline-secondary" onclick="deleteGroup()">批量删除</button>
-                    <button class="btn btn-sm btn-outline-secondary">导出表单</button>
-                </div>
-            </td>
-        </table>
+            <div id="confirmBox" class="modal" style="display: none; overflow: scroll;">
 
-        <table>
-            <td>搜寻：<input id="searchBar" class="usrValue" onkeyup="onSearch(this)" style="width: 200px; margin-top: 46px"></td>
-            <td><button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary"
-                        onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button></td>
-        </table>
+                <form class="modal-content animate" onsubmit="return false" style="max-width: 600px;padding-top: 30px;">
 
-        <table id="userTable" class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
-            <thead>
-                <tr>
-                    <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
-                    <th>QQ</th>
-                    <th>群昵称</th>
-                    <th>邮寄地址</th>
-                    <th>手机号</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
-            <tr th:each="u:${uLst}">
-                <td style="width: 100px"><input type="checkbox" name="uItem" th:id="${u.username}"></td>
-                <td><p th:text="${u.username}"></p></td>
-                <td style="width: 160px"><p th:text="${u.uname}"></p></td>
-                <td><p th:text="${u.province}+${u.city}+${u.district}+${u.address}"></p></td>
-                <td style="width: 160px"><p th:text="${u.phone}"></p></td>
-                <td style="width: 160px">
-                    <button class="btn btn-info" style="font-size: 12px;"
-                            th:onclick="modifyU([[${u.username}]],[[${u.uname}]],[[${u.email}]],[[${u.receiver}]],[[${u.province}]],[[${u.city}]],[[${u.district}]],[[${u.address}]],[[${u.phone}]])">修改
-                    </button>
-                    <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="deleteSingleUser([[${u.username}]])">删除</button>
+                <span onclick="document.getElementById('confirmBox').style.display='none'" class="close" title="Close Modal"
+                      style="margin: 26px; font-size: 40px">&times;</span>
+
+                    <div class="container">
+                        <table align="center">
+                            <tr><td class="usrRow" style="padding-bottom: 20px"><p>你即将删除用户，该用户相关的订单也会一并删除，确定？</p></td></tr>
+                            <tr>
+                                <td class="usrRow">
+                                    <table align="center">
+                                        <td style="padding-right: 6px"><button class="btn btn-danger" style="font-size: 14px; background-color: #d16262;" onclick="deleteUser()">确定</button></td>
+                                        <td style="padding-left: 6px"><button class="btn btn-secondary" style="font-size: 14px" onclick="document.getElementById('confirmBox').style.display='none'">取消</button></td>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td width="100%"><p align="center" style="font-size: 13px; color: #f44336">**请谨慎操作</p></td></tr>
+                        </table>
+
+                    </div>
+                </form >
+            </div>
+
+            <table style="width: 100%" th:name="buttonGroup">
+                <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap">用户管理</a></td>
+                <td style="width: 100%">
+                    <div class="btn-group mr2" style="float: right; position: relative; top:80px">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="insertU()">新增用户</button>
+                        <button class="btn btn-sm btn-outline-secondary" onclick="showConfirm(null)">批量删除</button>
+                        <button class="btn btn-sm btn-outline-secondary">导出表单</button>
+                    </div>
                 </td>
-            </tr>
+            </table>
 
-        </table>
+            <table>
+                <td>搜寻：<input id="searchBar" th:value="${searchbar}" class="usrValue" style="width: 200px; height: 28px; margin-top: 46px"></td>
+                <td>
+                    <div class="btn-group mr2" style="float: right; position: relative;">
+                        <button style="margin: 46px 0 0 6px;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="sendSearch()">搜寻</button>
+                        <button style="margin: 46px 0 0 0;font-size: 12px;" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('searchBar').value=null;onSearch(document.getElementById('searchBar'))">清空</button>
+                    </div>
+                </td>
+            </table>
 
-        <!--<div style="height: 2000px">-->
+            <table id="userTable" class="tablesorter table" th:name="mainLst" style="min-width: 930px;margin-top: 10px">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" onchange="checkedAll(this)">&nbsp;&nbsp;全选</th>
+                        <th>QQ</th>
+                        <th>群昵称</th>
+                        <th>邮寄地址</th>
+                        <th>手机号</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="loadMoreData">
+                    <div th:fragment="userDetailList">
+                        <tr th:each="u:${uLst}">
+                            <td style="width: 100px"><input type="checkbox" name="uItem" th:id="${u.username}"></td>
+                            <td>
+                                <a th:href="@{/admin/revealOrderByParam(param=${u.username})}" target="_blank" th:text="${u.username}"></a>
+                            </td>
+                            <td style="width: 160px">
+                                <p th:text="${u.uname}"></p>
+                            </td>
+                            <td>
+                                <p th:text="${u.province}+${u.city}+${u.district}+${u.address}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <p th:text="${u.phone}"></p>
+                            </td>
+                            <td style="width: 160px">
+                                <button class="btn btn-info" style="font-size: 12px;" th:onclick="modifyU([[${u.username}]],[[${u.uname}]],[[${u.email}]],[[${u.receiver}]],[[${u.province}]],[[${u.city}]],[[${u.district}]],[[${u.address}]],[[${u.phone}]])">修改
+                                </button>
+                                <button class="btn btn-danger" style="font-size: 12px; background-color: #d16262;" th:onclick="showConfirm([[${u.username}]])">删除</button>
+                            </td>
+                        </tr>
+                    </div>
+                </tbody>
 
-        <!--</div>-->
+            </table>
 
-        <div align="center">
-            <p th:if="!${#arrays.isEmpty(uLst)}" style="padding: 10px; font-size: 16px; color: #888888; min-width: 930px">没有更多了</p>
-        </div>
+            <!--<div style="height: 2000px">-->
 
-        <div align="center">
-            <p th:if="${#arrays.isEmpty(uLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
-        </div>
+            <!--</div>-->
 
+            <div align="center" id="buttonMsg">
+                <button th:if="${!#arrays.isEmpty(uLst)}" class="btn btn-info" onclick="loadMore()">加载更多</button>
+            </div>
+
+            <div align="center">
+                <p th:if="${#arrays.isEmpty(uLst)}" style="padding: 10px; font-size: 18px; color: #888888; min-width: 930px">这里没有东西</p>
+            </div>
     </div>
 </div>
 

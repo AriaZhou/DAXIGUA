@@ -1,8 +1,12 @@
 package com.example.demo.controller;
 
 import java.security.Principal;
+import java.util.Arrays;
 
+import com.example.demo.dao.OrderDAO;
+import com.example.demo.dao.PaymentDAO;
 import com.example.demo.dao.UserDAO;
+import com.example.demo.entity.Orders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
@@ -14,20 +18,22 @@ import com.example.demo.entity.User;;import javax.annotation.Resource;
 @RestController
 public class MainController {
 
-	@Autowired
-//	UserDAODB userDao;
 	UserDAO userDao;
+	@Autowired
+	OrderDAO orderDao;
+	@Autowired
+	PaymentDAO paymentDao;
 
 	@Resource
 	private BCryptPasswordEncoder bCryptPasswordEncoder;  //注入bcryct加密
 	
-	@RequestMapping("/")
+	@RequestMapping(value={"/"})
 	@ResponseBody
 	public ModelAndView index(Principal principal) {
 
 		ModelAndView model;
 		try{
-			if(userDao.findById(principal.getName()).get().getRole().equals("0"))
+			if(userDao.findById(principal.getName()).get().getRole().equals("ROLE_USER"))
 				model = new ModelAndView("redirect:/index");
 			else
 				model = new ModelAndView("redirect:/admin");
@@ -109,6 +115,20 @@ public class MainController {
 		u.setPassword(bCryptPasswordEncoder.encode(newPsw));
 		userDao.save(u);
 		return "修改成功";
+	}
+
+	@RequestMapping("/searchPaymentDetail")
+	@ResponseBody
+	public String searchPaymentDetail(String payid){
+
+		String detail = "";
+		Iterable<Orders> orders = orderDao.findAllById(Arrays.asList(paymentDao.findById(payid).get().getValue().split(" ")));
+		for (Orders o : orders)
+			detail+=o.getProduct().getGroup().getId() + "：  " + o.getProduct().getPname()+" ✖️"+o.getOcount()+"\n";
+
+		orderDao.saveAll(orders);
+		return detail;
+
 	}
 	
 }

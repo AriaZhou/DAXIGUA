@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>首页</title>
 
-    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        * {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
 
+        body {
+            background: #f0f0f0;
+            margin: 0px;
+        }
+
+        .filterinput {
+            background-color: rgba(249, 244, 244, 0);
+            border-radius: 15px;
+            width: 90%;
+            height: 30px;
+            border: thin solid #FFF;
+            text-indent: 0.5em;
+            font-weight: bold;
+            color: #FFF;
+        }
+
+        #demo-list a {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            -o-text-overflow: ellipsis;
+            white-space: nowrap;
+            ] width: 100%;
+        }
+
+    </style>
+
+
+    <!--    侧边栏-->
     <style type="text/css">
         *{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
         body{background:#f0f0f0;margin: 0px;}
@@ -25,22 +59,12 @@
             text-overflow:ellipsis;
             -o-text-overflow:ellipsis;
             white-space:nowrap;]
-            width:100%;
+        width:100%;
         }
     </style>
 
-    <script src="../../static/js/jquery-1.11.2.min.js" th:src="@{../js/jquery-1.11.2.min.js}" type="text/javascript"></script>
     <script src="../../static/js/jquery-accordion-menu.js" th:src="@{../js/jquery-accordion-menu.js}" type="text/javascript"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script type="text/javascript">
-        jQuery(document).ready(function () {
-            jQuery("#jquery-accordion-menu").jqueryAccordionMenu();
-
-        });
-
         $(function(){
             //顶部导航切换
             $("#demo-list li").click(function(){
@@ -49,87 +73,107 @@
             })
         })
     </script>
+
+    <!--    jQuery-->
+    <script src="../../static/jQuery/jquery.min.js" th:src="@{../jQuery/jquery.min.js}" type="text/javascript"></script>
+
+    <!--    bootstrap-->
+    <script src="../../static/jQuery/popper.min.js" th:src="@{../jQuery/popper.min.js}" type="text/javascript"></script>
+    <script src="../../static/bootstrap/js/bootstrap.min.js" th:src="@{../bootstrap/js/bootstrap.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" href="../../static/bootstrap/css/bootstrap.min.css" th:href="@{../bootstrap/css/bootstrap.min.css}" />
+
+    <link href="../../static/css/adminIndex.css" th:href="@{../css/adminIndex.css}" rel="stylesheet" type="text/css" />
+
+    <!--    tablesorter-->
+    <script src="../../static/jQuery/jquery.tablesorter.min.js" th:src="@{../jQuery/jquery.tablesorter.min.js}" type="text/javascript"></script>
+
 </head>
+
 <body>
-<div id="jquery-accordion-menu" class="jquery-accordion-menu red">
+    <div id="jquery-accordion-menu" class="jquery-accordion-menu red">
 
-    <div class="toutou">
-        <img src="../picture/img_0016.png">
-        <p>[[${username}]]</p>
-        <div class="toutoubuttons" style="padding-left: 6px">
-            <button><a href="#">修改资料</a></button>
+        <div class="toutou">
+            <img src="../picture/img_0016.png">
+            <p>[[${username}]]</p>
+            <div class="toutoubuttons" style="padding-left: 6px">
+                <button><a href="#">修改资料</a></button>
+            </div>
+            <div class="toutoubuttons" style="padding-right: 6px">
+                <form action="#" th:action="@{/logout}" method="post">
+                    <button><a style="color: white">登出账号</a></button>
+                </form>
+            </div>
         </div>
-        <div class="toutoubuttons" style="padding-right: 6px">
-            <form action="#" th:action="@{/logout}" method="post">
-                <button><a style="color: white">登出账号</a></button>
-            </form>
+
+        <ul id="demo-list">
+
+            <li class="active"><a href="#"> 首页 </a></li>
+            <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
+            <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
+            <li><a th:href="@{/admin/revealAllOrder}">订单管理 </a></li>
+            <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
+            <li><a th:href="@{/admin/revealAllShipment}">出货管理 </a></li>
+            <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
+                <!--<ul class="submenu">-->
+                <!--<li><a href="#">Web Design </a></li>-->
+                <!--<li><a href="#">Hosting </a></li>-->
+                <!--<li><a href="#">Consulting </a></li>-->
+                <!--</ul>-->
+            </li>
+            <li><a href="#">系统管理 </a></li>
+            <li><a href="#">Contact </a></li>
+
+        </ul>
+    </div>
+
+
+    <div style="padding-left: 200px">
+        <div class="container" style="height:100%; padding: 50px 0 0 0">
+            <p>helloadmin</p>
+
         </div>
     </div>
 
-    <ul id="demo-list">
+    <script type="text/javascript">
+        (function($) {
+            $.expr[":"].Contains = function(a, i, m) {
+                return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+            };
 
-        <li class="active"><a href="#"> 首页 </a></li>
-        <li><a th:href="@{/admin/revealAllGroup}">开团管理 </a></li>
-        <li><a th:href="@{/admin/revealAllProduct}">商品管理 </a></li>
-        <li><a th:href="@{/admin/revealAllOrder}" href="#">订单管理 </a></li>
-        <li><a th:href="@{/admin/revealAllPayment}">支付管理 </a></li>
-        <li><a th:href="@{/admin/revealAllUser}">用户管理 </a>
-            <!--<ul class="submenu">-->
-            <!--<li><a href="#">Web Design </a></li>-->
-            <!--<li><a href="#">Hosting </a></li>-->
-            <!--<li><a href="#">Consulting </a></li>-->
-            <!--</ul>-->
-        </li>
-        <li><a href="#">系统管理 </a></li>
-        <li><a href="#">Contact </a></li>
-
-    </ul>
-</div>
-
-
-<div style="padding-left: 200px">
-    <div class="container" style="height:100%; padding: 50px">
-        <p>helloadmin</p>
-
-    </div>
-</div>
-
-<script type="text/javascript">
-    (function($) {
-        $.expr[":"].Contains = function(a, i, m) {
-            return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-        };
-        function filterList(header, list) {
-            //@header 头部元素
-            //@list 无需列表
-            //创建一个搜素表单
-            var form = $("<form>").attr({
-                "class":"filterform",
-                action:"#"
-            }), input = $("<input>").attr({
-                "class":"filterinput",
-                type:"text"
+            function filterList(header, list) {
+                //@header 头部元素
+                //@list 无需列表
+                //创建一个搜素表单
+                var form = $("<form>").attr({
+                        "class": "filterform",
+                        action: "#"
+                    }),
+                    input = $("<input>").attr({
+                        "class": "filterinput",
+                        type: "text"
+                    });
+                $(form).append(input).appendTo(header);
+                $(input).change(function() {
+                    var filter = $(this).val();
+                    if (filter) {
+                        $matches = $(list).find("a:Contains(" + filter + ")").parent();
+                        $("li", list).not($matches).slideUp();
+                        $matches.slideDown();
+                    } else {
+                        $(list).find("li").slideDown();
+                    }
+                    return false;
+                }).keyup(function() {
+                    $(this).change();
+                });
+            }
+            $(function() {
+                filterList($("#form"), $("#demo-list"));
             });
-            $(form).append(input).appendTo(header);
-            $(input).change(function() {
-                var filter = $(this).val();
-                if (filter) {
-                    $matches = $(list).find("a:Contains(" + filter + ")").parent();
-                    $("li", list).not($matches).slideUp();
-                    $matches.slideDown();
-                } else {
-                    $(list).find("li").slideDown();
-                }
-                return false;
-            }).keyup(function() {
-                $(this).change();
-            });
-        }
-        $(function() {
-            filterList($("#form"), $("#demo-list"));
-        });
-    })(jQuery);
-</script>
+        })(jQuery);
+
+    </script>
 
 </body>
+
 </html>

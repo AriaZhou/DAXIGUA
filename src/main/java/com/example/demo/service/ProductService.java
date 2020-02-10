@@ -109,7 +109,7 @@ public class ProductService {
         //下拉选单
         // 准备下拉列表数据
         int index = 0;
-        String[] strs = new String[4];
+        String[] strs = new String[6];
         for (PState s : pstateDao.findAll()){
             strs[index]=s.getId()+"-"+s.getValue();
             index++;
