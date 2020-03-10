@@ -280,8 +280,8 @@ public class AdminOrderController {
                 values = new String[4];
                 values[0] = errorList.get(0).split("\\[")[1];
                 values[1] = errorList.get(1);
-                values[2] = errorList.get(2);
-                values[3] = errorList.get(3).split("]")[0];
+                values[2] = errorList.get(2).split("]")[0];
+//                values[3] = errorList.get(3).split("]")[0];
                 data.clear();
                 data.add(values);
                 break;

@@ -3,16 +3,19 @@ package com.example.demo.service;
 import com.example.demo.dao.*;
 import com.example.demo.entity.*;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +36,11 @@ public class OrderService {
     @Autowired
     StateDAO stateDao;
 
+    @Resource
+    private BCryptPasswordEncoder bCryptPasswordEncoder;  //注入bcryct加密
+
     public Map<String, Object> orderImport(String fileName, MultipartFile file, HttpServletResponse response) throws Exception {
-        boolean notNull = false;
+
         List<Orders> orderList = new ArrayList<>();
         List<List<Object>> errorList = new ArrayList<>();
 
@@ -53,9 +59,6 @@ public class OrderService {
             wb = new XSSFWorkbook(is);
         }
         Sheet sheet = wb.getSheetAt(0);
-        if(sheet!=null){
-            notNull = true;
-        }
 
         for (int r = 1; r <= sheet.getLastRowNum(); r++) {
             Row row = sheet.getRow(r);
@@ -63,44 +66,54 @@ public class OrderService {
                 continue;
             }
 
-            String uid;
-            try{
-                if(row.getCell(0).getCellType().toString().equals("NUMERIC"))
-                    uid = (int)row.getCell(0).getNumericCellValue()+"";
-                else
-                    uid = (int)Double.parseDouble(row.getCell(0).getStringCellValue())+"";
-            }catch (Exception e){
-                uid = null;
-            }
+            String uid = checkExcelValueType(row.getCell(0));
 
             try{
-                User user = userDao.findById(uid).get();
-                if(user.getUsername().equals(uid)){
-                    String[] orders = row.getCell(2).getStringCellValue().split(";");
-                    for (int i = 0; i < orders.length; i++) {
-                        String[] values = orders[i].split("\\*");
-                        Product product = productDao.findByName(values[0]);
-                        Orders o = new Orders();
-                        o.setId(new Date().getTime()+"");
-                        o.setUser(user);
-                        o.setState(stateDao.findById(0L).get());
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                        o.setTime(sdf.format(new Date()));
-                        o.setOcount(Integer.parseInt(values[1]));
-                        o.setPrice(row.getCell(3).getNumericCellValue()+"");
-                        product.setOrdercount(product.getOrdercount()+Integer.parseInt(values[1]));
-                        product.setPcount(product.getPcount()-Integer.parseInt(values[1]));
-                        productDao.save(product);
-                        o.setProduct(product);
-                        orderList.add(o);
-                    }
+                User user;
+                if(userDao.existsById(uid))
+                    user = userDao.findById(uid).get();
+                else{
+                    user = new User();
+                    user.setUsername(uid);
+                    user.setUname(checkExcelValueType(row.getCell(1)));
+                    user.setPassword(bCryptPasswordEncoder.encode(uid));
+                    user.setRole("ROLE_USER");
+                    user.setPhone("null");
+                    userDao.save(user);
+
+//                    List<Object> values = new ArrayList<>();
+//                    values.add(uid);
+//                    values.add(checkExcelValueType(row.getCell(1)));
+//                    values.add(checkExcelValueType(row.getCell(2)));
+//                    values.add("QQ号不正确，用户不存在");
+//                    errorList.add(values);
+//                    continue;
+                }
+                String[] orders = checkExcelValueType(row.getCell(2)).split("; ");
+                for (int i = 0; i < orders.length; i++) {
+                    String[] values = orders[i].split("\\*");
+                    Product product = productDao.findByName(values[0]);
+                    Orders o = new Orders();
+                    o.setId(new Date().getTime()+"");
+                    o.setUser(user);
+                    o.setState(stateDao.findById(0L).get());
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    o.setTime(sdf.format(new Date()));
+                    o.setOcount(Integer.parseInt(values[1]));
+                    o.setPrice(o.getOcount()*Double.parseDouble(product.getPrice())+"");
+                    product.setOrdercount(product.getOrdercount()+Integer.parseInt(values[1]));
+                    product.setPcount(product.getPcount()-Integer.parseInt(values[1]));
+                    productDao.save(product);
+                    o.setProduct(product);
+                    orderList.add(o);
                 }
             }catch (Exception e){
                 List<Object> values = new ArrayList<>();
                 values.add(uid);
-                values.add(row.getCell(1).getStringCellValue());
-                values.add(row.getCell(2).getStringCellValue());
-                values.add(row.getCell(3).getNumericCellValue());
+                values.add(checkExcelValueType(row.getCell(1)));
+                values.add(checkExcelValueType(row.getCell(2)));
+//                values.add(row.getCell(3).getNumericCellValue());
+                values.add("格式有误");
                 errorList.add(values);
             }
 
@@ -132,8 +145,11 @@ public class OrderService {
         cell = row.createCell(2);
         cell.setCellValue("订单");
 //        cell.setCellStyle(style);
+//        cell = row.createCell(3);
+//        cell.setCellValue("小计");
+//        cell.setCellStyle(style);
         cell = row.createCell(3);
-        cell.setCellValue("小计");
+        cell.setCellValue("错误标记");
 //        cell.setCellStyle(style);
 
         int i = 1;
@@ -150,9 +166,12 @@ public class OrderService {
             cell2 = row.createCell(2);
 //            cell2.setCellStyle(style);
             cell2.setCellValue(e[2]);
+//            cell2 = row.createCell(3);
+//            cell2.setCellStyle(style);
+//            cell2.setCellValue(Double.parseDouble(e[3]));
             cell2 = row.createCell(3);
 //            cell2.setCellStyle(style);
-            cell2.setCellValue(Double.parseDouble(e[3]));
+            cell2.setCellValue(e[3]);
             i++;
         }
 
@@ -206,8 +225,8 @@ public class OrderService {
         cell = row.createCell(2);
         cell.setCellValue("订单");
 //        cell.setCellStyle(style);
-        cell = row.createCell(3);
-        cell.setCellValue("小计");
+//        cell = row.createCell(3);
+//        cell.setCellValue("小计");
 //        cell.setCellStyle(style);
 
         // 第六步，保存文件
@@ -279,6 +298,17 @@ public class OrderService {
         orderDao.save(o);
     }
 
+    public String checkExcelValueType(Cell cell){
+        try{
+            if(cell.getCellType().toString().equals("NUMERIC"))
+                return  (int)cell.getNumericCellValue()+"";
+            else
+                return  cell.getStringCellValue();
+        }catch (Exception e){
+            System.out.println(e.getMessage()+"error============");
+            return null;
+        }
+    }
 
     /**
      * 导出数据保存成Excel

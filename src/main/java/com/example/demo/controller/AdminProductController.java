@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class AdminProductController {
@@ -238,6 +235,71 @@ public class AdminProductController {
             productService.exportProduct(ids,response);
         }
 
+    }
+
+    /**
+     * 数据上传导入
+     * 自动销账
+     * @param file
+     */
+    @RequestMapping(value = "/admin/uploadProducts", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView uploadProducts(@RequestParam("excelFile") MultipartFile file, Principal principal, HttpServletRequest request, HttpServletResponse response){
+        ModelAndView model = new ModelAndView("admin/productLst");
+        try {
+            Map<String, Object> importResult = productService.productImport(file.getOriginalFilename(),file,principal);
+            List<Product> list= (List<Product>)importResult.get("productList");
+            List<List<Object>> errorList= (List<List<Object>>)importResult.get("errorList");
+
+            Pageable pageable = PageRequest.of(0, 20);
+            Iterable<Product> pLst=productDao.findALLByState(pageable);
+            model.addObject("pLst", pLst);
+            Iterable<Group> gLst = groupDao.findAll();
+            model.addObject("gLst", gLst);
+            Iterable<PState> sLst = pstateDao.findAll();
+            model.addObject("sLst", sLst);
+            model.addObject("successCount", list.size());
+            model.addObject("successPLst", list.iterator());
+            model.addObject("failCount", errorList.size());
+            model.addObject("failPLst", errorList);
+            model.addObject("success", true);
+            model.addObject("username", principal.getName());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("导入失败");
+        }
+        return model;
+    }
+
+    @RequestMapping(value = "/admin/exportErrorProducts", method = RequestMethod.GET)
+    @ResponseBody
+    public void exportErrorProducts(@RequestParam List<String> errorList, HttpServletResponse response){
+        List<String[]> data = new ArrayList<>();
+        for (String e : errorList) {
+            String[] values;
+            try{
+                values = e.split("\\[")[1].split("]")[0].split(", ");
+            }catch(Exception ex){
+                System.out.println("=======errorMsg======" + ex.getMessage());
+                values = new String[4];
+                values[0] = errorList.get(0).split("\\[")[1];
+                values[1] = errorList.get(1);
+                values[2] = errorList.get(2);
+                values[3] = errorList.get(3).split("]")[0];
+                data.clear();
+                data.add(values);
+                break;
+            }
+            data.add(values);
+        }
+        productService.exportErrorProducts(data, response);
+    }
+
+    @RequestMapping("/admin/downloadProductTemplate")
+    @ResponseBody
+    public void downloadOrderTemplate(HttpServletRequest request, HttpServletResponse response) {
+        productService.exportTemplate(request, response);
     }
 
     //导出全部货物表单

@@ -210,11 +210,75 @@
                 </form>
             </div>
 
+            <div id="successImportLst" th:if="${success}" class="modal" style="display: block; overflow: scroll;">
+
+                <form class="modal-content animate" onsubmit="return false;" enctype="multipart/form-data">
+
+                    <div th:if="${failCount > 0}" class="alert alert-danger">
+                        <strong>导入失败!</strong> 有 [[${failCount}]] 笔资料汇入失败
+                        <a style="text-decoration:underline; size: 9pt" th:href="@{/admin/exportErrorProducts(errorList=${failPLst})}">点此导出</a>
+                    </div>
+
+                    <div class="alert alert-success">
+                        <strong>导入成功!</strong> 成功汇入 [[${successCount}]] 笔资料
+                    </div>
+
+                    <a th:href='@{/admin/revealAllProduct}' class="close" title="Close Modal" style="font-size: 40px">&times;</a>
+
+                    <div class="container">
+                        <table class="tablesorter table" style="margin-top: 10px; min-width: 930px;">
+                            <thead>
+                            <tr>
+                                <th>团号</th>
+                                <th>名称</th>
+                                <th>价格</th>
+                                <th>订购数量</th>
+                                <th>剩余可定数量</th>
+                                <th>货物状态</th>
+                            </tr>
+                            </thead>
+                            <tr th:each="p:${successPLst}">
+                                <td><p th:text="${p.group.id}"></p></td>
+                                <td><p th:text="${p.pname}"></p></td>
+                                <td><p th:text="${p.price}"></p></td>
+                                <td><p th:text="${p.ordercount}"></p></td>
+                                <td><p th:text="${p.pcount}"></p></td>
+                                <td><p th:text="${p.state.value}"></p></td>
+                            </tr>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div id="importProducts" class="modal" style="display: none; overflow: scroll;">
+
+                <form class="modal-content animate" th:action="@{/admin/uploadProducts}" id="uploadE" enctype="multipart/form-data" method="post" style="max-width: 300px;padding: 60px 0 30px 0;">
+
+                    <span onclick="document.getElementById('importProducts').style.display='none'" class="close" title="Close Modal" style="margin: 5px; right: 10px;font-size: 40px">&times;</span>
+
+                    <div class="container" align="center">
+                        <input id="excelFile" type="file" name="excelFile" accept=".xlsx,application/vnd.ms-excel,application/vnd.openxmlformat-officedocument.spreadsheetml.sheet" />
+                        <br>
+                        <table style="width: 100%">
+                            <td><button class="btn btn-secondary" style="font-size: 10pt;margin: 30px 0px 0 40px;" onclick="location.href='/admin/downloadProductTemplate';return false;">下载模板</button></td>
+                            <td><button id="excel_button" value="导入" type="submit" class="btn btn-info" style="font-size: 10pt;margin: 30px 20px 0 0px;">确认导入</button></td>
+                        </table>
+
+                    </div>
+                </form>
+            </div>
+
         <table style="width: 100%" th:name="buttonGroup">
             <td><a style="padding: 50px; font-size: 26px; font-weight: bold; white-space:nowrap" >商品管理</a></td>
             <td style="width: 100%">
                 <div class="btn-group mr2" style="float: right; position: relative; top:80px">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="insertP()">新增产品</button>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" style="border-bottom-right-radius: 0; border-top-right-radius: 0;" data-toggle="dropdown">新增墨水</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" onclick="insertP()">单个新增</a>
+                            <a class="dropdown-item" onclick="document.getElementById('importProducts').style.display='block'">批量导入</a>
+                        </div>
+                    </div>
                     <div class="dropdown">
                         <button class="btn btn-sm btn-outline-secondary dropdown-toggle"  style="border-radius: 0" data-toggle="dropdown" >批量操作</button>
                         <div class="dropdown-menu">

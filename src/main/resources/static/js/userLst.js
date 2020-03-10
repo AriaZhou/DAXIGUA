@@ -59,7 +59,7 @@ function insertU() {
     document.getElementById("insertConfirm").hidden = false;
     document.getElementById("modifyConfirm").hidden = true;
     document.getElementById("username").value = null;
-    document.getElementById("username").hidden = false;
+    document.getElementById("usernameInput").hidden = false;
     document.getElementById("usernameValue").hidden = true;
     document.getElementById("name").value = null;
     document.getElementById("email").value = null;
@@ -83,7 +83,7 @@ function modifyU(username, name, email, receiver, province, city, district, addr
     document.getElementById("rollback").hidden = false;
     document.getElementById("insertConfirm").hidden = true;
     document.getElementById("modifyConfirm").hidden = false;
-    document.getElementById("username").hidden = true;
+    document.getElementById("usernameInput").hidden = true;
     document.getElementById("usernameValue").hidden = false;
     document.getElementById("username").value = username;
     document.getElementById("usernameValue").innerText = "QQ："+username;

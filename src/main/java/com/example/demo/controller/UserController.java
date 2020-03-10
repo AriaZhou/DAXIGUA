@@ -46,7 +46,8 @@ public class UserController {
     @ResponseBody
     public ModelAndView userIndex(Principal principal) {
 
-        ModelAndView model = new ModelAndView("user/index");
+        ModelAndView model = new ModelAndView("user/myOrder");
+//        ModelAndView model = new ModelAndView("user/index");
         try{
             User u = userDao.findById(principal.getName()).get();
             model.addObject("userInfo",u);
