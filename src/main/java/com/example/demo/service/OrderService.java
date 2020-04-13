@@ -62,14 +62,13 @@ public class OrderService {
 
         for (int r = 1; r <= sheet.getLastRowNum(); r++) {
             Row row = sheet.getRow(r);
-            if (row == null){
-                continue;
-            }
+            if (row == null) continue;
+            if(row.getLastCellNum() < 4) throw new Exception("导入文件格式错误");
 
             String uid = checkExcelValueType(row.getCell(0));
-
             try{
                 User user;
+                //用户不存在就新建一个用户
                 if(userDao.existsById(uid))
                     user = userDao.findById(uid).get();
                 else{
@@ -80,29 +79,32 @@ public class OrderService {
                     user.setRole("ROLE_USER");
                     user.setPhone("null");
                     userDao.save(user);
-
-//                    List<Object> values = new ArrayList<>();
-//                    values.add(uid);
-//                    values.add(checkExcelValueType(row.getCell(1)));
-//                    values.add(checkExcelValueType(row.getCell(2)));
-//                    values.add("QQ号不正确，用户不存在");
-//                    errorList.add(values);
-//                    continue;
                 }
-                String[] orders = checkExcelValueType(row.getCell(2)).split("; ");
+                String groupid = checkExcelValueType(row.getCell(2));
+                String[] orders = checkExcelValueType(row.getCell(3)).split("; ");
                 for (int i = 0; i < orders.length; i++) {
-                    String[] values = orders[i].split("\\*");
-                    Product product = productDao.findByName(values[0]);
+                    String[] products = orders[i].split("\\*");
+                    Product product = productDao.findByNameAndGroup(products[0], groupid);
+                    if(product==null){
+                        List<Object> values = new ArrayList<>();
+                        values.add(uid);
+                        values.add(checkExcelValueType(row.getCell(1)));
+                        values.add(checkExcelValueType(row.getCell(2)));
+                        values.add(checkExcelValueType(row.getCell(3)));
+                        values.add("商品不存在，请检查团号和商品名是否正确");
+                        errorList.add(values);
+                    }
+
                     Orders o = new Orders();
                     o.setId(new Date().getTime()+"");
                     o.setUser(user);
                     o.setState(stateDao.findById(0L).get());
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     o.setTime(sdf.format(new Date()));
-                    o.setOcount(Integer.parseInt(values[1]));
+                    o.setOcount(Integer.parseInt(products[1]));
                     o.setPrice(o.getOcount()*Double.parseDouble(product.getPrice())+"");
-                    product.setOrdercount(product.getOrdercount()+Integer.parseInt(values[1]));
-                    product.setPcount(product.getPcount()-Integer.parseInt(values[1]));
+                    product.setOrdercount(product.getOrdercount()+Integer.parseInt(products[1]));
+                    product.setPcount(product.getPcount()-Integer.parseInt(products[1]));
                     productDao.save(product);
                     o.setProduct(product);
                     orderList.add(o);
@@ -112,6 +114,7 @@ public class OrderService {
                 values.add(uid);
                 values.add(checkExcelValueType(row.getCell(1)));
                 values.add(checkExcelValueType(row.getCell(2)));
+                values.add(checkExcelValueType(row.getCell(3)));
 //                values.add(row.getCell(3).getNumericCellValue());
                 values.add("格式有误");
                 errorList.add(values);
@@ -143,12 +146,12 @@ public class OrderService {
         cell.setCellValue("群昵称");
 //        cell.setCellStyle(style);
         cell = row.createCell(2);
-        cell.setCellValue("订单");
-//        cell.setCellStyle(style);
-//        cell = row.createCell(3);
-//        cell.setCellValue("小计");
+        cell.setCellValue("团号");
 //        cell.setCellStyle(style);
         cell = row.createCell(3);
+        cell.setCellValue("订单");
+//        cell.setCellStyle(style);
+        cell = row.createCell(4);
         cell.setCellValue("错误标记");
 //        cell.setCellStyle(style);
 
@@ -166,12 +169,12 @@ public class OrderService {
             cell2 = row.createCell(2);
 //            cell2.setCellStyle(style);
             cell2.setCellValue(e[2]);
-//            cell2 = row.createCell(3);
-//            cell2.setCellStyle(style);
-//            cell2.setCellValue(Double.parseDouble(e[3]));
             cell2 = row.createCell(3);
 //            cell2.setCellStyle(style);
             cell2.setCellValue(e[3]);
+            cell2 = row.createCell(4);
+//            cell2.setCellStyle(style);
+            cell2.setCellValue(e[4]);
             i++;
         }
 
@@ -223,10 +226,10 @@ public class OrderService {
         cell.setCellValue("群昵称");
 //        cell.setCellStyle(style);
         cell = row.createCell(2);
-        cell.setCellValue("订单");
+        cell.setCellValue("团号");
 //        cell.setCellStyle(style);
-//        cell = row.createCell(3);
-//        cell.setCellValue("小计");
+        cell = row.createCell(3);
+        cell.setCellValue("订单");
 //        cell.setCellStyle(style);
 
         // 第六步，保存文件

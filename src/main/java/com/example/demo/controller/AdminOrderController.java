@@ -45,7 +45,8 @@ public class AdminOrderController {
         Iterable<Orders> oLst = orderDao.findALLByState(pageable);
 
         model.addObject("oLst", oLst);
-        Iterable<Group> gLst = groupDao.findAllWithNowTimeBefore(new Date());
+//        Iterable<Group> gLst = groupDao.findAllWithNowTimeBefore(new Date());
+        Iterable<Group> gLst = groupDao.findAll();
         model.addObject("gLst", gLst);
         Iterable<State> sLst = stateDao.findAll();
         model.addObject("sLst", sLst);

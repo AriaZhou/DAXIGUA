@@ -116,7 +116,7 @@
                                 <td style="font-size: 18px; font-weight: bold; color: #886d6d; padding-bottom: 6px; text-align: center;">
                                     <div class="dropdown">
                                         团号：<input name="group" id="groupid" class="dropdown-toggle" data-toggle="dropdown" readonly style="color: #886d6d; border: #3b424d solid 1px; border-radius: 3px; padding-left: 6px">
-                                        <div class="dropdown-menu">
+                                        <div class="dropdown-menu" style="overflow-y: scroll">
                                             <a th:each="g:${gLst}" class="dropdown-item" th:onclick="addTimeValue([[${g.id}]],[[${#dates.format(g.starttime, 'yyyy-MM-dd HH:mm:ss')}]],[[${#dates.format(g.endtime, 'yyyy-MM-dd HH:mm:ss')}]])">[[${g.id}]]</a>
                                     </div>
                                 </div>
@@ -319,8 +319,8 @@
             <tbody id="loadMoreData">
                 <div th:fragment="productDetailList">
                     <tr th:each="p:${pLst}">
-                    <td><input th:if="${#arrays.isEmpty(p.orders)}" type="checkbox" name="pItem" th:id="${p.id}">
-                        <input th:if="${!#arrays.isEmpty(p.orders)}" type="checkbox" th:id="${p.id}" disabled></td>
+                    <td><input type="checkbox" name="pItem" th:id="${p.id}"></td>
+<!--                        <input th:if="${!#arrays.isEmpty(p.orders)}" type="checkbox" th:id="${p.id}" disabled></td>-->
                     <td><p th:text="${p.group.id}"></p></td>
                     <td><p th:text="${p.pname}"></p></td>
                     <td><p th:text="${p.price}"></p></td>
@@ -365,5 +365,10 @@
 </script>
 
 </body>
+
+<footer>
+    <p>苹果李子卖西瓜版权所有</p>
+    <p>请加QQ群：627091438</p>
+</footer>
 
 </html>

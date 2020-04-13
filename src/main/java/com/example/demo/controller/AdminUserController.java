@@ -39,10 +39,12 @@ public class AdminUserController {
 
         Pageable pageable = PageRequest.of(0, 20);
         Iterable<User> uLst = userDao.findALLByState(pageable).getContent();
+//        Iterable<User> uLst = userDao.findAll();
 //        for(User u :uLst){
-//            u.setPassword(bCryptPasswordEncoder.encode(u.getPassword()));
+//            if(u.getUsername() != principal.getName())
+//                u.setPassword(bCryptPasswordEncoder.encode(u.getUsername()));
 //        }
-//        userDao.saveAll(uLst);
+        userDao.saveAll(uLst);
         model.addObject("uLst", uLst);
         model.addObject("username", principal.getName());
 

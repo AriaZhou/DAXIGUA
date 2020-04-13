@@ -19,8 +19,8 @@ public interface ProductDAO extends CrudRepository<Product, String> {
     @Query(value = "select * from product p where p.id = :id for update", nativeQuery = true)
     Product findProductForUpdate(@Param("id") String pid);
 
-    @Query(value = "select * from product p where p.pname = :name for update", nativeQuery = true)
-    Product findByName(@Param("name") String pname);
+    @Query(value = "select * from product p where p.groupid = :groupid and p.pname = :pname for update", nativeQuery = true)
+    Product findByNameAndGroup(@Param("pname") String pname, @Param("groupid") String groupid);
 
     @Query("select p from Product p where p.group.id = :groupid AND p.state.id = 0 AND p.pcount > 0")
     Iterable<Product> findByGroupIdVali(
